@@ -1,0 +1,38 @@
+﻿<Window x:Class="MonumentMap.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:m="clr-namespace:Microsoft.Maps.MapControl.WPF;assembly=Microsoft.Maps.MapControl.WPF"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MonumentMap"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    
+    <!-- Dekorisanje pinova na mapi -->
+    <Window.Resources>
+        <ControlTemplate x:Key="MonumentPinTemplate" TargetType="m:Pushpin">
+            <Grid x:Name="ContentGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <Grid Margin="0" Width="33" Height="33">
+
+                        <Polygon HorizontalAlignment="Center" VerticalAlignment="Center" Points="0,0 50,0 25,30"
+                                 Stroke="Black" StrokeThickness="1" Fill="Blue" />
+                        
+                        <!-- Za prikaz teksta -->
+                        <ContentPresenter HorizontalAlignment="Center"
+                                                                VerticalAlignment="Top"
+                                                                Content="{TemplateBinding Content}"
+                                                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                Margin="0" TextBlock.FontFamily="Segoe UI" TextBlock.FontWeight="Bold" TextBlock.Foreground="#ffffff">
+                        </ContentPresenter>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </ControlTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <m:Map x:Name="worldMap" ZoomLevel="2"  Mode="AerialWithLabels" CredentialsProvider="AtDk4CCssn5oeGv1MfzEWA_LA9eulE9bDLI6VdfGkcnCi6ydlDX0LT-jNXskoIV_" Margin="-10,0,10,0">
+        </m:Map>
+    </Grid>
+</Window>
