@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MonumentMap
 {
-    class MonumentPin
+    public class MonumentPin
     {
     }
 }

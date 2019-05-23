@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using System.Windows.Controls.Primitives;
 using Microsoft.Maps.MapControl.WPF; /* Direktiva za mapu i njene elemente */
 
 namespace MonumentMap
@@ -28,6 +29,23 @@ namespace MonumentMap
 
             worldMap.MouseDoubleClick += new MouseButtonEventHandler(worldMap_MouseDoubleClick);
             worldMap.ViewChangeOnFrame += new EventHandler<MapEventArgs>(worldMap_ViewChangeOnFrame);
+
+        }
+
+        //uklanjanje overflow-a na ikonicama toolbar-a
+        private void ToolBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            ToolBar toolBar = sender as ToolBar;
+            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
+            if (overflowGrid != null)
+            {
+                overflowGrid.Visibility = Visibility.Collapsed;
+            }
+            var mainPanelBorder = toolBar.Template.FindName("MainPanelBorder", toolBar) as FrameworkElement;
+            if (mainPanelBorder != null)
+            {
+                mainPanelBorder.Margin = new Thickness();
+            }
         }
 
         //na dupli klik se ubaci pin na mapu - za sad
@@ -54,14 +72,16 @@ namespace MonumentMap
         {
             double z = worldMap.ZoomLevel;
 
+            //setting min zoom 
             if (z > 8)
             {
                 worldMap.ZoomLevel = 8;
             }
 
-            if (z < 2)
+            //settin max zoom
+            if (z < 2.5)
             {
-                worldMap.ZoomLevel = 2;
+                worldMap.ZoomLevel = 2.5;
             }
         }
     }
