@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 using System.Windows.Controls.Primitives;
 using Microsoft.Maps.MapControl.WPF; /* Direktiva za mapu i njene elemente */
+using System.Windows.Media.Animation;
 
 namespace MonumentMap
 {
@@ -23,13 +24,33 @@ namespace MonumentMap
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        //sluzi za databinding na neke konstante, npr velicina fonta, dimenzija prozora... 
+        public WindowConstants WindowConstants { get; set; }
+
+        /******** Booleans indicating whether pop-up windows are shown ********/
+        public bool isNewMonumentWindowShown = false;
+
+
         public MainWindow()
         {
             InitializeComponent();
 
+            DataContext = this;  
+
             worldMap.MouseDoubleClick += new MouseButtonEventHandler(worldMap_MouseDoubleClick);
             worldMap.ViewChangeOnFrame += new EventHandler<MapEventArgs>(worldMap_ViewChangeOnFrame);
 
+            onLoad();
+        }
+
+       
+        private void onLoad()
+        {
+            WindowConstants = new WindowConstants(18, 14); //initializing font size
+
+            //inserting enums to comboboxes
+            climateType.ItemsSource = Enum.GetValues(typeof(ClimateType)).Cast<ClimateType>();
         }
 
         //uklanjanje overflow-a na ikonicama toolbar-a
@@ -47,6 +68,11 @@ namespace MonumentMap
                 mainPanelBorder.Margin = new Thickness();
             }
         }
+
+
+                            /*********************
+                            * Map event handlers *
+                            * *******************/
 
         //na dupli klik se ubaci pin na mapu - za sad
         private void worldMap_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -82,6 +108,46 @@ namespace MonumentMap
             if (z < 2.5)
             {
                 worldMap.ZoomLevel = 2.5;
+            }
+        }
+
+
+                    /**********************************
+                    * Animation button event handlers *
+                    * *********************************/
+
+        private void closeNewMonumWindowBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if(isNewMonumentWindowShown)
+            {
+                DoubleAnimation double_anim = new DoubleAnimation
+                {
+                    From = 0,
+                    To = -newMonumentHolder.Width,
+                    Duration = new Duration(TimeSpan.FromSeconds(0.3)),
+                    AutoReverse = false
+                };
+
+                newMonumentHolder.BeginAnimation(Canvas.LeftProperty, double_anim);
+                isNewMonumentWindowShown = false;
+            }
+        }
+
+        private void newMonumentBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isNewMonumentWindowShown)
+            {
+
+                DoubleAnimation double_anim = new DoubleAnimation
+                {
+                    From = -newMonumentHolder.Width,
+                    To = 0,
+                    Duration = new Duration(TimeSpan.FromSeconds(0.3)),
+                    AutoReverse = false
+                };
+
+                newMonumentHolder.BeginAnimation(Canvas.LeftProperty, double_anim);
+                isNewMonumentWindowShown = true;
             }
         }
     }

@@ -38,12 +38,60 @@
                 <Setter Property="FontSize" Value="20"/>
             </Style>
         </Page.Resources>
-        <DockPanel  Background="#205770">
+
+        <!-- Glavni panel -->
+        <DockPanel x:Name="mainPanel"  Background="#205770">
+
+            <!-- Prozor za dodavanje novih spomenika -->
+            <Canvas x:Name="newMonumentCanvas"  Panel.ZIndex="99" DockPanel.Dock="Left">
+                <StackPanel Width="400" x:Name="newMonumentHolder" Canvas.Left="-400" Background="#001a33" Height="{Binding ActualHeight, ElementName=newMonumentCanvas}" RenderTransformOrigin="0.521,0.275">
+                    <!-- Zaglavlje prozora-->
+                    <Grid Height="55">
+                        <Label VerticalAlignment="Center" HorizontalAlignment="Left" Content="Add new monument" Foreground="White"
+                               FontSize="{Binding WindowConstants.HeaderFontSize}" FontWeight="SemiBold" Margin="10,8,0,10"/>
+                        <Button x:Name="closeNewMonumWindowBtn" Width="60" Height="40" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="SemiBold"
+                                ToolTip="Close window" Foreground="White" Content="Close" Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}"
+                                Margin="0,5,10,10" BorderThickness="0" Click="closeNewMonumWindowBtn_Click"/>
+                        <Rectangle VerticalAlignment="Bottom" Fill="White" Height="1"></Rectangle>
+                    </Grid>
+
+                    <!-- Slika i ikonica -->
+                    <Grid Height="120">
+                        <Image Source="icons/default-monument.jpg" VerticalAlignment="Center" HorizontalAlignment="Left" Width="181"/>
+                        <Rectangle VerticalAlignment="Stretch" Stroke="White" Width="2" Margin="294,0,105,0"/>
+                        <Image Source="icons/monument-icon.png" Height="48" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,30,22,42"/>
+                        <Rectangle VerticalAlignment="Bottom" Stroke="White"></Rectangle>
+                    </Grid>
+
+                    <!-- Forma za dodavanje novog spomenika -->
+                    <ScrollViewer VerticalScrollBarVisibility="Hidden" VerticalAlignment="Stretch" Height="295">
+
+                        <Grid x:Name="newMonumentForm">
+                            <Label Content="ID:" Height="30"  Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="72,28,215,375"/>
+                            <TextBox x:Name="monumentID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Margin="195,32,138,388"/>
+
+                            <Label Content="Name:" Height="30" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="72,63,224,340"/>
+                            <TextBox x:Name="monumentName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Margin="195,67,47,352" ToolTip="dfdsfs"/>
+
+                            <Label Content="Description:" Height="30" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="72,100,192,298"/>
+                            <TextBox x:Name="monumentDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="75"
+                                     HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="195,102,47,251"/>
+
+                            <Label Content="Type:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="72,206,215,209"/>
+                            <ComboBox x:Name="monumentType" FontSize="{Binding WindowConstants.FormFontSize}" Margin="195,206,47,209"/>
+
+                            <Label Content="Climate:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="72,248,215,167"/>
+                            <ComboBox x:Name="climateType" FontSize="{Binding WindowConstants.FormFontSize}" Margin="195,248,47,169"/>
+                        </Grid>
+                    </ScrollViewer>
+                    
+                </StackPanel>
+            </Canvas>
 
             <!-- TOOLBAR -->
             <ToolBarTray DockPanel.Dock="Top" ToolBarTray.IsLocked="True" Grid.Row="1" Background="#001a33">
                 <ToolBar Background="#e6f3ff" ToolBar.OverflowMode="Never" Loaded="ToolBar_Loaded" ToolTipService.ToolTip="Add new monument">
-                    <Button x:Name="newMonumentBtn">
+                    <Button x:Name="newMonumentBtn" Click="newMonumentBtn_Click">
                         <Image Source="icons/monument-icon.png" Height="25" />
                     </Button>
                 </ToolBar>
