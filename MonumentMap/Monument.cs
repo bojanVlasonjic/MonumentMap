@@ -21,6 +21,7 @@ namespace MonumentMap
         public TouristStatus TourStatus { get; set; }
 
         public bool IsEcoEndangered { get; set; }
+        public bool ContainsEndangeredSpecies { get; set; }
         public bool IsInSettlement { get; set; }
 
         public double AnnualIncome { get; set; } //displayed in $USD

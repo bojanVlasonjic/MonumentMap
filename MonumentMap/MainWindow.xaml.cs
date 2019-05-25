@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using Microsoft.Maps.MapControl.WPF; /* Direktiva za mapu i njene elemente */
 using System.Windows.Media.Animation;
+using System.Text.RegularExpressions;
 
 namespace MonumentMap
 {
@@ -30,6 +31,8 @@ namespace MonumentMap
 
         /******** Booleans indicating whether pop-up windows are shown ********/
         public bool isNewMonumentWindowShown = false;
+
+
 
 
         public MainWindow()
@@ -47,10 +50,11 @@ namespace MonumentMap
        
         private void onLoad()
         {
-            WindowConstants = new WindowConstants(18, 14); //initializing font size
+            WindowConstants = new WindowConstants(18, 15); //initializing font size
 
             //inserting enums to comboboxes
             climateType.ItemsSource = Enum.GetValues(typeof(ClimateType)).Cast<ClimateType>();
+            touristStatus.ItemsSource = Enum.GetValues(typeof(TouristStatus)).Cast<TouristStatus>();
         }
 
         //uklanjanje overflow-a na ikonicama toolbar-a
@@ -70,9 +74,16 @@ namespace MonumentMap
         }
 
 
-                            /*********************
-                            * Map event handlers *
-                            * *******************/
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+
+                        /*********************
+                        * Map event handlers *
+                        * *******************/
 
         //na dupli klik se ubaci pin na mapu - za sad
         private void worldMap_MouseDoubleClick(object sender, MouseButtonEventArgs e)

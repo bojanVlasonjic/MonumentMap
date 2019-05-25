@@ -6,7 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MonumentMap"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800">
+        WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Width="1000" Height="700">
 
     <!-- Dekorisanje pinova na mapi -->
     <Window.Resources>
@@ -44,7 +45,7 @@
 
             <!-- Prozor za dodavanje novih spomenika -->
             <Canvas x:Name="newMonumentCanvas"  Panel.ZIndex="99" DockPanel.Dock="Left">
-                <StackPanel Width="400" x:Name="newMonumentHolder" Canvas.Left="-400" Background="#001a33" Height="{Binding ActualHeight, ElementName=newMonumentCanvas}" RenderTransformOrigin="0.521,0.275">
+                <StackPanel Width="420" x:Name="newMonumentHolder" Canvas.Left="-420" Background="#001a33" Height="{Binding ActualHeight, ElementName=newMonumentCanvas}" RenderTransformOrigin="0.521,0.275">
                     <!-- Zaglavlje prozora-->
                     <Grid Height="55">
                         <Label VerticalAlignment="Center" HorizontalAlignment="Left" Content="Add new monument" Foreground="White"
@@ -62,29 +63,72 @@
                         <Image Source="icons/monument-icon.png" Height="48" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,30,22,42"/>
                         <Rectangle VerticalAlignment="Bottom" Stroke="White"></Rectangle>
                     </Grid>
+                    
+                    <ScrollViewer x:Name="newMonumentScrollBar" VerticalScrollBarVisibility="Hidden"  Height="494">
+                        <!-- Forma za dodavanje novog spomenika -->
+                        <Grid x:Name="newMonumentForm" Height="500" ScrollViewer.CanContentScroll="True">
+                            
+                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
 
-                    <!-- Forma za dodavanje novog spomenika -->
-                    <ScrollViewer VerticalScrollBarVisibility="Hidden" VerticalAlignment="Stretch" Height="295">
+                            <Label Content="ID:" Height="30"  Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,32,243,379"/>
+                            <TextBox x:Name="monumentID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Margin="216,32,117,388"/>
 
-                        <Grid x:Name="newMonumentForm">
-                            <Label Content="ID:" Height="30"  Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="72,28,215,375"/>
-                            <TextBox x:Name="monumentID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Margin="195,32,138,388"/>
+                            <Label Content="Name:" Height="30" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,67,254,344"/>
+                            <TextBox x:Name="monumentName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Margin="216,67,26,352" ToolTip="dfdsfs"/>
 
-                            <Label Content="Name:" Height="30" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="72,63,224,340"/>
-                            <TextBox x:Name="monumentName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Margin="195,67,47,352" ToolTip="dfdsfs"/>
+                            <Label Content="Description:" Height="30" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,102,233,309"/>
+                            <TextBox x:Name="monumentDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="100"
+                                     HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="216,102,26,259" Height="80"/>
 
-                            <Label Content="Description:" Height="30" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="72,100,192,298"/>
-                            <TextBox x:Name="monumentDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="75"
-                                     HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="195,102,47,251"/>
+                            <Label Content="Type:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,206,254,209"/>
+                            <ComboBox x:Name="monumentType" FontSize="{Binding WindowConstants.FormFontSize}" Margin="216,206,26,209"/>
 
-                            <Label Content="Type:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="72,206,215,209"/>
-                            <ComboBox x:Name="monumentType" FontSize="{Binding WindowConstants.FormFontSize}" Margin="195,206,47,209"/>
+                            <Label Content="Climate:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,248,254,167"/>
+                            <ComboBox x:Name="climateType" FontSize="{Binding WindowConstants.FormFontSize}" Margin="216,248,26,169"/>
 
-                            <Label Content="Climate:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="72,248,215,167"/>
-                            <ComboBox x:Name="climateType" FontSize="{Binding WindowConstants.FormFontSize}" Margin="195,248,47,169"/>
+                            <Label Content="Eco endangered:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,292,205,123"/>
+                            <RadioButton x:Name="radioEcoPosBtn" Content="Yes" HorizontalAlignment="Left" Margin="256,298,0,0" VerticalAlignment="Top"
+                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="eco"/>
+                            <RadioButton x:Name="radioEcoNegBtn" Content="No" HorizontalAlignment="Right" Margin="0,298,38,0" VerticalAlignment="Top"
+                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="eco"/>
+
+                            <Label Content="In human settlement:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,324,205,91"/>
+                            <RadioButton x:Name="radioSettlementPosBtn" Content="Yes" HorizontalAlignment="Left" Margin="256,330,0,0" VerticalAlignment="Top"
+                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="settlement"/>
+                            <RadioButton x:Name="radioSettlementNegBtn" Content="No" HorizontalAlignment="Right" Margin="0,330,38,0" VerticalAlignment="Top"
+                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="settlement" />
+
+                            <Label Content="Has endangered species:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,360,216,55"/>
+                            <RadioButton x:Name="radioSpeciesPosBtn" Content="Yes" HorizontalAlignment="Left" Margin="256,366,0,0" VerticalAlignment="Top"
+                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species"/>
+                            <RadioButton x:Name="radioSpeciesNegBtn" Content="No" HorizontalAlignment="Left" Margin="347,366,0,0" VerticalAlignment="Top"
+                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species"/>
+
+                            <Label Content="Tourist status:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,405,216,10"/>
+                            <ComboBox x:Name="touristStatus" FontSize="{Binding WindowConstants.FormFontSize}" Margin="216,405,26,12"/>
+
+                            <Label Content="Annual income:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,5,216,20" Grid.Row="1"/>
+                            <TextBox x:Name="annualIncome" Text="" FontSize="{Binding WindowConstants.FormFontSize}"
+                                     Margin="216,7,117,30"  PreviewTextInput="NumberValidationTextBox" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
+                                <TextBox.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleY="-1"/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </TextBox.RenderTransform>
+                            </TextBox>
                         </Grid>
                     </ScrollViewer>
-                    
+
                 </StackPanel>
             </Canvas>
 
