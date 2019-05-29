@@ -45,91 +45,134 @@
 
             <!-- Prozor za dodavanje novih spomenika -->
             <Canvas x:Name="newMonumentCanvas"  Panel.ZIndex="99" DockPanel.Dock="Left">
-                <StackPanel Width="420" x:Name="newMonumentHolder" Canvas.Left="-420" Background="#001a33" Height="{Binding ActualHeight, ElementName=newMonumentCanvas}" RenderTransformOrigin="0.521,0.275">
-                    <!-- Zaglavlje prozora-->
-                    <Grid Height="55">
-                        <Label VerticalAlignment="Center" HorizontalAlignment="Left" Content="Add new monument" Foreground="White"
-                               FontSize="{Binding WindowConstants.HeaderFontSize}" FontWeight="SemiBold" Margin="10,8,0,10"/>
-                        <Button x:Name="closeNewMonumWindowBtn" Width="60" Height="40" VerticalAlignment="Center" HorizontalAlignment="Right" FontWeight="SemiBold"
-                                ToolTip="Close window" Foreground="White" Content="Close" Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}"
-                                Margin="0,5,10,10" BorderThickness="0" Click="closeNewMonumWindowBtn_Click"/>
-                        <Rectangle VerticalAlignment="Bottom" Fill="White" Height="1"></Rectangle>
-                    </Grid>
+                <ScrollViewer x:Name="newMonumentHolder" VerticalScrollBarVisibility="Hidden" Width="420" Canvas.Left="-420"  Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Border}},Path=ActualHeight}" CanContentScroll="True">
+                    <StackPanel  Height="670" Background="#001a33">
+                        <!-- Zaglavlje prozora-->
+                        <Grid x:Name="newMonumentHeader" Height="40">
 
-                    <!-- Slika i ikonica -->
-                    <Grid Height="120">
-                        <Image Source="icons/default-monument.jpg" VerticalAlignment="Center" HorizontalAlignment="Left" Width="181"/>
-                        <Rectangle VerticalAlignment="Stretch" Stroke="White" Width="2" Margin="294,0,105,0"/>
-                        <Image Source="icons/monument-icon.png" Height="48" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,30,22,42"/>
-                        <Rectangle VerticalAlignment="Bottom" Stroke="White"></Rectangle>
-                    </Grid>
-                    
-                    <ScrollViewer x:Name="newMonumentScrollBar" VerticalScrollBarVisibility="Hidden"  Height="494">
-                        <!-- Forma za dodavanje novog spomenika -->
-                        <Grid x:Name="newMonumentForm" Height="500" ScrollViewer.CanContentScroll="True">
-                            
-                            
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Label Content="ID:" Height="30"  Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,32,243,379"/>
-                            <TextBox x:Name="monumentID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Margin="216,32,117,388"/>
+                            <Label VerticalAlignment="Center" HorizontalAlignment="Left" Content="Add new monument" Foreground="White"
+                               FontSize="{Binding WindowConstants.HeaderFontSize}" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0"/>
 
-                            <Label Content="Name:" Height="30" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,67,254,344"/>
-                            <TextBox x:Name="monumentName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Margin="216,67,26,352" ToolTip="dfdsfs"/>
-
-                            <Label Content="Description:" Height="30" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,102,233,309"/>
-                            <TextBox x:Name="monumentDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="100"
-                                     HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Margin="216,102,26,259" Height="80"/>
-
-                            <Label Content="Type:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,206,254,209"/>
-                            <ComboBox x:Name="monumentType" FontSize="{Binding WindowConstants.FormFontSize}" Margin="216,206,26,209"/>
-
-                            <Label Content="Climate:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,248,254,167"/>
-                            <ComboBox x:Name="climateType" FontSize="{Binding WindowConstants.FormFontSize}" Margin="216,248,26,169"/>
-
-                            <Label Content="Eco endangered:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,292,205,123"/>
-                            <RadioButton x:Name="radioEcoPosBtn" Content="Yes" HorizontalAlignment="Left" Margin="256,298,0,0" VerticalAlignment="Top"
-                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="eco"/>
-                            <RadioButton x:Name="radioEcoNegBtn" Content="No" HorizontalAlignment="Right" Margin="0,298,38,0" VerticalAlignment="Top"
-                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="eco"/>
-
-                            <Label Content="In human settlement:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,324,205,91"/>
-                            <RadioButton x:Name="radioSettlementPosBtn" Content="Yes" HorizontalAlignment="Left" Margin="256,330,0,0" VerticalAlignment="Top"
-                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="settlement"/>
-                            <RadioButton x:Name="radioSettlementNegBtn" Content="No" HorizontalAlignment="Right" Margin="0,330,38,0" VerticalAlignment="Top"
-                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="settlement" />
-
-                            <Label Content="Has endangered species:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,360,216,55"/>
-                            <RadioButton x:Name="radioSpeciesPosBtn" Content="Yes" HorizontalAlignment="Left" Margin="256,366,0,0" VerticalAlignment="Top"
-                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species"/>
-                            <RadioButton x:Name="radioSpeciesNegBtn" Content="No" HorizontalAlignment="Left" Margin="347,366,0,0" VerticalAlignment="Top"
-                                         Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species"/>
-
-                            <Label Content="Tourist status:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,405,216,10"/>
-                            <ComboBox x:Name="touristStatus" FontSize="{Binding WindowConstants.FormFontSize}" Margin="216,405,26,12"/>
-
-                            <Label Content="Annual income:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="10,5,216,20" Grid.Row="1"/>
-                            <TextBox x:Name="annualIncome" Text="" FontSize="{Binding WindowConstants.FormFontSize}"
-                                     Margin="216,7,117,30"  PreviewTextInput="NumberValidationTextBox" RenderTransformOrigin="0.5,0.5" Grid.Row="1">
-                                <TextBox.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform ScaleY="-1"/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform/>
-                                    </TransformGroup>
-                                </TextBox.RenderTransform>
-                            </TextBox>
+                            <Button x:Name="closeNewMonumWindowBtn" Width="60" Height="40" VerticalAlignment="Center" FontWeight="SemiBold" HorizontalAlignment="Right"
+                                ToolTip="Close window" Foreground="White" Content="Close" Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}"
+                                Grid.Row="0" Grid.Column="1"  BorderThickness="0" Click="closeNewMonumWindowBtn_Click"/>
                         </Grid>
-                    </ScrollViewer>
 
-                </StackPanel>
+                        <!-- Slika i ikonica -->
+                        <Border BorderBrush="White" BorderThickness="2">
+                            <Grid x:Name="newMonumentPicAndIcon" Margin="0,15,0,0" Height="150">
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="280"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="140" />
+                                </Grid.RowDefinitions>
+
+                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Grid.Row="0" Grid.Column="1" Width="3" HorizontalAlignment="Left"/>
+                                <Image Source="icons/default-monument.jpg" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
+                                <Button Grid.Row="0" x:Name="changeMonumPicBtn" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="120" ToolTip="Change monument picture"
+                                        Height="25" Content="Change picture" Foreground="White" Background="#043c96" Opacity="0.7" FontSize="15" Click="changeMonumPicBtn_Click"/>
+
+                                <Image Source="icons/monument-icon.png" Height="48" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
+                                <Button Grid.Row="0" x:Name="changeMonumIconBtn" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="100"
+                                        Height="25" Content="Change icon" Foreground="White" Background="#043c96" Opacity="0.7" FontSize="15" Click="changeMonumIconBtn_Click" ToolTip="Change monument icon"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Forma za dodavanje novog spomenika -->
+                        <Grid x:Name="newMonumentForm" Margin="0,15,0,0">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Label Content="ID:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}"  Grid.Column="0" Grid.Row="0"/>
+                            <TextBox x:Name="monumentID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Column="1" Grid.Row="0"/>
+
+                            <Label Content="Name:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="2" Grid.Column="0"/>
+                            <TextBox x:Name="monumentName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="2" Grid.Column="1"/>
+
+                            <Label Content="Description:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0"/>
+                            <TextBox x:Name="monumentDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="100"
+                                    HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="4" Grid.Column="1" Height="80"/>
+
+                            <Label Content="Type:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="0"/>
+                            <ComboBox x:Name="monumentType" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="1"/>
+
+                            <Label Content="Climate:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="0"/>
+                            <ComboBox x:Name="climateType" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="1"/>
+
+                            <Label Content="Eco endangered:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="10" Grid.Column="0"/>
+                            <RadioButton x:Name="radioEcoPosBtn" Content="Yes" HorizontalAlignment="Left" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center"
+                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="eco" Margin="20, 0"/>
+                            <RadioButton x:Name="radioEcoNegBtn" Content="No" HorizontalAlignment="Right" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center"
+                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="eco" Margin="20, 0" IsChecked="True"/>
+
+                            <Label Content="In human settlement:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="12" Grid.Column="0"/>
+                            <RadioButton x:Name="radioSettlementPosBtn" Content="Yes" HorizontalAlignment="Left" Grid.Row="12" Grid.Column="1" VerticalAlignment="Center"
+                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="settlement" Margin="20, 0"/>
+                            <RadioButton x:Name="radioSettlementNegBtn" Content="No" HorizontalAlignment="Right" Grid.Row="12" Grid.Column="1" VerticalAlignment="Center"
+                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="settlement" Margin="20, 0" IsChecked="True"/>
+
+                            <Label Content="Has endangered species:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="14" Grid.Column="0"/>
+                            <RadioButton x:Name="radioSpeciesPosBtn" Content="Yes" HorizontalAlignment="Left" Grid.Row="14" Grid.Column="1" VerticalAlignment="Center"
+                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species" Margin="20, 0"/>
+                            <RadioButton x:Name="radioSpeciesNegBtn" Content="No" HorizontalAlignment="Right" Grid.Row="14" Grid.Column="1" VerticalAlignment="Center"
+                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species" Margin="20, 0" IsChecked="True"/>
+
+                            <Label Content="Tourist status:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="16" Grid.Column="0"/>
+                            <ComboBox x:Name="touristStatus" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="16" Grid.Column="1"/>
+
+                            <Label Content="Annual income ($):" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="18" Grid.Column="0"/>
+                            <TextBox x:Name="annualIncome" Text="" FontSize="{Binding WindowConstants.FormFontSize}" PreviewTextInput="NumberValidationTextBox" Grid.Row="18" Grid.Column="1"/>
+
+                            <Label Content="Discovery date:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="20" Grid.Column="0"/>
+                            <DatePicker x:Name="discoveryDate" Grid.Row="20" Grid.Column="1" FirstDayOfWeek="Monday" FontSize="{Binding WindowConstants.FormFontSize}" ToolTip="etc 31-Dec-2000"></DatePicker>
+
+                            <Button x:Name="addMonumentBtn" Grid.Row="22" Grid.Column="0" ToolTip="Add new monument" VerticalAlignment="Center" Width="120"
+                                Content="Add monument" Foreground="White" Background="#043c96" Height="30" FontSize="{Binding WindowConstants.FormFontSize}" Click="addMonumentBtn_Click"/>
+                            <Button x:Name="addTagBtn" Grid.Row="22" Grid.Column="1" ToolTip="Add tag to new monument" Width="100"  VerticalAlignment="Center"
+                                Content="Add tag"  Foreground="White" Background="#043c96" Height="30" FontSize="{Binding WindowConstants.FormFontSize}" Click="addTagBtn_Click"/>
+                        </Grid>
+
+                    </StackPanel>
+                </ScrollViewer>
             </Canvas>
 
             <!-- TOOLBAR -->

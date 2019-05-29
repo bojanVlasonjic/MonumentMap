@@ -17,6 +17,7 @@ using System.Windows.Controls.Primitives;
 using Microsoft.Maps.MapControl.WPF; /* Direktiva za mapu i njene elemente */
 using System.Windows.Media.Animation;
 using System.Text.RegularExpressions;
+using System.Collections.ObjectModel; //observable collections
 
 namespace MonumentMap
 {
@@ -33,6 +34,9 @@ namespace MonumentMap
         public bool isNewMonumentWindowShown = false;
 
 
+        /***************** Observable collections *****************/
+        public ObservableCollection<Monument> observ_monuments;
+        //TODO: za tipove spomenika i tagove kolekcija
 
 
         public MainWindow()
@@ -50,7 +54,15 @@ namespace MonumentMap
        
         private void onLoad()
         {
-            WindowConstants = new WindowConstants(18, 15); //initializing font size
+            
+            WindowConstants = new WindowConstants();
+            observ_monuments = new ObservableCollection<Monument>();
+
+            /* Initializing font sizes */
+        WindowConstants.HeaderFontSize = 18;
+            WindowConstants.FormFontSize = 16; //do 18 je ok
+
+            WindowConstants.RowSpacing = 18; //setting space between rows in grid
 
             //inserting enums to comboboxes
             climateType.ItemsSource = Enum.GetValues(typeof(ClimateType)).Cast<ClimateType>();
@@ -82,7 +94,7 @@ namespace MonumentMap
 
 
                         /*********************
-                        * Map event handlers *
+                        * MAP EVENT HANDLERS *
                         * *******************/
 
         //na dupli klik se ubaci pin na mapu - za sad
@@ -124,7 +136,7 @@ namespace MonumentMap
 
 
                     /**********************************
-                    * Animation button event handlers *
+                    * ANIMATION BUTTONE EVENT HANDLERS *
                     * *********************************/
 
         private void closeNewMonumWindowBtn_Click(object sender, RoutedEventArgs e)
@@ -160,6 +172,33 @@ namespace MonumentMap
                 newMonumentHolder.BeginAnimation(Canvas.LeftProperty, double_anim);
                 isNewMonumentWindowShown = true;
             }
+        }
+
+
+                    /*************************
+                    * BUTTON ON_CLICK EVENTS *
+                    * ***********************/
+
+        private void changeMonumIconBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: proveriti dimenzije slike koja se upload-uje
+        }
+
+        private void changeMonumPicBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: proveriti dimenzije ikonice koja se upload-uje
+        }
+
+        private void addMonumentBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: proveriti da li su polja prazna
+            //TODO: proveri da li unesena sifra postoji
+            //TODO: kreirati novi spomenik i dodati ga u observable collection
+        }
+
+        private void addTagBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //dodavanje neke od postojecih etiketa spomeniku
         }
     }
 }

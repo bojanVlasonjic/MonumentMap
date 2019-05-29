@@ -12,6 +12,13 @@ namespace MonumentMap
     {
         private double _header_font_size { get; set; }
         private double _form_font_size { get; set; }
+        private double _row_spacing { get; set; }
+
+
+        public WindowConstants()
+        {
+
+        }
 
         public WindowConstants(int headerFontSize, int formLabelsSize)
         {
@@ -41,6 +48,17 @@ namespace MonumentMap
             {
                 _form_font_size = value;
                 OnPropertyChanged(nameof(FormFontSize));
+            }
+        }
+
+        public double RowSpacing
+        {
+            get { return _row_spacing; }
+
+            set
+            {
+                _row_spacing = value;
+                OnPropertyChanged(nameof(RowSpacing));
             }
         }
 
