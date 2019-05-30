@@ -18,6 +18,7 @@ using Microsoft.Maps.MapControl.WPF; /* Direktiva za mapu i njene elemente */
 using System.Windows.Media.Animation;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel; //observable collections
+using System.Windows.Threading;
 
 namespace MonumentMap
 {
@@ -27,8 +28,9 @@ namespace MonumentMap
     public partial class MainWindow : Window
     {
 
-        //sluzi za databinding na neke konstante, npr velicina fonta, dimenzija prozora... 
+        /************************** Databinding objects **************************/
         public WindowConstants WindowConstants { get; set; }
+        public CanvasPositions CanvasPositions { get; set; }
 
         /******** Booleans indicating whether pop-up windows are shown ********/
         public bool isNewMonumentWindowShown = false;
@@ -39,50 +41,68 @@ namespace MonumentMap
         //TODO: za tipove spomenika i tagove kolekcija
 
 
+        private double mainWindowHeight;
+        private double mainWindowWidth;
+
+
+        /******************* Timers *******************/
+        static DispatcherTimer userNotificationTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(4)
+        };
+
+
         public MainWindow()
         {
             InitializeComponent();
 
-            DataContext = this;  
+            DataContext = this;
+
+            mainWindowHeight = Height;
+            mainWindowWidth = Width;
 
             worldMap.MouseDoubleClick += new MouseButtonEventHandler(worldMap_MouseDoubleClick);
             worldMap.ViewChangeOnFrame += new EventHandler<MapEventArgs>(worldMap_ViewChangeOnFrame);
+            this.SizeChanged += OnWindowSizeChanged;
 
             onLoad();
         }
 
-       
+
         private void onLoad()
         {
             
             WindowConstants = new WindowConstants();
+            CanvasPositions = new CanvasPositions();
             observ_monuments = new ObservableCollection<Monument>();
 
             /* Initializing font sizes */
-        WindowConstants.HeaderFontSize = 18;
+            WindowConstants.HeaderFontSize = 20;
             WindowConstants.FormFontSize = 16; //do 18 je ok
 
             WindowConstants.RowSpacing = 18; //setting space between rows in grid
+
+            /* Initializing pop-up window positions */
+            centerPopUpWindows();
 
             //inserting enums to comboboxes
             climateType.ItemsSource = Enum.GetValues(typeof(ClimateType)).Cast<ClimateType>();
             touristStatus.ItemsSource = Enum.GetValues(typeof(TouristStatus)).Cast<TouristStatus>();
         }
 
-        //uklanjanje overflow-a na ikonicama toolbar-a
-        private void ToolBar_Loaded(object sender, RoutedEventArgs e)
+
+        private void centerPopUpWindows()
         {
-            ToolBar toolBar = sender as ToolBar;
-            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
-            if (overflowGrid != null)
-            {
-                overflowGrid.Visibility = Visibility.Collapsed;
-            }
-            var mainPanelBorder = toolBar.Template.FindName("MainPanelBorder", toolBar) as FrameworkElement;
-            if (mainPanelBorder != null)
-            {
-                mainPanelBorder.Margin = new Thickness();
-            }
+            CanvasPositions.Top = (mainWindowHeight / 2) - (newMonumTypeGrid.Height / 2);
+            CanvasPositions.Left = (mainWindowWidth / 2) - (newMonumTypeGrid.Width / 2);
+        }
+
+
+        protected void OnWindowSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            mainWindowHeight = e.NewSize.Height;
+            mainWindowWidth = e.NewSize.Width;
+            centerPopUpWindows();
         }
 
 
@@ -199,6 +219,50 @@ namespace MonumentMap
         private void addTagBtn_Click(object sender, RoutedEventArgs e)
         {
             //dodavanje neke od postojecih etiketa spomeniku
+        }
+
+        private void newTagBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void newMonumentTypeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            newMonumTypeGrid.Visibility = Visibility.Visible;
+        }
+
+        private void monumentTypeBrowseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension and default file extension
+            dlg.DefaultExt = ".txt";
+            dlg.Filter = "Icon Files (*.png, *.svg, *.eps, *.psd)|*.png;*.svg;*.eps;*.psd";
+
+            // Display OpenFileDialog by calling ShowDialog method
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Get the selected file name and display in a TextBox
+            if (result == true)
+            {
+                // Open document
+                string filePath = dlg.FileName;
+                monumentTypeIconPath.Text = filePath; //place the icon path to hidden text box to remember it
+
+                int fileNameIndex = filePath.LastIndexOf("\\");
+                monumentTypeIconName.Text = filePath.Substring(fileNameIndex + 1); //extract the icon name and display it
+            }
+        }
+
+        private void addMonumentTypeBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void cancelMonumentTypeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: isprazni input polja
+            newMonumTypeGrid.Visibility = Visibility.Hidden;
         }
     }
 }

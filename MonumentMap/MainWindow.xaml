@@ -41,11 +41,63 @@
         </Page.Resources>
 
         <!-- Glavni panel -->
-        <DockPanel x:Name="mainPanel"  Background="#205770">
-
+        <Grid>
             <!-- Prozor za dodavanje novih spomenika -->
-            <Canvas x:Name="newMonumentCanvas"  Panel.ZIndex="99" DockPanel.Dock="Left">
-                <ScrollViewer x:Name="newMonumentHolder" VerticalScrollBarVisibility="Hidden" Width="420" Canvas.Left="-420"  Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Border}},Path=ActualHeight}" CanContentScroll="True">
+            <Canvas x:Name="newMonumentCanvas"  Panel.ZIndex="99" HorizontalAlignment="Stretch">
+
+                <!-- Prozor za dodavanje novog tipa spomenika -->
+                <Grid x:Name="newMonumTypeGrid" Width="500" Height="400" Background="#001a33" Canvas.Top="{Binding CanvasPositions.Top}"
+                      Canvas.Left="{Binding CanvasPositions.Left}" Visibility="Hidden">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Foreground="White" Text="Add new monument type" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center"
+                               FontSize="{Binding WindowConstants.HeaderFontSize}"  HorizontalAlignment="Center"/>
+
+                    <Label Content="ID:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Column="0" Grid.Row="2" Margin="5"/>
+                    <TextBox x:Name="monumentTypeID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Margin="0,0,10,0"
+                             Grid.Column="1" Grid.Row="2"  Width="100" HorizontalAlignment="Left"/>
+
+                    <Label Content="Name:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="4" Grid.Column="0" Margin="5"/>
+                    <TextBox x:Name="monumentTypeName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="4" Grid.Column="1" Margin="0,0,10,0"/>
+
+                    <Label Content="Description:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Top" Margin="5" Grid.Row="6" Grid.Column="0"/>
+                    <TextBox x:Name="monumentTypeDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="200" Margin="0,0,10,0"
+                                    HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="6" Grid.Column="1" Height="80" />
+
+                    <Label Content="Select icon:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="5" Grid.Row="8" Grid.Column="0"></Label>
+                    <Button x:Name="monumentTypeBrowseBtn" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right"
+                            Width="70" Content="Browse" Height="36" VerticalAlignment="Center" Click="monumentTypeBrowseBtn_Click"></Button>
+                    <TextBlock x:Name="monumentTypeIconName" Foreground="White" HorizontalAlignment="Left" FontSize="{Binding WindowConstants.FormFontSize}"
+                               Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" Margin="10" Width="Auto"></TextBlock>
+
+                    <!-- Skriveni textBox koji cuva putanju do ikonice -->
+                    <TextBox x:Name="monumentTypeIconPath" Grid.Row="9" Grid.ColumnSpan="2" Width="200" Visibility="Hidden" IsReadOnly="True"></TextBox>
+
+                    <Button x:Name="addMonumentTypeBtn" Foreground="White" Background="Blue" Content="Add type" Grid.Column="0" Grid.Row="10"
+                            Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="addMonumentTypeBtn_Click"></Button>
+                    <Button x:Name="cancelMonumentTypeBtn" Foreground="White" Background="Blue" Content="Cancel" Grid.Column="1" Grid.Row="10"
+                            Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Margin="50,7,50,0" Click="cancelMonumentTypeBtn_Click" ></Button>
+                </Grid>
+
+                <ScrollViewer x:Name="newMonumentHolder" VerticalScrollBarVisibility="Hidden" Width="420" Canvas.Left="-420"  Height="673" CanContentScroll="True" Canvas.Top="-3">
                     <StackPanel  Height="670" Background="#001a33">
                         <!-- Zaglavlje prozora-->
                         <Grid x:Name="newMonumentHeader" Height="40">
@@ -79,7 +131,7 @@
                                 </Grid.RowDefinitions>
 
                                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Grid.Row="0" Grid.Column="1" Width="3" HorizontalAlignment="Left"/>
-                                <Image Source="icons/default-monument.jpg" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
+                                <Image Source="pictures/default-monument.jpg" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
                                 <Button Grid.Row="0" x:Name="changeMonumPicBtn" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="120" ToolTip="Change monument picture"
                                         Height="25" Content="Change picture" Foreground="White" Background="#043c96" Opacity="0.7" FontSize="15" Click="changeMonumPicBtn_Click"/>
 
@@ -129,7 +181,7 @@
                             <TextBox x:Name="monumentName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="2" Grid.Column="1"/>
 
                             <Label Content="Description:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0"/>
-                            <TextBox x:Name="monumentDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="100"
+                            <TextBox x:Name="monumentDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="200"
                                     HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="4" Grid.Column="1" Height="80"/>
 
                             <Label Content="Type:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="0"/>
@@ -163,7 +215,8 @@
                             <TextBox x:Name="annualIncome" Text="" FontSize="{Binding WindowConstants.FormFontSize}" PreviewTextInput="NumberValidationTextBox" Grid.Row="18" Grid.Column="1"/>
 
                             <Label Content="Discovery date:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="20" Grid.Column="0"/>
-                            <DatePicker x:Name="discoveryDate" Grid.Row="20" Grid.Column="1" FirstDayOfWeek="Monday" FontSize="{Binding WindowConstants.FormFontSize}" ToolTip="etc 31-Dec-2000"></DatePicker>
+                            <DatePicker x:Name="discoveryDate" Grid.Row="20" Grid.Column="1" FirstDayOfWeek="Monday" FontSize="{Binding WindowConstants.FormFontSize}"
+                                       Focusable="False" ToolTip="Click calendar icon to select date"></DatePicker>
 
                             <Button x:Name="addMonumentBtn" Grid.Row="22" Grid.Column="0" ToolTip="Add new monument" VerticalAlignment="Center" Width="120"
                                 Content="Add monument" Foreground="White" Background="#043c96" Height="30" FontSize="{Binding WindowConstants.FormFontSize}" Click="addMonumentBtn_Click"/>
@@ -175,20 +228,54 @@
                 </ScrollViewer>
             </Canvas>
 
-            <!-- TOOLBAR -->
-            <ToolBarTray DockPanel.Dock="Top" ToolBarTray.IsLocked="True" Grid.Row="1" Background="#001a33">
-                <ToolBar Background="#e6f3ff" ToolBar.OverflowMode="Never" Loaded="ToolBar_Loaded" ToolTipService.ToolTip="Add new monument">
-                    <Button x:Name="newMonumentBtn" Click="newMonumentBtn_Click">
-                        <Image Source="icons/monument-icon.png" Height="25" />
-                    </Button>
-                </ToolBar>
-            </ToolBarTray>
+            <DockPanel x:Name="mainPanel"  Background="#001a33">
 
-            <!-- BING MAPA -->
-            <Grid>
-                <m:Map x:Name="worldMap" ZoomLevel="2.5"  Mode="AerialWithLabels" CredentialsProvider="AtDk4CCssn5oeGv1MfzEWA_LA9eulE9bDLI6VdfGkcnCi6ydlDX0LT-jNXskoIV_" RenderTransformOrigin="0.5,0.5"/>
-            </Grid>
-        </DockPanel>
+                <!-- TOOLBAR -->
+                <Grid DockPanel.Dock="Top">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <!-- Nov spomenik -->
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <!-- Nov tip spomenika -->
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <!-- Novi tip tag -->
+                        <ColumnDefinition></ColumnDefinition>
+                        <!-- Pretraga -->
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Button x:Name="newMonumentBtn" Click="newMonumentBtn_Click" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Width="50"
+                        Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new monument" BorderThickness="0">
+                        <Image Source="icons/monument-icon.png" Height="35"/>
+                    </Button>
+
+                    <Button x:Name="newMonumentTypeBtn" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Width="50"
+                        Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new type of monument" BorderThickness="0" Click="newMonumentTypeBtn_Click">
+                        <Image Source="icons/type.png" Height="35"/>
+                    </Button>
+
+                    <Button x:Name="newTagBtn" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" Width="50"
+                        Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new tag" BorderThickness="0" Click="newTagBtn_Click">
+                        <Image Source="icons/blue-tag.png" Height="35"/>
+                    </Button>
+
+
+                    <TextBlock x:Name="UserNotificationMessage" Foreground="White" Opacity="0" VerticalAlignment="Center" Grid.Row="0" Grid.Column="3" FontSize="{Binding WindowConstants.HeaderFontSize}"></TextBlock>
+
+                </Grid>
+
+
+                <!-- BING MAPA -->
+                <Grid>
+                    <m:Map x:Name="worldMap" ZoomLevel="2.5"  Mode="AerialWithLabels" CredentialsProvider="AtDk4CCssn5oeGv1MfzEWA_LA9eulE9bDLI6VdfGkcnCi6ydlDX0LT-jNXskoIV_" RenderTransformOrigin="0.5,0.5"/>
+                </Grid>
+
+            </DockPanel>
+        </Grid>
     </Page>
 
 </Window>

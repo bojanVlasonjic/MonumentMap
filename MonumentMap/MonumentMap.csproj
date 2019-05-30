@@ -69,6 +69,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CanvasPositions.cs" />
+    <Compile Include="MonumentTag.cs" />
     <Compile Include="WindowConstants.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -109,7 +111,13 @@
     <Resource Include="icons\monument-icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icons\default-monument.jpg" />
+    <Resource Include="pictures\default-monument.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\blue-tag.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\type.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
