@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MonumentMap"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="MainWindow" Width="1000" Height="700">
@@ -42,8 +43,8 @@
 
         <!-- Glavni panel -->
         <Grid>
-            <!-- Prozor za dodavanje novih spomenika -->
-            <Canvas x:Name="newMonumentCanvas"  Panel.ZIndex="99" HorizontalAlignment="Stretch">
+           <!-- Canvas koji prekriva glavni prozor -->
+            <Canvas x:Name="mainCanvas"  Panel.ZIndex="99" HorizontalAlignment="Stretch">
 
                 <!-- Prozor za dodavanje novog tipa spomenika -->
                 <Grid x:Name="newMonumTypeGrid" Width="500" Height="400" Background="#001a33" Canvas.Top="{Binding CanvasPositions.Top}"
@@ -96,11 +97,56 @@
                     <Button x:Name="cancelMonumentTypeBtn" Foreground="White" Background="Blue" Content="Cancel" Grid.Column="1" Grid.Row="10"
                             Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Margin="50,7,50,0" Click="cancelMonumentTypeBtn_Click" ></Button>
                 </Grid>
+                
+                <!-- Prozor za dodavanje novog Tag-a -->
+                <Grid x:Name="newTagGrid" Width="500" Height="400" Background="#001a33" Canvas.Top="{Binding CanvasPositions.Top}"
+                      Canvas.Left="{Binding CanvasPositions.Left}" Visibility="Hidden">
 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Foreground="White" Text="Add new tag" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center"
+                               FontSize="{Binding WindowConstants.HeaderFontSize}"  HorizontalAlignment="Center"/>
+
+                    <Label Content="ID:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Column="0" Grid.Row="2" Margin="5"/>
+                    <TextBox x:Name="tagID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Margin="0,0,10,0"
+                             Grid.Column="1" Grid.Row="2"  Width="100" HorizontalAlignment="Left"/>
+
+                    <Label Content="Description:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0"/>
+                    <TextBox x:Name="tagDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="200"
+                                    HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="4" Grid.Column="1" Height="80"/>
+
+                    <Label Content="Select color:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="0"/>
+                    <xctk:ColorPicker Name="ColorPicker_Tag" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="250" SelectedColorChanged="selectedColorChanged"/>
+
+                    <TextBox x:Name="tagColorCode" Grid.Row="7" Grid.ColumnSpan="2" Visibility="Hidden"></TextBox>
+
+                    <Button x:Name="addTagBtn" Foreground="White" Background="Blue" Content="Add tag" Grid.Column="0" Grid.Row="8"
+                            Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="addTagBtn_Click_1"></Button>
+                    <Button x:Name="cancelTagBtn" Foreground="White" Background="Blue" Content="Cancel" Grid.Column="1" Grid.Row="8"
+                            Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="cancelTagBtn_Click"></Button>
+
+                </Grid>
+
+                <!-- Prozor za dodavanje novih spomenika -->
                 <ScrollViewer x:Name="newMonumentHolder" VerticalScrollBarVisibility="Hidden" Width="420" Canvas.Left="-420"  Height="673" CanContentScroll="True" Canvas.Top="-3">
                     <StackPanel  Height="670" Background="#001a33">
                         <!-- Zaglavlje prozora-->
-                        <Grid x:Name="newMonumentHeader" Height="40">
+                        <Grid x:Name="newMonumentHeader" Height="Auto">
 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
@@ -215,13 +261,13 @@
                             <TextBox x:Name="annualIncome" Text="" FontSize="{Binding WindowConstants.FormFontSize}" PreviewTextInput="NumberValidationTextBox" Grid.Row="18" Grid.Column="1"/>
 
                             <Label Content="Discovery date:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="20" Grid.Column="0"/>
-                            <DatePicker x:Name="discoveryDate" Grid.Row="20" Grid.Column="1" FirstDayOfWeek="Monday" FontSize="{Binding WindowConstants.FormFontSize}"
-                                       Focusable="False" ToolTip="Click calendar icon to select date"></DatePicker>
+                            <local:CustomDatePicker x:Name="discoveryDate" Grid.Row="20" Grid.Column="1" FirstDayOfWeek="Monday" FontSize="{Binding WindowConstants.FormFontSize}"
+                                       Focusable="False" ToolTip="Click calendar icon to select date" WatermarkText="Click calendar icon"></local:CustomDatePicker>
 
                             <Button x:Name="addMonumentBtn" Grid.Row="22" Grid.Column="0" ToolTip="Add new monument" VerticalAlignment="Center" Width="120"
                                 Content="Add monument" Foreground="White" Background="#043c96" Height="30" FontSize="{Binding WindowConstants.FormFontSize}" Click="addMonumentBtn_Click"/>
-                            <Button x:Name="addTagBtn" Grid.Row="22" Grid.Column="1" ToolTip="Add tag to new monument" Width="100"  VerticalAlignment="Center"
-                                Content="Add tag"  Foreground="White" Background="#043c96" Height="30" FontSize="{Binding WindowConstants.FormFontSize}" Click="addTagBtn_Click"/>
+                            <Button x:Name="addTagToMonumentBtn" Grid.Row="22" Grid.Column="1" ToolTip="Add tag to new monument" Width="100"  VerticalAlignment="Center"
+                                Content="Add tag"  Foreground="White" Background="#043c96" Height="30" FontSize="{Binding WindowConstants.FormFontSize}" Click="addTagToMonumentBtn_Click" />
                         </Grid>
 
                     </StackPanel>

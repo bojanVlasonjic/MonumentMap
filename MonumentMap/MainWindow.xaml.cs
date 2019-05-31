@@ -44,6 +44,8 @@ namespace MonumentMap
         private double mainWindowHeight;
         private double mainWindowWidth;
 
+        static BrushConverter brushConverter = new BrushConverter();
+
 
         /******************* Timers *******************/
         static DispatcherTimer userNotificationTimer = new DispatcherTimer
@@ -223,35 +225,38 @@ namespace MonumentMap
 
         private void newTagBtn_Click(object sender, RoutedEventArgs e)
         {
+            
+            
+            newTagGrid.Visibility = Visibility.Visible;
+
+            //darkening background
+            //mainCanvas.Opacity = 0.90;
+            //mainCanvas.Background = Brushes.Black;
 
         }
 
         private void newMonumentTypeBtn_Click(object sender, RoutedEventArgs e)
         {
+            //darkening background
+            //mainCanvas.Opacity = 0.5;
+            //mainCanvas.Background = Brushes.Black;
+
             newMonumTypeGrid.Visibility = Visibility.Visible;
         }
 
         private void monumentTypeBrowseBtn_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
-            // Set filter for file extension and default file extension
-            dlg.DefaultExt = ".txt";
-            dlg.Filter = "Icon Files (*.png, *.svg, *.eps, *.psd)|*.png;*.svg;*.eps;*.psd";
+            string filePath = browseFiles("Icon Files (*.png, *.svg, *.eps, *.psd)|*.png;*.svg;*.eps;*.psd");
 
-            // Display OpenFileDialog by calling ShowDialog method
-            Nullable<bool> result = dlg.ShowDialog();
-
-            // Get the selected file name and display in a TextBox
-            if (result == true)
+            if(filePath != null)
             {
-                // Open document
-                string filePath = dlg.FileName;
                 monumentTypeIconPath.Text = filePath; //place the icon path to hidden text box to remember it
 
                 int fileNameIndex = filePath.LastIndexOf("\\");
                 monumentTypeIconName.Text = filePath.Substring(fileNameIndex + 1); //extract the icon name and display it
-            }
+            } 
+          
         }
 
         private void addMonumentTypeBtn_Click(object sender, RoutedEventArgs e)
@@ -262,7 +267,72 @@ namespace MonumentMap
         private void cancelMonumentTypeBtn_Click(object sender, RoutedEventArgs e)
         {
             //TODO: isprazni input polja
+
+            //returning background to normal
+            //mainCanvas.Opacity = 1;
+            //mainCanvas.Background = (Brush)brushConverter.ConvertFrom("#001a33");
+
             newMonumTypeGrid.Visibility = Visibility.Hidden;
         }
+
+        private void addTagToMonumentBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void addTagBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void cancelTagBtn_Click(object sender, RoutedEventArgs e)
+        {
+            //returning background to normal
+            //mainCanvas.Opacity = 0;
+            //mainCanvas.Background = (Brush)brushConverter.ConvertFrom("#001a33");
+
+            newTagGrid.Visibility = Visibility.Hidden;
+        }
+
+
+        /********************
+        * AUXILIARY METHODS *
+        * ******************/
+
+        private void ClrPcker_Background_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
+        {
+            //TextBox.Text = "#" + ClrPcker_Background.SelectedColor.R.ToString() + ClrPcker_Background.SelectedColor.G.ToString() + ClrPcker_Background.SelectedColor.B.ToString();
+        }
+
+        /** Metoda koja sluzi za odabir fajlova. Tip fajlova se specificira kao parametar
+         *  string filterCriteria - sluzi za izlistivanje iskljucivo fajlova tog tipa
+         *  return - putanja do odabranog fajla ili null ukoliko fajl nije odabran */
+        public string browseFiles(string filterCriteria)
+        {
+
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            // Set filter for file extension 
+            dlg.Filter = filterCriteria;
+
+            // Display OpenFileDialog by calling ShowDialog method
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Get the selected file path and return it
+            if (result == true)
+            {
+                return dlg.FileName;
+                
+            }
+
+            return null;
+        }
+
+        private void selectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            tagColorCode.Text = ColorPicker_Tag.SelectedColor.ToString();
+            
+        }
+
     }
 }
