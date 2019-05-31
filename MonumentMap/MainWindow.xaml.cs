@@ -85,7 +85,7 @@ namespace MonumentMap
             WindowConstants.RowSpacing = 18; //setting space between rows in grid
 
             /* Initializing pop-up window positions */
-            centerPopUpWindows();
+            //centerPopUpWindows();
 
             //inserting enums to comboboxes
             climateType.ItemsSource = Enum.GetValues(typeof(ClimateType)).Cast<ClimateType>();
@@ -104,7 +104,12 @@ namespace MonumentMap
         {
             mainWindowHeight = e.NewSize.Height;
             mainWindowWidth = e.NewSize.Width;
-            centerPopUpWindows();
+
+            CanvasPositions.Width = mainWindowWidth;
+            CanvasPositions.Height = mainWindowHeight;
+
+
+            //centerPopUpWindows();
         }
 
 
@@ -225,9 +230,9 @@ namespace MonumentMap
 
         private void newTagBtn_Click(object sender, RoutedEventArgs e)
         {
-            
-            
-            newTagGrid.Visibility = Visibility.Visible;
+
+
+            newTagGridHolder.Visibility = Visibility.Visible;
 
             //darkening background
             //mainCanvas.Opacity = 0.90;
@@ -241,7 +246,7 @@ namespace MonumentMap
             //mainCanvas.Opacity = 0.5;
             //mainCanvas.Background = Brushes.Black;
 
-            newMonumTypeGrid.Visibility = Visibility.Visible;
+            newMonumTypeGridHolder.Visibility = Visibility.Visible;
         }
 
         private void monumentTypeBrowseBtn_Click(object sender, RoutedEventArgs e)
@@ -272,7 +277,7 @@ namespace MonumentMap
             //mainCanvas.Opacity = 1;
             //mainCanvas.Background = (Brush)brushConverter.ConvertFrom("#001a33");
 
-            newMonumTypeGrid.Visibility = Visibility.Hidden;
+            newMonumTypeGridHolder.Visibility = Visibility.Hidden;
         }
 
         private void addTagToMonumentBtn_Click(object sender, RoutedEventArgs e)
@@ -291,7 +296,7 @@ namespace MonumentMap
             //mainCanvas.Opacity = 0;
             //mainCanvas.Background = (Brush)brushConverter.ConvertFrom("#001a33");
 
-            newTagGrid.Visibility = Visibility.Hidden;
+            newTagGridHolder.Visibility = Visibility.Hidden;
         }
 
 

@@ -15,7 +15,37 @@ namespace MonumentMap
         private double _top;
         private double _left;
 
+        private double _width;
+        private double _height;
+
         public CanvasPositions() { }
+
+        public double Width
+        {
+            get
+            {
+                return _width;
+            }
+            set
+            {
+                _width = value;
+                OnPropertyChanged(nameof(Width));
+            }
+        }
+
+        public double Height
+        {
+            get
+            {
+                return _height;
+            }
+            set
+            {
+                _height = value;
+                OnPropertyChanged(nameof(Height));
+            }
+        }
+        
 
         public double Top
         {
