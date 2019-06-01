@@ -143,8 +143,26 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icons\default-icon.png" />
-    <Resource Include="pictures\DefaultMonumentImage.jpg" />
- </ItemGroup>
+    <None Include="pictures\DefaultMonumentImage.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icons\MonumentIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\MonumentIconResource.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="pictures\DefaultMonumentImageResource.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icons\monument-icon-test.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
