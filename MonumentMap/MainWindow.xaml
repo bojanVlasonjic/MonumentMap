@@ -79,14 +79,16 @@
 
                         <Label Content="ID:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Column="0" Grid.Row="2" Margin="5"/>
                         <TextBox x:Name="monumentTypeID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Margin="0,0,10,0"
-                                 Grid.Column="1" Grid.Row="2"  Width="100" HorizontalAlignment="Left"/>
+                                 Grid.Column="1" Grid.Row="2"  Width="100" HorizontalAlignment="Left" GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
 
                         <Label Content="Name:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="4" Grid.Column="0" Margin="5"/>
-                        <TextBox x:Name="monumentTypeName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="4" Grid.Column="1" Margin="0,0,10,0"/>
+                        <TextBox x:Name="monumentTypeName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="4" Grid.Column="1" Margin="0,0,10,0"
+                                 GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
 
                         <Label Content="Description:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Top" Margin="5" Grid.Row="6" Grid.Column="0"/>
                         <TextBox x:Name="monumentTypeDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="200" Margin="0,0,10,0"
-                                        HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="6" Grid.Column="1" Height="80" />
+                                 HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="6" Grid.Column="1" Height="80"
+                                 GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
 
                         <Label Content="Select icon:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="5" Grid.Row="8" Grid.Column="0"></Label>
                         <Button x:Name="monumentTypeBrowseBtn" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right"
@@ -95,7 +97,8 @@
                                    Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" Margin="10" Width="Auto"></TextBlock>
 
                         <!-- Skriveni textBox koji cuva putanju do ikonice -->
-                        <TextBox x:Name="monumentTypeIconPath" Grid.Row="9" Grid.ColumnSpan="2" Width="200" Visibility="Hidden" IsReadOnly="True"></TextBox>
+                        <TextBox x:Name="monumentTypeIconPath" Grid.Row="9" Grid.ColumnSpan="2" Width="200" Visibility="Hidden" IsReadOnly="True"
+                                 GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"></TextBox>
 
                         <Button x:Name="addMonumentTypeBtn" Foreground="White" Background="Blue" Content="Add type" Grid.Column="0" Grid.Row="10"
                                 Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="addMonumentTypeBtn_Click"></Button>
@@ -133,16 +136,17 @@
 
                         <Label Content="ID:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Column="0" Grid.Row="2" Margin="5"/>
                         <TextBox x:Name="tagID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Margin="0,0,10,0"
-                                 Grid.Column="1" Grid.Row="2"  Width="100" HorizontalAlignment="Left"/>
+                                 Grid.Column="1" Grid.Row="2"  Width="100" HorizontalAlignment="Left" GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
 
                         <Label Content="Description:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0"/>
-                        <TextBox x:Name="tagDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="200"
-                                        HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="4" Grid.Column="1" Height="80"/>
+                        <TextBox x:Name="tagDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="200" HorizontalAlignment="Stretch" AcceptsReturn="True"
+                                 VerticalScrollBarVisibility="Auto" Grid.Row="4" Grid.Column="1" Height="80" GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
 
                         <Label Content="Select color:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="0"/>
                         <xctk:ColorPicker Name="ColorPicker_Tag" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="250" SelectedColorChanged="selectedColorChanged"/>
-
-                        <TextBox x:Name="tagColorCode" Grid.Row="7" Grid.ColumnSpan="2" Visibility="Hidden"></TextBox>
+                        
+                        <!-- Skriveno polje koje pamti hash kod odabrane boje -->
+                        <TextBox x:Name="tagColorCode" Grid.Row="7" Grid.ColumnSpan="2" Visibility="Hidden" GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"></TextBox>
 
                         <Button x:Name="addTagBtn" Foreground="White" Background="Blue" Content="Add tag" Grid.Column="0" Grid.Row="8"
                                 Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="addTagBtn_Click_1"></Button>
@@ -153,141 +157,161 @@
                 </Grid>
 
                 <!-- Prozor za dodavanje novih spomenika -->
-                <ScrollViewer x:Name="newMonumentHolder" VerticalScrollBarVisibility="Hidden" Width="420" Canvas.Left="-420"  Height="673" CanContentScroll="True" Canvas.Top="-3">
-                    <StackPanel Background="#001a33">
-                        <!-- Zaglavlje prozora-->
-                        <Grid x:Name="newMonumentHeader" Height="Auto">
+                <Grid x:Name="newMonumentGrid" Canvas.Left="-420" Width="420" ScrollViewer.CanContentScroll="True">
 
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="600"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Zaglavlje prozora-->
+                    <Grid x:Name="newMonumentHeader" Height="{Binding WindowConstants.ToolbarHeight}" Grid.Row="0" Background="#001a33">
 
-                            <Label VerticalAlignment="Center" HorizontalAlignment="Left" Content="Add new monument" Foreground="White"
-                               FontSize="{Binding WindowConstants.HeaderFontSize}" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
-                            <Button x:Name="closeNewMonumWindowBtn" Width="60" Height="40" VerticalAlignment="Center" FontWeight="SemiBold" HorizontalAlignment="Right"
-                                ToolTip="Close window" Foreground="White" Content="Close" Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}"
-                                Grid.Row="0" Grid.Column="1"  BorderThickness="0" Click="closeNewMonumWindowBtn_Click"/>
-                        </Grid>
+                        <Label VerticalAlignment="Center" HorizontalAlignment="Left" Content="Add new monument" Foreground="White"
+                                   FontSize="{Binding WindowConstants.HeaderFontSize}" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0"/>
 
-                        <!-- Slika i ikonica -->
-                        <Border BorderBrush="White" BorderThickness="2">
-                            <Grid x:Name="newMonumentPicAndIcon" Margin="0,15,0,0" Height="150">
+                        <Button x:Name="closeNewMonumWindowBtn" Width="60" Height="40" VerticalAlignment="Center" FontWeight="SemiBold" HorizontalAlignment="Right"
+                                    ToolTip="Close window" Foreground="White" Content="Close" Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}"
+                                    Grid.Row="0" Grid.Column="1"  BorderThickness="0" Click="closeNewMonumWindowBtn_Click"/>
+                    </Grid>
+
+                    <ScrollViewer x:Name="newMonumentHolder" VerticalScrollBarVisibility="Visible" CanContentScroll="True" Grid.Row="1">
+                        <StackPanel Background="#001a33">
+
+                            <!-- Slika i ikonica -->
+                            <Border BorderBrush="White" BorderThickness="2">
+                                <Grid x:Name="newMonumentPicAndIcon" Margin="0,15,0,0" ScrollViewer.CanContentScroll="True">
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="280"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="140" />
+                                    </Grid.RowDefinitions>
+
+                                    <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Grid.Row="0" Grid.Column="1" Width="3" HorizontalAlignment="Left"/>
+                                    <Image x:Name="monumentPicture" Source="pictures/default-monument.jpg" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
+                                    <Button Grid.Row="0" x:Name="changeMonumPicBtn" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="120" ToolTip="Change monument picture"
+                                            Height="25" Content="Change picture" Foreground="White" Background="#043c96" Opacity="0.7" FontSize="15" Click="changeMonumPicBtn_Click"/>
+
+                                    <Image x:Name="monumentIcon" Source="icons/default-icon.png" Height="48" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
+                                    <Button Grid.Row="0" x:Name="changeMonumIconBtn" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="100"
+                                            Height="25" Content="Change icon" Foreground="White" Background="#043c96" Opacity="0.7" FontSize="15" Click="changeMonumIconBtn_Click" ToolTip="Change monument icon"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- Forma za dodavanje novog spomenika -->
+                            <Grid x:Name="newMonumentForm" Margin="0,15,0,0" Height="500" ScrollViewer.CanContentScroll="True">
 
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="280"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="140" />
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                                    <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Grid.Row="0" Grid.Column="1" Width="3" HorizontalAlignment="Left"/>
-                                <Image Source="pictures/default-monument.jpg" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
-                                <Button Grid.Row="0" x:Name="changeMonumPicBtn" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="120" ToolTip="Change monument picture"
-                                        Height="25" Content="Change picture" Foreground="White" Background="#043c96" Opacity="0.7" FontSize="15" Click="changeMonumPicBtn_Click"/>
+                                <Label Content="ID:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}"  Grid.Column="0" Grid.Row="0"/>
+                                <TextBox x:Name="monumentID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Column="1" Grid.Row="0"
+                                         GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
+                                
+                                <!-- Skrivena polja koja pamte putanju do odabrane slike i ikonice -->
+                                <TextBox x:Name="newMonumentIconPath" Grid.Row="1" Grid.Column="0" Visibility="Hidden"></TextBox>
+                                <TextBox x:Name="newMonumentPicturePath" Grid.Row="1" Grid.Column="1" Visibility="Hidden"></TextBox>
 
-                                <Image Source="icons/monument-icon.png" Height="48" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
-                                <Button Grid.Row="0" x:Name="changeMonumIconBtn" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="100"
-                                        Height="25" Content="Change icon" Foreground="White" Background="#043c96" Opacity="0.7" FontSize="15" Click="changeMonumIconBtn_Click" ToolTip="Change monument icon"/>
+                                <Label Content="Name:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="2" Grid.Column="0"/>
+                                <TextBox x:Name="monumentName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="2" Grid.Column="1"
+                                         GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
+
+                                <Label Content="Description:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0"/>
+                                <TextBox x:Name="monumentDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="200"
+                                        HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="4" Grid.Column="1" Height="80"
+                                         GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
+
+                                <Label Content="Type:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="0"/>
+                                <ComboBox x:Name="monumentType" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="1"
+                                          GotFocus="comboBox_GotFocus" LostFocus="comboBox_LostFocus"/>
+
+                                <Label Content="Climate:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="0"/>
+                                <ComboBox x:Name="climateType" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="1"
+                                          GotFocus="comboBox_GotFocus" LostFocus="comboBox_LostFocus"/>
+
+                                <Label Content="Eco endangered:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="10" Grid.Column="0"/>
+                                <RadioButton x:Name="radioEcoPosBtn" Content="Yes" HorizontalAlignment="Left" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center"
+                                            Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="eco" Margin="20, 0"/>
+                                <RadioButton x:Name="radioEcoNegBtn" Content="No" HorizontalAlignment="Right" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center"
+                                            Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="eco" Margin="20, 0" IsChecked="True"/>
+
+                                <Label Content="In human settlement:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="12" Grid.Column="0"/>
+                                <RadioButton x:Name="radioSettlementPosBtn" Content="Yes" HorizontalAlignment="Left" Grid.Row="12" Grid.Column="1" VerticalAlignment="Center"
+                                            Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="settlement" Margin="20, 0"/>
+                                <RadioButton x:Name="radioSettlementNegBtn" Content="No" HorizontalAlignment="Right" Grid.Row="12" Grid.Column="1" VerticalAlignment="Center"
+                                            Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="settlement" Margin="20, 0" IsChecked="True"/>
+
+                                <Label Content="Has endangered species:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="14" Grid.Column="0"/>
+                                <RadioButton x:Name="radioSpeciesPosBtn" Content="Yes" HorizontalAlignment="Left" Grid.Row="14" Grid.Column="1" VerticalAlignment="Center"
+                                            Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species" Margin="20, 0"/>
+                                <RadioButton x:Name="radioSpeciesNegBtn" Content="No" HorizontalAlignment="Right" Grid.Row="14" Grid.Column="1" VerticalAlignment="Center"
+                                            Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species" Margin="20, 0" IsChecked="True"/>
+
+                                <Label Content="Tourist status:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="16" Grid.Column="0"/>
+                                <ComboBox x:Name="touristStatus" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="16" Grid.Column="1"
+                                          GotFocus="comboBox_GotFocus" LostFocus="comboBox_LostFocus"/>
+
+                                <Label Content="Annual income ($):" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="18" Grid.Column="0"/>
+                                <TextBox x:Name="annualIncome" Text="" FontSize="{Binding WindowConstants.FormFontSize}" PreviewTextInput="NumberValidationTextBox" Grid.Row="18" Grid.Column="1"
+                                         GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
+
+                                <Label Content="Discovery date:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="20" Grid.Column="0"/>
+                                <local:CustomDatePicker x:Name="discoveryDate" Grid.Row="20" Grid.Column="1" FirstDayOfWeek="Monday" FontSize="{Binding WindowConstants.FormFontSize}"
+                                           Focusable="False" ToolTip="Click calendar icon to select date" WatermarkText="Click calendar icon"></local:CustomDatePicker>
+
+                                <Button x:Name="addMonumentBtn" Grid.Row="22" Grid.Column="0" ToolTip="Add new monument" VerticalAlignment="Center" Width="120"
+                                    Content="Add monument" Foreground="White" Background="#043c96" Height="30" FontSize="{Binding WindowConstants.FormFontSize}" Click="addMonumentBtn_Click"/>
+                                <Button x:Name="addTagToMonumentBtn" Grid.Row="22" Grid.Column="1" ToolTip="Add tag to new monument" Width="100"  VerticalAlignment="Center"
+                                    Content="Add tag"  Foreground="White" Background="#043c96" Height="30" FontSize="{Binding WindowConstants.FormFontSize}" Click="addTagToMonumentBtn_Click" />
                             </Grid>
-                        </Border>
 
-                        <!-- Forma za dodavanje novog spomenika -->
-                        <Grid x:Name="newMonumentForm" Margin="0,15,0,0">
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Label Content="ID:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}"  Grid.Column="0" Grid.Row="0"/>
-                            <TextBox x:Name="monumentID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Column="1" Grid.Row="0"/>
-
-                            <Label Content="Name:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="2" Grid.Column="0"/>
-                            <TextBox x:Name="monumentName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="2" Grid.Column="1"/>
-
-                            <Label Content="Description:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0"/>
-                            <TextBox x:Name="monumentDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="200"
-                                    HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="4" Grid.Column="1" Height="80"/>
-
-                            <Label Content="Type:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="0"/>
-                            <ComboBox x:Name="monumentType" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="1"/>
-
-                            <Label Content="Climate:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="0"/>
-                            <ComboBox x:Name="climateType" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="1"/>
-
-                            <Label Content="Eco endangered:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="10" Grid.Column="0"/>
-                            <RadioButton x:Name="radioEcoPosBtn" Content="Yes" HorizontalAlignment="Left" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center"
-                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="eco" Margin="20, 0"/>
-                            <RadioButton x:Name="radioEcoNegBtn" Content="No" HorizontalAlignment="Right" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center"
-                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="eco" Margin="20, 0" IsChecked="True"/>
-
-                            <Label Content="In human settlement:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="12" Grid.Column="0"/>
-                            <RadioButton x:Name="radioSettlementPosBtn" Content="Yes" HorizontalAlignment="Left" Grid.Row="12" Grid.Column="1" VerticalAlignment="Center"
-                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="settlement" Margin="20, 0"/>
-                            <RadioButton x:Name="radioSettlementNegBtn" Content="No" HorizontalAlignment="Right" Grid.Row="12" Grid.Column="1" VerticalAlignment="Center"
-                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="settlement" Margin="20, 0" IsChecked="True"/>
-
-                            <Label Content="Has endangered species:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="14" Grid.Column="0"/>
-                            <RadioButton x:Name="radioSpeciesPosBtn" Content="Yes" HorizontalAlignment="Left" Grid.Row="14" Grid.Column="1" VerticalAlignment="Center"
-                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species" Margin="20, 0"/>
-                            <RadioButton x:Name="radioSpeciesNegBtn" Content="No" HorizontalAlignment="Right" Grid.Row="14" Grid.Column="1" VerticalAlignment="Center"
-                                        Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species" Margin="20, 0" IsChecked="True"/>
-
-                            <Label Content="Tourist status:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="16" Grid.Column="0"/>
-                            <ComboBox x:Name="touristStatus" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="16" Grid.Column="1"/>
-
-                            <Label Content="Annual income ($):" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="18" Grid.Column="0"/>
-                            <TextBox x:Name="annualIncome" Text="" FontSize="{Binding WindowConstants.FormFontSize}" PreviewTextInput="NumberValidationTextBox" Grid.Row="18" Grid.Column="1"/>
-
-                            <Label Content="Discovery date:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="20" Grid.Column="0"/>
-                            <local:CustomDatePicker x:Name="discoveryDate" Grid.Row="20" Grid.Column="1" FirstDayOfWeek="Monday" FontSize="{Binding WindowConstants.FormFontSize}"
-                                       Focusable="False" ToolTip="Click calendar icon to select date" WatermarkText="Click calendar icon"></local:CustomDatePicker>
-
-                            <Button x:Name="addMonumentBtn" Grid.Row="22" Grid.Column="0" ToolTip="Add new monument" VerticalAlignment="Center" Width="120"
-                                Content="Add monument" Foreground="White" Background="#043c96" Height="30" FontSize="{Binding WindowConstants.FormFontSize}" Click="addMonumentBtn_Click"/>
-                            <Button x:Name="addTagToMonumentBtn" Grid.Row="22" Grid.Column="1" ToolTip="Add tag to new monument" Width="100"  VerticalAlignment="Center"
-                                Content="Add tag"  Foreground="White" Background="#043c96" Height="30" FontSize="{Binding WindowConstants.FormFontSize}" Click="addTagToMonumentBtn_Click" />
-                        </Grid>
-
-                    </StackPanel>
-                </ScrollViewer>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
             </Canvas>
 
             <DockPanel x:Name="mainPanel"  Background="#001a33">
 
                 <!-- TOOLBAR -->
-                <Grid DockPanel.Dock="Top">
+                <Grid DockPanel.Dock="Top" Height="{Binding WindowConstants.ToolbarHeight}">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="60"></ColumnDefinition>
@@ -306,17 +330,17 @@
 
                     <Button x:Name="newMonumentBtn" Click="newMonumentBtn_Click" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Width="50"
                         Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new monument" BorderThickness="0">
-                        <Image Source="icons/monument-icon.png" Height="35"/>
+                        <Image Source="icons/monument-icon.png" Height="{Binding WindowConstants.ToolbarHeight}"/>
                     </Button>
 
                     <Button x:Name="newMonumentTypeBtn" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Width="50"
                         Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new type of monument" BorderThickness="0" Click="newMonumentTypeBtn_Click">
-                        <Image Source="icons/type.png" Height="35"/>
+                        <Image Source="icons/type.png" Height="{Binding WindowConstants.ToolbarHeight}"/>
                     </Button>
 
                     <Button x:Name="newTagBtn" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" Width="50"
                         Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new tag" BorderThickness="0" Click="newTagBtn_Click">
-                        <Image Source="icons/blue-tag.png" Height="35"/>
+                        <Image Source="icons/blue-tag.png" Height="{Binding WindowConstants.ToolbarHeight}"/>
                     </Button>
 
 

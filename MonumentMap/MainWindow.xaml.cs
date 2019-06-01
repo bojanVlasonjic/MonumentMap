@@ -45,6 +45,17 @@ namespace MonumentMap
         private double mainWindowWidth;
 
         static BrushConverter brushConverter = new BrushConverter();
+        static Thickness comboBoxFocusThickness = new Thickness(4);
+        static Thickness comboBoxLostFocusThickness = new Thickness(1);
+
+
+        static string BROWSE_ICONS_FILTER = "Icon Files (*.png, *.svg, *.eps, *.psd)|*.png;*.svg;*.eps;*.psd";
+        static string BROWSE_PICS_FILTER = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files(*.*)|*.*";
+
+
+        //default picture and icon
+        private BitmapImage DEFAULT_ICON;
+        private BitmapImage DEFAULT_PICTURE;
 
 
         /******************* Timers *******************/
@@ -52,6 +63,8 @@ namespace MonumentMap
         {
             Interval = TimeSpan.FromSeconds(4)
         };
+
+
 
 
         public MainWindow()
@@ -84,12 +97,17 @@ namespace MonumentMap
 
             WindowConstants.RowSpacing = 18; //setting space between rows in grid
 
-            /* Initializing pop-up window positions */
-            //centerPopUpWindows();
+            WindowConstants.ToolbarHeight = 40; //initializing toolbar height
+
+            /* Memorizing default monument icon and picture */
+            DEFAULT_ICON = new BitmapImage(new Uri(monumentIcon.Source.ToString()));
+            DEFAULT_PICTURE = new BitmapImage(new Uri(monumentPicture.Source.ToString()));
+
 
             //inserting enums to comboboxes
             climateType.ItemsSource = Enum.GetValues(typeof(ClimateType)).Cast<ClimateType>();
             touristStatus.ItemsSource = Enum.GetValues(typeof(TouristStatus)).Cast<TouristStatus>();
+            //TODO: insert monument types
         }
 
 
@@ -173,13 +191,19 @@ namespace MonumentMap
                 DoubleAnimation double_anim = new DoubleAnimation
                 {
                     From = 0,
-                    To = -newMonumentHolder.Width,
+                    To = -newMonumentGrid.Width,
                     Duration = new Duration(TimeSpan.FromSeconds(0.3)),
                     AutoReverse = false
                 };
 
-                newMonumentHolder.BeginAnimation(Canvas.LeftProperty, double_anim);
+                newMonumentGrid.BeginAnimation(Canvas.LeftProperty, double_anim);
                 isNewMonumentWindowShown = false;
+
+                clearInputs(newMonumentForm);
+
+                //reseting default icon and picture
+                 monumentPicture.Source = DEFAULT_PICTURE;
+                 monumentIcon.Source = DEFAULT_ICON;
             }
         }
 
@@ -190,13 +214,13 @@ namespace MonumentMap
 
                 DoubleAnimation double_anim = new DoubleAnimation
                 {
-                    From = -newMonumentHolder.Width,
+                    From = -newMonumentGrid.Width,
                     To = 0,
                     Duration = new Duration(TimeSpan.FromSeconds(0.3)),
                     AutoReverse = false
                 };
 
-                newMonumentHolder.BeginAnimation(Canvas.LeftProperty, double_anim);
+                newMonumentGrid.BeginAnimation(Canvas.LeftProperty, double_anim);
                 isNewMonumentWindowShown = true;
             }
         }
@@ -208,12 +232,26 @@ namespace MonumentMap
 
         private void changeMonumIconBtn_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: proveriti dimenzije slike koja se upload-uje
+            
+            string filePath = browseFiles(BROWSE_ICONS_FILTER);
+
+            if(filePath != null)
+            {
+                monumentIcon.Source = new BitmapImage(new Uri(filePath));
+                newMonumentIconPath.Text = filePath;
+            }
         }
 
         private void changeMonumPicBtn_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: proveriti dimenzije ikonice koja se upload-uje
+            
+            string filePath = browseFiles(BROWSE_PICS_FILTER);
+
+            if(filePath != null)
+            {
+                monumentPicture.Source = new BitmapImage(new Uri(filePath));
+                newMonumentPicturePath.Text = filePath;
+            }
         }
 
         private void addMonumentBtn_Click(object sender, RoutedEventArgs e)
@@ -252,7 +290,7 @@ namespace MonumentMap
         private void monumentTypeBrowseBtn_Click(object sender, RoutedEventArgs e)
         {
 
-            string filePath = browseFiles("Icon Files (*.png, *.svg, *.eps, *.psd)|*.png;*.svg;*.eps;*.psd");
+            string filePath = browseFiles(BROWSE_ICONS_FILTER);
 
             if(filePath != null)
             {
@@ -271,13 +309,11 @@ namespace MonumentMap
 
         private void cancelMonumentTypeBtn_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: isprazni input polja
-
-            //returning background to normal
-            //mainCanvas.Opacity = 1;
-            //mainCanvas.Background = (Brush)brushConverter.ConvertFrom("#001a33");
-
+            
+            clearInputs(newMonumTypeGrid);
             newMonumTypeGridHolder.Visibility = Visibility.Hidden;
+
+
         }
 
         private void addTagToMonumentBtn_Click(object sender, RoutedEventArgs e)
@@ -292,22 +328,15 @@ namespace MonumentMap
 
         private void cancelTagBtn_Click(object sender, RoutedEventArgs e)
         {
-            //returning background to normal
-            //mainCanvas.Opacity = 0;
-            //mainCanvas.Background = (Brush)brushConverter.ConvertFrom("#001a33");
-
+ 
+            clearInputs(newTagGrid);
             newTagGridHolder.Visibility = Visibility.Hidden;
         }
 
 
-        /********************
-        * AUXILIARY METHODS *
-        * ******************/
-
-        private void ClrPcker_Background_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color> e)
-        {
-            //TextBox.Text = "#" + ClrPcker_Background.SelectedColor.R.ToString() + ClrPcker_Background.SelectedColor.G.ToString() + ClrPcker_Background.SelectedColor.B.ToString();
-        }
+                                    /********************
+                                    * AUXILIARY METHODS *
+                                    * ******************/
 
         /** Metoda koja sluzi za odabir fajlova. Tip fajlova se specificira kao parametar
          *  string filterCriteria - sluzi za izlistivanje iskljucivo fajlova tog tipa
@@ -339,5 +368,49 @@ namespace MonumentMap
             
         }
 
+
+        private void clearInputs(Grid inputHolder)
+        {
+            foreach(UIElement input in inputHolder.Children)
+            {
+                if(input is TextBox)
+                {
+                    ((TextBox)input).Text = string.Empty;
+
+                } else if(input is ComboBox)
+                {
+                    ((ComboBox)input).Text = string.Empty;
+                }
+
+            }
+        }
+
+                            /******************
+                            * ON FOCUS EVENTS *
+                            * ****************/
+
+        private void textBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var txt = sender as TextBox;
+            txt.Background = Brushes.Yellow;
+        }
+
+        private void textBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var txt = sender as TextBox;
+            txt.Background = Brushes.White;
+        }
+
+        private void comboBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var combo = sender as ComboBox;
+            combo.BorderThickness = comboBoxFocusThickness;
+        }
+
+        private void comboBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            var combo = sender as ComboBox;
+            combo.BorderThickness = comboBoxLostFocusThickness;
+        }
     }
 }

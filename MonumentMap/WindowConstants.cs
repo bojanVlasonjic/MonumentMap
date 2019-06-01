@@ -10,9 +10,10 @@ namespace MonumentMap
 {
     public class WindowConstants: INotifyPropertyChanged
     {
-        private double _header_font_size { get; set; }
-        private double _form_font_size { get; set; }
-        private double _row_spacing { get; set; }
+        private double _header_font_size;
+        private double _form_font_size;
+        private double _row_spacing;
+        private double _toolbar_height;
 
 
         public WindowConstants()
@@ -59,6 +60,18 @@ namespace MonumentMap
             {
                 _row_spacing = value;
                 OnPropertyChanged(nameof(RowSpacing));
+            }
+        }
+
+
+        public double ToolbarHeight
+        {
+            get { return _toolbar_height; }
+
+            set
+            {
+                _toolbar_height = value;
+                OnPropertyChanged(nameof(ToolbarHeight));
             }
         }
 
