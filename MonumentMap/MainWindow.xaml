@@ -9,9 +9,31 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="MainWindow" Width="1000" Height="700">
-
+    
+    
+    
     <!-- Dekorisanje pinova na mapi -->
     <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#072530"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#0a3b4c"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
         <ControlTemplate x:Key="MonumentPinTemplate" TargetType="m:Pushpin">
             <Grid x:Name="ContentGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
@@ -45,7 +67,133 @@
         <Grid>
            <!-- Canvas koji prekriva glavni prozor -->
             <Canvas x:Name="mainCanvas"  Panel.ZIndex="99" HorizontalAlignment="Stretch">
+                <Grid x:Name="DisplayMonumentInfoHolder" Canvas.Right="0" Canvas.Top="0" Width="500" Height="{Binding CanvasPositions.Height}" Background="#072530">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="{Binding CanvasPositions.ScrollViewerHeights}"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
 
+                        <Button Click="Button_ClickCloseDisplayInfo" FontSize="18" FontWeight="SemiBold" Content="Close" Foreground="White"/>
+
+                        <TextBlock TextAlignment="Right" Margin="0,0,15,0" Grid.Column="1" Text="Monument Information"
+                                   Foreground="White" VerticalAlignment="Center"/>
+
+
+                    </Grid>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden"  
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <StackPanel>
+
+                            <Grid Height="280">
+                                <Grid>
+                                    <Grid.Background>
+                                        <SolidColorBrush Color="Black" Opacity="0.3"/>
+                                    </Grid.Background>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition Height="100"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="1" Foreground="White" FontSize="22" VerticalAlignment="Center" TextWrapping="Wrap"
+                                               FontWeight="SemiBold" Text="Monument Name or Title" Margin="15"/>
+                                </Grid>
+                                <Grid.Background>
+                                    <ImageBrush x:Name="DisplayInfoImage" ImageSource="pictures/DefaultMonumentImage.jpg" Stretch="UniformToFill"/>
+                                </Grid.Background>
+                            </Grid>
+                            
+                            <TextBlock Foreground="White" TextWrapping="Wrap" TextAlignment="Justify" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat orci ut tincidunt fringilla. Praesent diam mi, rhoncus sed ultrices eu, bibendum et velit. Pellentesque vitae magna vulputate, pulvinar orci in, aliquet justo. Vestibulum non dolor iaculis, posuere velit in, scelerisque tellus. Mauris accumsan tempor enim, a rutrum tellus. Donec tincidunt dignissim lectus, in sollicitudin lacus malesuada eget. Mauris pretium gravida ante, ut fermentum nisi tristique quis. Nam facilisis enim pharetra, facilisis mi eu, lobortis nisi. Nulla dignissim purus et lobortis malesuada." Margin="15"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="White" Text="Type: " Margin="15, 10"/>
+                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="White" Text="Climate: " Margin="15, 10"/>
+                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="White" Text="Eco endangered:" Margin="15, 10"/>
+                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="White" Text="In human settlement: " Margin="15, 10"/>
+                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="White" Text="Has endangered species:" Margin="15, 10"/>
+                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="White" Text="Tourist status:" Margin="15, 10"/>
+                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="White" Text="Annual income: " Margin="15, 10"/>
+                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                            </Grid>
+
+                            <Grid Height="150">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Border Background="White" Padding="2" Width="80" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="15, 15, 15, 15">
+                                    <Button Content="Edit" Foreground="White" FontSize="14"/>
+
+
+                                </Border>
+                            </Grid>
+
+
+
+
+
+                        </StackPanel>
+                    </ScrollViewer>
+                    
+                    
+                </Grid>
+
+                
+                
+                
 
                 <Grid x:Name="newMonumTypeGridHolder" Visibility="Hidden" Width="{Binding CanvasPositions.Width}" Height="{Binding CanvasPositions.Height}">
                     <Grid.Background>
@@ -165,7 +313,7 @@
                     </Grid.RowDefinitions>
                     
                     <!-- Zaglavlje prozora-->
-                    <Grid x:Name="newMonumentHeader" Height="{Binding WindowConstants.ToolbarHeight}" Grid.Row="0" Background="#001a33">
+                    <Grid x:Name="newMonumentHeader" Height="50" Grid.Row="0" Background="#001a33">
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -308,10 +456,10 @@
                 </Grid>
             </Canvas>
 
-            <DockPanel x:Name="mainPanel"  Background="#001a33">
+            <DockPanel x:Name="mainPanel"  Background="#072530">
 
                 <!-- TOOLBAR -->
-                <Grid DockPanel.Dock="Top" Height="{Binding WindowConstants.ToolbarHeight}">
+                <Grid x:Name="mainToolbar" DockPanel.Dock="Top" Height="50">
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="60"></ColumnDefinition>
@@ -329,18 +477,18 @@
                     </Grid.RowDefinitions>
 
                     <Button x:Name="newMonumentBtn" Click="newMonumentBtn_Click" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Width="50"
-                        Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new monument" BorderThickness="0">
-                        <Image Source="icons/monument-icon.png" Height="{Binding WindowConstants.ToolbarHeight}"/>
+                         FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new monument" BorderThickness="0">
+                        <Image Source="icons/monument-icon.png" Height="35"/>
                     </Button>
 
                     <Button x:Name="newMonumentTypeBtn" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Width="50"
-                        Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new type of monument" BorderThickness="0" Click="newMonumentTypeBtn_Click">
-                        <Image Source="icons/type.png" Height="{Binding WindowConstants.ToolbarHeight}"/>
+                         FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new type of monument" BorderThickness="0" Click="newMonumentTypeBtn_Click">
+                        <Image Source="icons/type.png" Height="35"/>
                     </Button>
 
                     <Button x:Name="newTagBtn" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" Width="50"
-                        Background="#001a33" FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new tag" BorderThickness="0" Click="newTagBtn_Click">
-                        <Image Source="icons/blue-tag.png" Height="{Binding WindowConstants.ToolbarHeight}"/>
+                        FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new tag" BorderThickness="0" Click="newTagBtn_Click">
+                        <Image Source="icons/blue-tag.png" Height="35"/>
                     </Button>
 
 

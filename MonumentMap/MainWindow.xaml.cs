@@ -34,6 +34,7 @@ namespace MonumentMap
 
         /******** Booleans indicating whether pop-up windows are shown ********/
         public bool isNewMonumentWindowShown = false;
+        public bool isNewMonumentWindowInfoShown = true;
 
 
         /***************** Observable collections *****************/
@@ -125,6 +126,7 @@ namespace MonumentMap
 
             CanvasPositions.Width = mainWindowWidth;
             CanvasPositions.Height = mainWindowHeight;
+            CanvasPositions.ScrollViewerHeights = mainWindowHeight;
 
 
             //centerPopUpWindows();
@@ -368,7 +370,6 @@ namespace MonumentMap
             
         }
 
-
         private void clearInputs(Grid inputHolder)
         {
             foreach(UIElement input in inputHolder.Children)
@@ -412,5 +413,26 @@ namespace MonumentMap
             var combo = sender as ComboBox;
             combo.BorderThickness = comboBoxLostFocusThickness;
         }
+
+
+
+        private void Button_ClickCloseDisplayInfo(object sender, RoutedEventArgs e)
+        {
+            if (isNewMonumentWindowInfoShown)
+            {
+
+                DoubleAnimation double_anim = new DoubleAnimation
+                {
+                    From = 0,
+                    To = -DisplayMonumentInfoHolder.Width,
+                    Duration = new Duration(TimeSpan.FromSeconds(0.3)),
+                    AutoReverse = false
+                };
+
+                DisplayMonumentInfoHolder.BeginAnimation(Canvas.RightProperty, double_anim);
+                isNewMonumentWindowInfoShown = false;
+            }
+        }
+
     }
 }

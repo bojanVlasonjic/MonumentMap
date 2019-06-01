@@ -18,7 +18,23 @@ namespace MonumentMap
         private double _width;
         private double _height;
 
+        private double _scrollViewerHeights;
+
         public CanvasPositions() { }
+
+
+        public double ScrollViewerHeights
+        {
+            get
+            {
+                return _scrollViewerHeights;
+            }
+            set
+            {
+                _scrollViewerHeights = value - 50;
+                OnPropertyChanged(nameof(ScrollViewerHeights));
+            }
+        }
 
         public double Width
         {
