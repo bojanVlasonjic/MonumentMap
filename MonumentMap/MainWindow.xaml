@@ -13,9 +13,8 @@
         WindowState="Maximized">
     
     
-    
-    <!-- Dekorisanje pinova na mapi -->
     <Window.Resources>
+
         <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -365,7 +364,7 @@
                 </Grid>
 
                 
-                <Grid x:Name="newMonumTypeGridHolder" Visibility="Visible" Width="{Binding CanvasPositions.Width}" Height="{Binding CanvasPositions.Height}">
+                <Grid x:Name="newMonumTypeGridHolder" Visibility="Hidden" Width="{Binding CanvasPositions.Width}" Height="{Binding CanvasPositions.Height}">
                     <Grid.Background>
                         <SolidColorBrush Color="Black" Opacity="0.75" />
                     </Grid.Background>
