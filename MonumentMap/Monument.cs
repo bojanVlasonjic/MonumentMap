@@ -17,6 +17,7 @@ namespace MonumentMap
     {
 
         private string _id;
+        private MonumentPin _pin;
 
         public string ID {
             get
@@ -46,10 +47,23 @@ namespace MonumentMap
 
         public double AnnualIncome { get; set; } //displayed in $USD
         public DateTime DateOfDiscovery { get; set; }
-        public MonumentPin monumentPin { get; set; }
+
+        public MonumentPin monumentPin {
+            get
+            {
+                return _pin;
+            }
+
+            set
+            {
+                _pin = value;
+                OnPropertyChanged(nameof(monumentPin));
+            }
+        }
 
         public Monument() {  }
 
+        [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

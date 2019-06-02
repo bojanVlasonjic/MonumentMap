@@ -117,12 +117,14 @@ namespace MonumentMap
 
                 try
                 {
+
                     using (Stream stream = new FileStream(monumentPath, FileMode.Open, FileAccess.Read))
                     {
                         observableMonums = (ObservableCollection<Monument>)formatter.Deserialize(stream);
-                    }
+                    } 
 
-                } catch(Exception)
+
+                } catch(Exception e)
                 {
                     return null;
                 }
