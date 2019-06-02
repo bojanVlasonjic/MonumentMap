@@ -45,7 +45,7 @@ namespace MonumentMap
         public bool IsInSettlement { get; set; }
 
         public double AnnualIncome { get; set; } //displayed in $USD
-        public DateTime DateOfDiscovery { get; set; }
+        public string DateOfDiscovery { get; set; }
         public MonumentPin monumentPin { get; set; }
 
         public Monument() {  }

@@ -101,9 +101,7 @@ namespace MonumentMap
             
             WindowConstants = new WindowConstants();
             CanvasPositions = new CanvasPositions();
-
-
-            observ_monuments = IO_Serializer.deserializeMonuments();
+            
 
             if (observ_monuments != null)
             {
@@ -278,7 +276,7 @@ namespace MonumentMap
             DisplayInfoHasEndangeredSpecies.Text = monument.ContainsEndangeredSpecies ? "Yes" : "No";
             DisplayInfoTouristStatus.Text = monument.TourStatus.ToString();
             DisplayInfoAnnualIncome.Text = monument.AnnualIncome.ToString();
-            DisplayInfoDiscoveryDate.Text = monument.DateOfDiscovery.ToString("dd-MM-yyyy");
+            DisplayInfoDiscoveryDate.Text = monument.DateOfDiscovery;
 
             DisplayInfoImage.ImageSource = new BitmapImage(new Uri(monument.Picture_path, UriKind.Relative));
         }
@@ -422,7 +420,7 @@ namespace MonumentMap
                 monument.ContainsEndangeredSpecies = radioButtonChecked(radioSpeciesPosBtn);
 
                 //parsing date picker
-                monument.DateOfDiscovery = discoveryDate.SelectedDate.Value;
+                monument.DateOfDiscovery = discoveryDate.Text;
 
 
                 //if the user left the local image as default
