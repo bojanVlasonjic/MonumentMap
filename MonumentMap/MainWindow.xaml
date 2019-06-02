@@ -389,7 +389,9 @@
                             <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                            <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
 
                         <TextBlock Foreground="White" Text="Add new monument type" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center"
@@ -415,13 +417,16 @@
                                    Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" Margin="10" Width="Auto"></TextBlock>
 
                         <!-- Skriveni textBox koji cuva putanju do ikonice -->
-                        <TextBox x:Name="monumentTypeIconPath" Grid.Row="9" Grid.ColumnSpan="2" Width="200" Visibility="Hidden" IsReadOnly="True"
+                        <TextBox x:Name="monumentTypeIconPath" Grid.Row="9" Grid.ColumnSpan="2" Width="200" Visibility="Hidden" IsEnabled="False"
                                  GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"></TextBox>
 
                         <Button x:Name="addMonumentTypeBtn" Foreground="White" Background="Blue" Content="Add type" Grid.Column="0" Grid.Row="10"
                                 Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="addMonumentTypeBtn_Click"></Button>
                         <Button x:Name="cancelMonumentTypeBtn" Foreground="White" Background="Blue" Content="Cancel" Grid.Column="1" Grid.Row="10"
                                 Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Margin="50,7,50,0" Click="cancelMonumentTypeBtn_Click" ></Button>
+
+                        <TextBlock x:Name="newTypeNotificationMessage" Text="" Foreground="White" Opacity="0" VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" Grid.Row="12" Grid.ColumnSpan="2" FontSize="{Binding WindowConstants.HeaderFontSize}"></TextBlock>
                     </Grid>
                 </Grid>
 
@@ -447,6 +452,8 @@
                             <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
                             <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
+                            <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
                     
                         <TextBlock Foreground="White" Text="Add new tag" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center"
@@ -461,16 +468,19 @@
                                  VerticalScrollBarVisibility="Auto" Grid.Row="4" Grid.Column="1" Height="80" GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
 
                         <Label Content="Select color:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="0"/>
-                        <xctk:ColorPicker Name="ColorPicker_Tag" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="250" SelectedColorChanged="selectedColorChanged"/>
+                        <xctk:ColorPicker Name="ColorPicker_Tag" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="250"
+                                          SelectedColorChanged="selectedColorChanged" BorderThickness="3"/>
                         
                         <!-- Skriveno polje koje pamti hash kod odabrane boje -->
-                        <TextBox x:Name="tagColorCode" Grid.Row="7" Grid.ColumnSpan="2" Visibility="Hidden" GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"></TextBox>
+                        <TextBox x:Name="tagColorCode" Grid.Row="7" Grid.ColumnSpan="2" Visibility="Hidden" GotFocus="textBox_GotFocus" IsEnabled="False" LostFocus="textBox_LostFocus"></TextBox>
 
                         <Button x:Name="addTagBtn" Foreground="White" Background="Blue" Content="Add tag" Grid.Column="0" Grid.Row="8"
-                                Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="addTagBtn_Click_1"></Button>
+                                Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="addTagBtn_Click"></Button>
                         <Button x:Name="cancelTagBtn" Foreground="White" Background="Blue" Content="Cancel" Grid.Column="1" Grid.Row="8"
                                 Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="cancelTagBtn_Click"></Button>
 
+                        <TextBlock x:Name="newTagNotificationMessage" Text="" Foreground="White" Opacity="0" VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" Grid.Row="10" Grid.ColumnSpan="2" FontSize="{Binding WindowConstants.HeaderFontSize}"></TextBlock>
                     </Grid>
                 </Grid>
 
@@ -558,7 +568,7 @@
                                     <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition  Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <Label Content="ID:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}"  Grid.Column="0" Grid.Row="0"/>
@@ -579,13 +589,14 @@
                                          GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
 
                                 <Label Content="Type:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="0"/>
-                                <Border BorderBrush="White" BorderThickness="0"  Grid.Row="6" Grid.Column="1">
+                                <Border BorderBrush="Transparent" BorderThickness="3"  Grid.Row="6" Grid.Column="1">
                                     <ComboBox x:Name="monumentType" FontSize="{Binding WindowConstants.FormFontSize}"
-                                          GotFocus="comboBox_GotFocus" LostFocus="comboBox_LostFocus"/>
+                                          GotFocus="comboBox_GotFocus" LostFocus="comboBox_LostFocus"
+                                              ItemsSource="{Binding observ_monum_types}"/>
                                 </Border>
 
                                 <Label Content="Climate:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="0"/>
-                                <Border BorderBrush="White" BorderThickness="0"  Grid.Row="8" Grid.Column="1">
+                                <Border BorderBrush="Transparent" BorderThickness="3"  Grid.Row="8" Grid.Column="1">
                                     <ComboBox x:Name="climateType" FontSize="{Binding WindowConstants.FormFontSize}"
                                           GotFocus="comboBox_GotFocus" LostFocus="comboBox_LostFocus"/>
                                 </Border>
@@ -609,7 +620,7 @@
                                             Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species" Margin="20, 0" IsChecked="True"/>
 
                                 <Label Content="Tourist status:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="16" Grid.Column="0"/>
-                                <Border BorderBrush="White" BorderThickness="0"  Grid.Row="16" Grid.Column="1">
+                                <Border BorderBrush="Transparent" BorderThickness="3"  Grid.Row="16" Grid.Column="1">
                                     <ComboBox x:Name="touristStatus" FontSize="{Binding WindowConstants.FormFontSize}"
                                           GotFocus="comboBox_GotFocus" LostFocus="comboBox_LostFocus"/>
                                 </Border>
@@ -683,7 +694,6 @@
                         <Image Source="icons/blue-tag.png" Height="35"/>
                     </Button>
 
-
                     <TextBlock x:Name="UserNotificationMessage" Foreground="White" Opacity="0"
                                VerticalAlignment="Center" HorizontalAlignment="Left"
                                Grid.Row="0" Grid.Column="3"
@@ -705,8 +715,9 @@
                     <TextBox Grid.Column="6" Margin="6" Background="#093647"
                             Text="Search..." HorizontalContentAlignment="Left" Padding="5"
                             VerticalContentAlignment="Center" Foreground="White"
-                            FontSize="14" BorderThickness="0"/>
-                    
+                            FontSize="14" BorderThickness="0"
+                            x:Name="searchTextBox"/>
+
                     <Button x:Name="searchBtn" Grid.Column="7" ToolTip="Search"
                             Width="40" Height="40" Margin="0,0,5,5"
                             BorderThickness="0" Content="{StaticResource SearchIconImage}"
@@ -716,7 +727,7 @@
 
                 <!-- BING MAPA -->
                 <Grid>
-                    <m:Map x:Name="worldMap" ZoomLevel="4"  Mode="AerialWithLabels" CredentialsProvider="AtDk4CCssn5oeGv1MfzEWA_LA9eulE9bDLI6VdfGkcnCi6ydlDX0LT-jNXskoIV_" RenderTransformOrigin="0.5,0.5"/>
+                    <m:Map x:Name="worldMap" ZoomLevel="3.6"  Mode="AerialWithLabels" CredentialsProvider="AtDk4CCssn5oeGv1MfzEWA_LA9eulE9bDLI6VdfGkcnCi6ydlDX0LT-jNXskoIV_" RenderTransformOrigin="0.5,0.5"/>
                 </Grid>
 
             </DockPanel>

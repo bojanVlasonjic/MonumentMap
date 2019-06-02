@@ -42,8 +42,9 @@ namespace MonumentMap
 
 
         /***************** Observable collections *****************/
-        public ObservableCollection<Monument> observ_monuments;
-        //TODO: za tipove spomenika i tagove kolekcija
+        public ObservableCollection<Monument> observ_monuments { get; set; }
+        public ObservableCollection<MonumentType> observ_monum_types { get; set; }
+        public ObservableCollection<MonumentTag> observ_monum_tags { get; set; }
 
 
         private double mainWindowHeight;
@@ -84,7 +85,6 @@ namespace MonumentMap
             mainWindowHeight = Height;
             mainWindowWidth = Width;
 
-            //worldMap.MouseDoubleClick += new MouseButtonEventHandler(worldMap_MouseDoubleClick);
             worldMap.ViewChangeOnFrame += new EventHandler<MapEventArgs>(worldMap_ViewChangeOnFrame);
             this.SizeChanged += OnWindowSizeChanged;
             this.MouseMove += Window_OnMouseMove;
@@ -96,6 +96,8 @@ namespace MonumentMap
 
         private void onLoad()
         {
+
+            initializeGlobalObjects();
             
             WindowConstants = new WindowConstants();
             CanvasPositions = new CanvasPositions();
@@ -103,11 +105,6 @@ namespace MonumentMap
 
             observ_monuments = IO_Serializer.deserializeMonuments();
 
-            if(observ_monuments == null)
-            {
-                NotifyUser("No monuments loaded");
-                observ_monuments = new ObservableCollection<Monument>();
-            }
             if (observ_monuments != null)
             {
                 foreach(Monument m in observ_monuments ) {
@@ -129,14 +126,75 @@ namespace MonumentMap
             DEFAULT_ICON = new BitmapImage(new Uri(monumentIcon.Source.ToString()));
             DEFAULT_PICTURE = new BitmapImage(new Uri(monumentPicture.Source.ToString()));
 
-
             //inserting enums to comboboxes
-            monumentType.Items.Add("NO_TYPE");
-            //TODO: insert monument types
-
             climateType.ItemsSource = Enum.GetValues(typeof(ClimateType)).Cast<ClimateType>();
             touristStatus.ItemsSource = Enum.GetValues(typeof(TouristStatus)).Cast<TouristStatus>();
-            
+
+            initializeNoMonumentType();
+
+        }
+
+
+        private void initializeNoMonumentType()
+        {
+
+            foreach(MonumentType type in observ_monum_types)
+            {
+                if(type.ID.Equals("0"))
+                {
+                    return;
+                }
+            }
+
+            MonumentType no_type = new MonumentType();
+            no_type.ID = "0";
+            no_type.Name = "No_type";
+            no_type.Icon_path = "icons/MonumentIcon.png";
+            observ_monum_types.Add(no_type);
+        }
+
+        private void initializeGlobalObjects()
+        {
+            WindowConstants = new WindowConstants();
+            CanvasPositions = new CanvasPositions();
+
+            StringBuilder sb = new StringBuilder();
+            bool notLoaded = false;
+
+            /* Loading collections from files */
+            observ_monuments = IO_Serializer.deserializeMonuments();
+            if (observ_monuments == null)
+            {
+                sb.Append("No monuments-");
+                observ_monuments = new ObservableCollection<Monument>();
+                notLoaded = true;
+            }
+
+
+            observ_monum_tags = IO_Serializer.deserializeMonumentTags();
+            if (observ_monum_tags == null)
+            {
+                sb.Append("No tags-");
+                observ_monum_tags = new ObservableCollection<MonumentTag>();
+                notLoaded = true;
+            }
+
+
+            observ_monum_types = IO_Serializer.deserializeMonumentTypes();
+            if(observ_monum_types == null)
+            {
+                sb.Append("No types");
+                observ_monum_types = new ObservableCollection<MonumentType>();
+                notLoaded = true;
+            }
+
+            sb.Append(" have been loaded");
+
+            if(notLoaded)
+            {
+                NotifyUser(sb.ToString());
+            }
+           
         }
 
 
@@ -237,9 +295,9 @@ namespace MonumentMap
             }
 
             //settin max zoom
-            if (z < 4)
+            if (z < 3.6)
             {
-                worldMap.ZoomLevel = 4;
+                worldMap.ZoomLevel = 3.6;
             }
         }
 
@@ -343,7 +401,11 @@ namespace MonumentMap
                 monument.Description = monumentDescr.Text;
                 monument.AnnualIncome = Double.Parse(annualIncome.Text);
 
-                //TODO: postavi tip spomenika
+                //setting monument type
+                int colonID = monumentType.SelectedItem.ToString().IndexOf(':'); //used to extract id from string
+                string typeID = monumentType.SelectedItem.ToString().Substring(0, colonID);
+
+                monument.Type = findMonumentType(typeID);
 
                 //parsing comboboxes
                 ClimateType climate;
@@ -385,17 +447,27 @@ namespace MonumentMap
                 //if the user left the default icon
                 if(newMonumentIconPath.Text.Equals(""))
                 {
-                    if(monumentType.SelectedValue.ToString().ToLower().Equals("no_type"))
+                    
+                    if (!typeID.Equals("0")) 
                     {
-                        monument.Icon_path = "icons/MonumentIcon.png";
+                        //set the monument icon from monument type
+                        if (monument.Type != null)
+                        {
+                            monument.Icon_path = monument.Type.Icon_path;
+                        } else
+                        {
+                            monument.Icon_path = "icons/MonumentIcon.png";
+                        }
+                        
                     } else
                     {
-                        //TODO: postavi ikonicu odabranog tipa
+                        monument.Icon_path = "icons/MonumentIcon.png";
                     }
+                    
 
                 } else
                 {
-                    //get source image extension from path
+                    //get source icon extension from path
                     string sourceExtension = getFileExtensionFromPath(newMonumentIconPath.Text);
 
                     //get destination path
@@ -424,7 +496,47 @@ namespace MonumentMap
 
         private void addTagBtn_Click(object sender, RoutedEventArgs e)
         {
-            //dodavanje neke od postojecih etiketa spomeniku
+
+            //check if the user selected a color
+            if (tagColorCode.Text.Equals(""))
+            {
+                ColorPicker_Tag.BorderBrush = Brushes.Red;
+                return;
+            }
+            else
+            {
+                ColorPicker_Tag.BorderBrush = Brushes.Transparent;
+            }
+
+
+            if (!checkForEmptyFields(newTagGrid)) {
+
+                if(findMonumentTag(tagID.Text) != null)
+                {
+                    MessageBox.Show("ID already exists");
+                    return;
+                }
+
+                MonumentTag tag = new MonumentTag();
+
+                tag.ID = tagID.Text;
+                tag.Description = tagDescr.Text;
+                tag.Color = tagColorCode.Text;
+
+                observ_monum_tags.Add(tag);
+                closeTagWindow();
+
+                //serializing
+                if(IO_Serializer.serializeMonumentTags(observ_monum_tags))
+                {
+                    NotifyUser("Tag successfully added");
+                } else
+                {
+                    NotifyUser("Failed to save tags");
+                }
+
+            }
+
             
         }
 
@@ -459,15 +571,67 @@ namespace MonumentMap
         private void addMonumentTypeBtn_Click(object sender, RoutedEventArgs e)
         {
 
+            if(!checkForEmptyFields(newMonumTypeGrid))
+            {
+                
+                if(monumentTypeIconPath.Text.Equals(""))
+                {
+                    //TODO: manje seljacko obavestenje
+                    MessageBox.Show("Please select icon");
+                    return;
+                }
+
+                if(findMonumentType(monumentTypeID.Text) != null)
+                {
+                    MessageBox.Show("ID already exists");
+                    return;
+                }
+
+                MonumentType type = new MonumentType();
+
+                type.ID = monumentTypeID.Text;
+                type.Name = monumentTypeName.Text;
+                type.Description = monumentTypeDescr.Text;
+
+                /** Uploading icon **/
+
+                //get source icon extension from path
+                string sourceExtension = getFileExtensionFromPath(monumentTypeIconPath.Text);
+
+                //get destination path
+                string destFileName = DateTime.Now.ToString("dd_MM_yyyy_HH_mm_ss") + sourceExtension; //to avoid duplicate names
+                string destinationPath = GetDestinationPath(destFileName, "monument_type_icons");
+
+                //copy source image to local folder
+                File.Copy(monumentTypeIconPath.Text, destinationPath);
+                type.Icon_path = destinationPath;
+
+                closeMonumentTypeDialog();
+                observ_monum_types.Add(type);
+
+                if(IO_Serializer.serializeMonumentTypes(observ_monum_types))
+                {
+                    NotifyUser("New monument type added");
+                } else
+                {
+                    NotifyUser("Failed to save monument types");
+                }
+                
+            }
+
         }
 
         private void cancelMonumentTypeBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
+            closeMonumentTypeDialog();
+
+        }
+
+        private void closeMonumentTypeDialog()
+        {
             clearInputs(newMonumTypeGrid);
             newMonumTypeGridHolder.Visibility = Visibility.Hidden;
-
-
         }
 
         private void addTagToMonumentBtn_Click(object sender, RoutedEventArgs e)
@@ -478,14 +642,16 @@ namespace MonumentMap
 
         }
 
-        private void addTagBtn_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         private void cancelTagBtn_Click(object sender, RoutedEventArgs e)
         {
- 
+
+            closeTagWindow();
+        }
+
+
+        private void closeTagWindow()
+        {
             clearInputs(newTagGrid);
             newTagGridHolder.Visibility = Visibility.Hidden;
         }
@@ -571,14 +737,12 @@ namespace MonumentMap
                         isEmpty = true;
                 
                         //make border red
-                        border.BorderThickness = FocusThickness;
                         border.BorderBrush = Brushes.Red;
 
                     } else
                     {
                         //make border default
-                        border.BorderThickness = LostFocusThickness;
-                        border.BorderBrush = Brushes.White;
+                        border.BorderBrush = Brushes.Transparent;
                     }
 
                 } else if(input is DatePicker)
@@ -619,8 +783,7 @@ namespace MonumentMap
                 } else if(input is Border)
                 {
                     Border border = ((Border)input);
-                    border.BorderThickness = LostFocusThickness;
-                    border.BorderBrush = Brushes.White;
+                    border.BorderBrush = Brushes.Transparent;
 
                     ComboBox combobox = ((ComboBox)border.Child);
                     combobox.SelectedItem = null;
@@ -648,6 +811,21 @@ namespace MonumentMap
             return false;
         }
 
+
+        private MonumentType findMonumentType(string id)
+        {
+
+            foreach (MonumentType type in observ_monum_types)
+            {
+                if (type.ID.Equals(id))
+                {
+                    return type;
+                }
+            }
+
+            return null;
+        }
+
         private Monument getMonumentById(string id)
         {
             foreach (Monument monument in observ_monuments)
@@ -655,11 +833,28 @@ namespace MonumentMap
                 if (monument.ID.Equals(id))
                 {
                     return monument;
+
+                }
+            }
+
+            return null;
+
+        }
+
+
+        private MonumentTag findMonumentTag(string id)
+        {
+            foreach (MonumentTag tag in observ_monum_tags)
+            {
+                if (tag.ID.Equals(id))
+                {
+                    return tag;
                 }
             }
 
             return null;
         }
+
 
         private string getFileExtensionFromPath(string filePath)
         {
@@ -678,9 +873,15 @@ namespace MonumentMap
             return false;
         }
 
-                            /******************
-                            * ON FOCUS EVENTS *
-                            * ****************/
+        /******************
+        * ON FOCUS EVENTS *
+        * ****************/
+
+
+        private void searchClicked(object sender, MouseButtonEventArgs e)
+        {
+            searchTextBox.Text = string.Empty;
+        }
 
         private void textBox_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -698,7 +899,6 @@ namespace MonumentMap
         {
             var combo = sender as ComboBox;
 
-            ((Border)combo.Parent).BorderThickness = FocusThickness;
             ((Border)combo.Parent).BorderBrush = Brushes.Blue;
         }
 
@@ -706,8 +906,7 @@ namespace MonumentMap
         {
             var combo = sender as ComboBox;
 
-            ((Border)combo.Parent).BorderThickness = LostFocusThickness;
-            ((Border)combo.Parent).BorderBrush = Brushes.White;
+            ((Border)combo.Parent).BorderBrush = Brushes.Transparent;
         }
 
 
@@ -749,9 +948,9 @@ namespace MonumentMap
         }
 
 
-        /*********************************
-         * METHODS FOR USER NOTIFICATION *
-         *********************************/
+                        /*********************************
+                         * METHODS FOR USER NOTIFICATION *
+                         *********************************/
 
         private void NotifyUser(string message)
         {
@@ -800,7 +999,9 @@ namespace MonumentMap
             UserNotificationMessage.Text = "";
         }
 
-
+                    /* ***********************
+                     * DRAG AND DROP METHODS *
+                     * ********************* */
 
         private void GridMonument_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -883,6 +1084,7 @@ namespace MonumentMap
             }
             
         }
+
 
         private void addMonumentPinToMap(Monument monument)
         {
@@ -1057,5 +1259,40 @@ namespace MonumentMap
 
         }
 
+
+                    /******************
+                     * DELETE METHODS *
+                     * ****************/
+
+        private bool deleteTag(string tagID)
+        {
+
+            MonumentTag tag = findMonumentTag(tagID);
+
+            if(tag != null)
+            {
+                return observ_monum_tags.Remove(tag);
+            }
+
+            return false;
+
+        }
+
+
+        private bool deleteMonumentType(string typeID)
+        {
+
+            MonumentType type = findMonumentType(typeID);
+
+            if(type != null)
+            {
+                return observ_monum_types.Remove(type);
+            }
+
+            return false;
+
+        }
+
+        
     }
 }
