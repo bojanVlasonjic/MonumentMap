@@ -19,9 +19,36 @@ namespace MonumentMap
         private double _height;
 
         private double _scrollViewerHeights;
+        private double _monumentsScrollViewerHeight;
+        private double _removeLeft;
 
         public CanvasPositions() { }
 
+        public double RemoveLeft
+        {
+            get
+            {
+                return _removeLeft;
+            }
+            set
+            {
+                _removeLeft = value;
+                OnPropertyChanged(nameof(RemoveLeft));
+            }
+        }
+
+        public double MonumentsScrollViewerHeight
+        {
+            get
+            {
+                return _monumentsScrollViewerHeight;
+            }
+            set
+            {
+                _monumentsScrollViewerHeight = value;
+                OnPropertyChanged(nameof(MonumentsScrollViewerHeight));
+            }
+        }
 
         public double ScrollViewerHeights
         {
@@ -32,6 +59,7 @@ namespace MonumentMap
             set
             {
                 _scrollViewerHeights = value - 50;
+                MonumentsScrollViewerHeight = _scrollViewerHeights - 38;
                 OnPropertyChanged(nameof(ScrollViewerHeights));
             }
         }

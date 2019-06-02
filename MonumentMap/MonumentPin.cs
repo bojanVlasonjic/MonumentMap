@@ -8,5 +8,7 @@ namespace MonumentMap
 {
     public class MonumentPin
     {
+        //Location
+        //Content - monument id
     }
 }

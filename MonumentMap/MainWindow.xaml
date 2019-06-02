@@ -35,23 +35,7 @@
 
 
         <ControlTemplate x:Key="MonumentPinTemplate" TargetType="m:Pushpin">
-            <Grid x:Name="ContentGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <StackPanel>
-                    <Grid Margin="0" Width="33" Height="33">
-
-                        <Polygon HorizontalAlignment="Center" VerticalAlignment="Center" Points="0,0 60,0 30,30"
-                                 Stroke="Black" StrokeThickness="1" Fill="Blue" />
-
-                        <!-- Za prikaz teksta na pinovima -->
-                        <ContentPresenter HorizontalAlignment="Center"
-                                                                VerticalAlignment="Top"
-                                                                Content="{TemplateBinding Content}"
-                                                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                                Margin="0" TextBlock.FontFamily="Segoe UI" TextBlock.FontWeight="Bold" TextBlock.Foreground="#ffffff">
-                        </ContentPresenter>
-                    </Grid>
-                </StackPanel>
-            </Grid>
+            <Image Source="icons/MonumentIcon.png" Width="50" Height="50" />
         </ControlTemplate>
     </Window.Resources>
 
@@ -67,7 +51,54 @@
         <Grid>
            <!-- Canvas koji prekriva glavni prozor -->
             <Canvas x:Name="mainCanvas"  Panel.ZIndex="99" HorizontalAlignment="Stretch">
-                <Grid x:Name="DisplayMonumentInfoHolder" Canvas.Right="0" Canvas.Top="0" Width="500" Height="{Binding CanvasPositions.Height}" Background="#072530">
+
+                
+
+                <Grid Canvas.Top="50" Width="160" Height="{Binding CanvasPositions.MonumentsScrollViewerHeight}"
+                      Background="#072530">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1"/>
+                        <RowDefinition Height="4"/>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Rectangle Fill="#093647"/>
+                    <TextBox Margin="0, 5" TextAlignment="Left" Foreground="White" BorderThickness="0"
+                             Text="Search..." VerticalContentAlignment="Center"
+                             FontSize="14" Background="#093647" Padding="5"
+                             Grid.Row="2" x:Name="SearchMonuments"/>
+                    <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
+                        <StackPanel x:Name="MonumentsStackPanel">
+                            <Grid Height="160" Margin="0, 5"
+                                  UIElement.MouseEnter="GridMonument_MouseEnter"
+                                  UIElement.MouseLeave="GridMonument_MouseLeave"
+                                  UIElement.MouseDown="GridMonument_MouseDown">
+                                <Grid>
+                                    <Grid.Background>
+                                        <SolidColorBrush Color="Black" Opacity="0.3"/>
+                                    </Grid.Background>
+
+
+                                    <Grid Width="80" Height="80">
+                                        <Grid.Background>
+                                            <ImageBrush ImageSource="icons/MonumentIconResource.png" Stretch="UniformToFill"/>
+                                        </Grid.Background>
+                                    </Grid>
+
+                                </Grid>
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="pictures/DefaultMonumentImageResource.jpg" Stretch="UniformToFill"/>
+                                </Grid.Background>
+                            </Grid>
+                            
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+                
+                
+                <Grid x:Name="DisplayMonumentInfoHolder" Canvas.Right="0" Canvas.Top="0" Width="500" 
+                      Height="{Binding CanvasPositions.Height}" Background="#072530">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50" />
                         <RowDefinition Height="{Binding CanvasPositions.ScrollViewerHeights}"/>
@@ -103,7 +134,7 @@
                                                FontWeight="SemiBold" Text="Monument Name or Title" Margin="15"/>
                                 </Grid>
                                 <Grid.Background>
-                                    <ImageBrush x:Name="DisplayInfoImage" ImageSource="pictures/DefaultMonumentImage.jpg" Stretch="UniformToFill"/>
+                                    <ImageBrush x:Name="DisplayInfoImage" ImageSource="pictures/DefaultMonumentImageResource.jpg" Stretch="UniformToFill"/>
                                 </Grid.Background>
                             </Grid>
 
@@ -452,6 +483,17 @@
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
+
+                <Grid Width="120" Height="40" x:Name="RemoveMonumentGrid" Background="#072530"
+                      Canvas.Top="-50" Canvas.Left="{Binding CanvasPositions.RemoveLeft}">
+                    <TextBlock Text="Remove" Foreground="White" FontSize="16"
+                               TextAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+                
+
+                <Grid x:Name="CursorIcon" Canvas.Top="0" Canvas.Left="0"
+                      Visibility="Hidden" Width="100" Height="100"/>
+
             </Canvas>
 
             <DockPanel x:Name="mainPanel"  Background="#072530">
@@ -497,7 +539,7 @@
 
                 <!-- BING MAPA -->
                 <Grid>
-                    <m:Map x:Name="worldMap" ZoomLevel="2.5"  Mode="AerialWithLabels" CredentialsProvider="AtDk4CCssn5oeGv1MfzEWA_LA9eulE9bDLI6VdfGkcnCi6ydlDX0LT-jNXskoIV_" RenderTransformOrigin="0.5,0.5"/>
+                    <m:Map x:Name="worldMap" ZoomLevel="4"  Mode="AerialWithLabels" CredentialsProvider="AtDk4CCssn5oeGv1MfzEWA_LA9eulE9bDLI6VdfGkcnCi6ydlDX0LT-jNXskoIV_" RenderTransformOrigin="0.5,0.5"/>
                 </Grid>
 
             </DockPanel>
