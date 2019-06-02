@@ -106,7 +106,7 @@
                                     <ImageBrush x:Name="DisplayInfoImage" ImageSource="pictures/DefaultMonumentImage.jpg" Stretch="UniformToFill"/>
                                 </Grid.Background>
                             </Grid>
-                            
+
                             <TextBlock Foreground="White" TextWrapping="Wrap" TextAlignment="Justify" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat orci ut tincidunt fringilla. Praesent diam mi, rhoncus sed ultrices eu, bibendum et velit. Pellentesque vitae magna vulputate, pulvinar orci in, aliquet justo. Vestibulum non dolor iaculis, posuere velit in, scelerisque tellus. Mauris accumsan tempor enim, a rutrum tellus. Donec tincidunt dignissim lectus, in sollicitudin lacus malesuada eget. Mauris pretium gravida ante, ut fermentum nisi tristique quis. Nam facilisis enim pharetra, facilisis mi eu, lobortis nisi. Nulla dignissim purus et lobortis malesuada." Margin="15"/>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -181,20 +181,11 @@
                                 </Border>
                             </Grid>
 
-
-
-
-
                         </StackPanel>
                     </ScrollViewer>
-                    
-                    
                 </Grid>
 
                 
-                
-                
-
                 <Grid x:Name="newMonumTypeGridHolder" Visibility="Hidden" Width="{Binding CanvasPositions.Width}" Height="{Binding CanvasPositions.Height}">
                     <Grid.Background>
                         <SolidColorBrush Color="Black" Opacity="0.75" />
@@ -309,7 +300,7 @@
 
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
-                        <RowDefinition Height="600"></RowDefinition>
+                        <RowDefinition Height="{Binding CanvasPositions.ScrollViewerHeights}"></RowDefinition>
                     </Grid.RowDefinitions>
                     
                     <!-- Zaglavlje prozora-->
@@ -357,8 +348,9 @@
                                 </Grid>
                             </Border>
 
+                          
                             <!-- Forma za dodavanje novog spomenika -->
-                            <Grid x:Name="newMonumentForm" Margin="0,15,0,0" Height="500" ScrollViewer.CanContentScroll="True">
+                            <Grid x:Name="newMonumentForm" Margin="0,15,0,0" ScrollViewer.CanContentScroll="True">
 
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
@@ -395,8 +387,8 @@
                                          GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
                                 
                                 <!-- Skrivena polja koja pamte putanju do odabrane slike i ikonice -->
-                                <TextBox x:Name="newMonumentIconPath" Grid.Row="1" Grid.Column="0" Visibility="Hidden"></TextBox>
-                                <TextBox x:Name="newMonumentPicturePath" Grid.Row="1" Grid.Column="1" Visibility="Hidden"></TextBox>
+                                <TextBox x:Name="newMonumentIconPath" Grid.Row="1" Grid.Column="0" Visibility="Hidden" IsEnabled="False"></TextBox>
+                                <TextBox x:Name="newMonumentPicturePath" Grid.Row="1" Grid.Column="1" Visibility="Hidden" IsEnabled="False"></TextBox>
 
                                 <Label Content="Name:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="2" Grid.Column="0"/>
                                 <TextBox x:Name="monumentName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="2" Grid.Column="1"
@@ -408,12 +400,16 @@
                                          GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
 
                                 <Label Content="Type:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="0"/>
-                                <ComboBox x:Name="monumentType" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="1"
+                                <Border BorderBrush="White" BorderThickness="0"  Grid.Row="6" Grid.Column="1">
+                                    <ComboBox x:Name="monumentType" FontSize="{Binding WindowConstants.FormFontSize}"
                                           GotFocus="comboBox_GotFocus" LostFocus="comboBox_LostFocus"/>
+                                </Border>
 
                                 <Label Content="Climate:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="0"/>
-                                <ComboBox x:Name="climateType" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="1"
+                                <Border BorderBrush="White" BorderThickness="0"  Grid.Row="8" Grid.Column="1">
+                                    <ComboBox x:Name="climateType" FontSize="{Binding WindowConstants.FormFontSize}"
                                           GotFocus="comboBox_GotFocus" LostFocus="comboBox_LostFocus"/>
+                                </Border>
 
                                 <Label Content="Eco endangered:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="10" Grid.Column="0"/>
                                 <RadioButton x:Name="radioEcoPosBtn" Content="Yes" HorizontalAlignment="Left" Grid.Row="10" Grid.Column="1" VerticalAlignment="Center"
@@ -434,8 +430,10 @@
                                             Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" GroupName="species" Margin="20, 0" IsChecked="True"/>
 
                                 <Label Content="Tourist status:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="16" Grid.Column="0"/>
-                                <ComboBox x:Name="touristStatus" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="16" Grid.Column="1"
+                                <Border BorderBrush="White" BorderThickness="0"  Grid.Row="16" Grid.Column="1">
+                                    <ComboBox x:Name="touristStatus" FontSize="{Binding WindowConstants.FormFontSize}"
                                           GotFocus="comboBox_GotFocus" LostFocus="comboBox_LostFocus"/>
+                                </Border>
 
                                 <Label Content="Annual income ($):" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="18" Grid.Column="0"/>
                                 <TextBox x:Name="annualIncome" Text="" FontSize="{Binding WindowConstants.FormFontSize}" PreviewTextInput="NumberValidationTextBox" Grid.Row="18" Grid.Column="1"
@@ -468,7 +466,7 @@
                         <!-- Nov tip spomenika -->
                         <ColumnDefinition Width="60"></ColumnDefinition>
                         <!-- Novi tip tag -->
-                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="340"></ColumnDefinition>
                         <!-- Pretraga -->
                     </Grid.ColumnDefinitions>
 
@@ -492,7 +490,7 @@
                     </Button>
 
 
-                    <TextBlock x:Name="UserNotificationMessage" Foreground="White" Opacity="0" VerticalAlignment="Center" Grid.Row="0" Grid.Column="3" FontSize="{Binding WindowConstants.HeaderFontSize}"></TextBlock>
+                    <TextBlock x:Name="UserNotificationMessage" Foreground="White" Opacity="0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="3" FontSize="{Binding WindowConstants.HeaderFontSize}"></TextBlock>
 
                 </Grid>
 

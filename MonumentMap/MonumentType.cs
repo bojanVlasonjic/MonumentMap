@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MonumentMap
 {
+    [Serializable]
     public class MonumentType
     {
         public string ID { get; set; }

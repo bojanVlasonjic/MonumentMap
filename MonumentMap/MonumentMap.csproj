@@ -91,6 +91,7 @@
     </Compile>
     <Compile Include="CanvasPositions.cs" />
     <Compile Include="CustomDatePicker.cs" />
+    <Compile Include="IOSerializer.cs" />
     <Compile Include="MonumentTag.cs" />
     <Compile Include="WindowConstants.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -144,7 +145,10 @@
   <ItemGroup>
     <Resource Include="icons\default-icon.png" />
     <Resource Include="pictures\DefaultMonumentImage.jpg" />
- </ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
