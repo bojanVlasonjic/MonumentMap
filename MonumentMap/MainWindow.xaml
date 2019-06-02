@@ -211,6 +211,7 @@
            <!-- Canvas koji prekriva glavni prozor -->
             <Canvas x:Name="mainCanvas"  Panel.ZIndex="99" HorizontalAlignment="Stretch">
 
+                <DataGrid ItemsSource="{Binding observ_monuments}" Canvas.Top="50" Canvas.Right="100"/>
 
                 <Grid Canvas.Top="50" Width="160" Height="{Binding CanvasPositions.MonumentsScrollViewerHeight}"
                       Background="#072530">
