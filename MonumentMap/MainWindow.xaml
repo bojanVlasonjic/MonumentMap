@@ -8,7 +8,9 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Width="1000" Height="700">
+        Title="Monument Map" Width="1024" Height="720"
+        MinWidth="1024" MinHeight="720"
+        WindowState="Maximized">
     
     
     
@@ -150,7 +152,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBoxItem}">
                         <Border Name="Border"
-                              Padding="2"
+                              Padding="10"
                               SnapsToDevicePixels="true">
                             <ContentPresenter />
                         </Border>
@@ -209,7 +211,6 @@
            <!-- Canvas koji prekriva glavni prozor -->
             <Canvas x:Name="mainCanvas"  Panel.ZIndex="99" HorizontalAlignment="Stretch">
 
-                
 
                 <Grid Canvas.Top="50" Width="160" Height="{Binding CanvasPositions.MonumentsScrollViewerHeight}"
                       Background="#072530">
@@ -691,13 +692,13 @@
                                HorizontalAlignment="Center" FontSize="14" Foreground="White"/>
 
                    
-                    <ComboBox Grid.Column="5" Margin="6" Padding="5" SelectedIndex="0">
-                        <ComboBoxItem Name="Item1" Margin="6">Item1</ComboBoxItem>
-                        <ComboBoxItem Name="Item2" Margin="6">Item2</ComboBoxItem>
-                        <ComboBoxItem Name="Item3" Margin="6">Item3</ComboBoxItem>
-                        <ComboBoxItem Name="Item4" Margin="6">Item4</ComboBoxItem>
-                        <ComboBoxItem Name="Item5" Margin="6">Item5</ComboBoxItem>
-                        <ComboBoxItem Name="Item6" Margin="6">Item6</ComboBoxItem>
+                    <ComboBox Grid.Column="5" Margin="6" Padding="6" SelectedIndex="0">
+                        <ComboBoxItem Name="Item1">Item1</ComboBoxItem>
+                        <ComboBoxItem Name="Item2">Item2</ComboBoxItem>
+                        <ComboBoxItem Name="Item3">Item3</ComboBoxItem>
+                        <ComboBoxItem Name="Item4">Item4</ComboBoxItem>
+                        <ComboBoxItem Name="Item5">Item5</ComboBoxItem>
+                        <ComboBoxItem Name="Item6">Item6</ComboBoxItem>
                     </ComboBox>
 
                     <TextBox Grid.Column="6" Margin="6" Background="#093647"
