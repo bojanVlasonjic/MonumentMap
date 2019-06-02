@@ -102,9 +102,6 @@ namespace MonumentMap
             WindowConstants = new WindowConstants();
             CanvasPositions = new CanvasPositions();
 
-
-            observ_monuments = IO_Serializer.deserializeMonuments();
-
             if (observ_monuments != null)
             {
                 foreach(Monument m in observ_monuments ) {
