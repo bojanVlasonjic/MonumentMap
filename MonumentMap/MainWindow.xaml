@@ -741,13 +741,15 @@
                                         Margin="10"
                                        Grid.Column="0" Grid.Row="0"/>
                                 <TextBox x:Name="monumentID" Text=""
+                                         BorderThickness="3"
                                          MaxLength="6" 
                                          Margin="0,5,10,5"
                                          Background="#093647"
                                          Grid.Column="1" Grid.Row="0"
                                          BorderBrush="Transparent"
                                          GotFocus="textBox_GotFocus"
-                                         LostFocus="textBox_LostFocus"/>
+                                         LostFocus="textBox_LostFocus"
+                                         Foreground="White"/>
                                 
                                 <!-- Skrivena polja koja pamte putanju do odabrane slike i ikonice -->
                                 <TextBox x:Name="newMonumentIconPath" Grid.Row="1" Grid.Column="0" Visibility="Hidden" IsEnabled="False"></TextBox>
@@ -755,14 +757,15 @@
 
                                 <Label Content="Name:" Foreground="White"
                                        Margin="10"
-                                       Grid.Row="1" Grid.Column="0"
-                                       />
+                                       Grid.Row="1" Grid.Column="0"/>
                                 <TextBox x:Name="monumentName" Text="" Background="#093647"
                                          Grid.Row="1" Grid.Column="1"
                                          Margin="0,5,10,5"
+                                         BorderThickness="3"
                                          BorderBrush="Transparent"
                                          GotFocus="textBox_GotFocus"
-                                         LostFocus="textBox_LostFocus"/>
+                                         LostFocus="textBox_LostFocus"
+                                         Foreground="White"/>
 
                                 <Label Content="Description:" 
                                        Foreground="White"
@@ -773,6 +776,7 @@
                                          Margin="0,5,10,5"
                                          TextWrapping="Wrap" 
                                          BorderBrush="Transparent"
+                                         BorderThickness="3"
                                          Background="#093647"
                                          MaxLength="200"
                                          HorizontalAlignment="Stretch" 
@@ -780,7 +784,8 @@
                                          VerticalScrollBarVisibility="Hidden"
                                          Grid.Row="3" Grid.Column="1" Height="80"
                                          GotFocus="textBox_GotFocus" 
-                                         LostFocus="textBox_LostFocus"/>
+                                         LostFocus="textBox_LostFocus"
+                                         Foreground="White"/>
 
                                 <Label Content="Type:" Foreground="White"
                                        Margin="10"
@@ -877,14 +882,15 @@
                                        Grid.Row="10" Grid.Column="0"
                                        Margin="10"/>
                                 <TextBox x:Name="annualIncome" Text=""
-                                         FontSize="{Binding WindowConstants.FormFontSize}"
                                          PreviewTextInput="NumberValidationTextBox" 
                                          Grid.Row="10" Grid.Column="1"
                                          GotFocus="textBox_GotFocus" 
                                          LostFocus="textBox_LostFocus"
                                          Margin="0,5,10,5"
                                          BorderBrush="Transparent"
-                                          Background="#093647"/>
+                                         BorderThickness="3"
+                                         Background="#093647"
+                                         Foreground="White"/>
 
                                 <Label Content="Discovery date:"
                                        Foreground="White" 
@@ -894,7 +900,9 @@
                                          Grid.Row="11" Grid.Column="1"
                                          Margin="0,5,10,5"
                                          BorderBrush="Transparent"
-                                         Background="#093647"></TextBox>
+                                         BorderThickness="3"
+                                         Background="#093647"
+                                         Foreground="White"></TextBox>
                                 <Border Grid.Row="12" Grid.RowSpan="1" Margin="10"
                                         Background="White" Padding="2"
                                         Height="45"
@@ -995,7 +1003,7 @@
                     </ComboBox>
 
                     <TextBox Grid.Column="6" Margin="6" Background="#093647"
-                            Text="Search..." HorizontalContentAlignment="Left" Padding="5"
+                            Text="" HorizontalContentAlignment="Left" Padding="5"
                             VerticalContentAlignment="Center" Foreground="White"
                             FontSize="14" BorderThickness="0"
                             x:Name="searchTextBox"/>

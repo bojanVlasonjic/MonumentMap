@@ -51,9 +51,6 @@ namespace MonumentMap
         private double mainWindowWidth;
 
         static BrushConverter brushConverter = new BrushConverter();
-        static Thickness FocusThickness = new Thickness(4);
-        static Thickness LostFocusThickness = new Thickness(1);
-
 
         static string BROWSE_ICONS_FILTER = "Icon Files (*.png, *.svg, *.eps, *.psd)|*.png;*.svg;*.eps;*.psd";
         static string BROWSE_PICS_FILTER = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files(*.*)|*.*";
@@ -714,53 +711,37 @@ namespace MonumentMap
                 {
                     TextBox textBox = ((TextBox)input);
                     if (textBox.Text.Equals("") && textBox.IsEnabled) {
-                        textBox.BorderBrush = Brushes.Red;
-                        textBox.BorderThickness = FocusThickness;
+                        textBox.BorderBrush = (Brush)brushConverter.ConvertFrom("#540a0a");
                         isEmpty = true;
                     } else
                     {
-                        textBox.BorderBrush = Brushes.White;
-                        textBox.BorderThickness = LostFocusThickness;
+                        textBox.BorderBrush = Brushes.Transparent;
                     }
 
                 } else if(input is Border)
                 {
                     Border border = ((Border)input);
-                    ComboBox comboBox = ((ComboBox)border.Child);
 
-
-                    if (comboBox.SelectedItem == null)
+                    if(border.Child is ComboBox)
                     {
+                        ComboBox comboBox = ((ComboBox)border.Child);
 
-                        isEmpty = true;
+                        if (comboBox.SelectedItem == null)
+                        {
 
-                        //make border red
-                        border.BorderBrush = Brushes.Red;
+                            isEmpty = true;
 
-                    } else
-                    {
-                        //make border default
-                        border.BorderBrush = Brushes.Transparent;
+                            //make border red
+                            border.BorderBrush = (Brush)brushConverter.ConvertFrom("#540a0a");
+                        }
+                        else
+                        {
+                            //make border default
+                            border.BorderBrush = Brushes.Transparent;
+                        }
                     }
 
-                } else if(input is DatePicker)
-                {
-                    DatePicker date = ((DatePicker)input);
-
-                    if(date.SelectedDate == null)
-                    {
-                        isEmpty = true;
-
-                        date.BorderBrush = Brushes.Red;
-                        date.BorderThickness = FocusThickness;
-
-                    } else
-                    {
-                        date.BorderThickness = LostFocusThickness;
-                        date.BorderBrush = Brushes.White;
-                    }
-
-                }
+                } 
 
             }
 
@@ -775,23 +756,20 @@ namespace MonumentMap
                 {
                     TextBox textBox = ((TextBox)input);
                     textBox.Text = string.Empty;
-                    textBox.BorderThickness = LostFocusThickness;
-                    textBox.BorderBrush = Brushes.White;
-
+                    textBox.BorderBrush = Brushes.Transparent;
+    
                 } else if(input is Border)
                 {
                     Border border = ((Border)input);
                     border.BorderBrush = Brushes.Transparent;
 
-                    ComboBox combobox = ((ComboBox)border.Child);
-                    combobox.SelectedItem = null;
+                    if(border.Child is ComboBox)
+                    {
+                        ComboBox combobox = ((ComboBox)border.Child);
+                        combobox.SelectedItem = null;
+                    }
 
-                } else if(input is DatePicker)
-                {
-                    DatePicker date = ((DatePicker)input);
-                    date.BorderThickness = LostFocusThickness;
-                    date.BorderBrush = Brushes.White;
-                }
+                } 
 
             }
         }
@@ -884,27 +862,25 @@ namespace MonumentMap
         private void textBox_GotFocus(object sender, RoutedEventArgs e)
         {
             var txt = sender as TextBox;
-            txt.Background = Brushes.Yellow;
+            txt.Background = (Brush)brushConverter.ConvertFrom("#0a3f54");
         }
 
         private void textBox_LostFocus(object sender, RoutedEventArgs e)
         {
             var txt = sender as TextBox;
-            txt.Background = Brushes.White;
+            txt.Background = (Brush)brushConverter.ConvertFrom("#093647");
         }
 
         private void comboBox_GotFocus(object sender, RoutedEventArgs e)
         {
             var combo = sender as ComboBox;
-
-            ((Border)combo.Parent).BorderBrush = Brushes.Blue;
+            ((Border)combo.Parent).BorderBrush = (Brush)brushConverter.ConvertFrom("#0a3f54");
         }
 
         private void comboBox_LostFocus(object sender, RoutedEventArgs e)
         {
             var combo = sender as ComboBox;
-
-            ((Border)combo.Parent).BorderBrush = Brushes.Transparent;
+            ((Border)combo.Parent).BorderBrush = (Brush)brushConverter.ConvertFrom("#093647"); ;
         }
 
 
