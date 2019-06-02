@@ -98,10 +98,10 @@ namespace MonumentMap
         {
 
             initializeGlobalObjects();
-            
+
             WindowConstants = new WindowConstants();
             CanvasPositions = new CanvasPositions();
-            
+
 
             if (observ_monuments != null)
             {
@@ -192,7 +192,7 @@ namespace MonumentMap
             {
                 NotifyUser(sb.ToString());
             }
-           
+
         }
 
 
@@ -251,7 +251,7 @@ namespace MonumentMap
 
 
 
-        worldMap.Children.Add(pin); 
+        worldMap.Children.Add(pin);
     } */
 
         public Monument selectedDisplayMonument = null;
@@ -286,7 +286,7 @@ namespace MonumentMap
         {
             double z = worldMap.ZoomLevel;
 
-            //setting min zoom 
+            //setting min zoom
             if (z > 16)
             {
                 worldMap.ZoomLevel = 16;
@@ -357,7 +357,7 @@ namespace MonumentMap
 
         private void changeMonumIconBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
             string filePath = browseFiles(BROWSE_ICONS_FILTER);
 
             if(filePath != null)
@@ -369,7 +369,7 @@ namespace MonumentMap
 
         private void changeMonumPicBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
             string filePath = browseFiles(BROWSE_PICS_FILTER);
 
             if(filePath != null)
@@ -382,7 +382,7 @@ namespace MonumentMap
 
         private void addMonumentBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
             if(!checkForEmptyFields(newMonumentForm))
             {
                 if(monumentIdExists(monumentID.Text))
@@ -445,8 +445,8 @@ namespace MonumentMap
                 //if the user left the default icon
                 if(newMonumentIconPath.Text.Equals(""))
                 {
-                    
-                    if (!typeID.Equals("0")) 
+
+                    if (!typeID.Equals("0"))
                     {
                         //set the monument icon from monument type
                         if (monument.Type != null)
@@ -456,12 +456,12 @@ namespace MonumentMap
                         {
                             monument.Icon_path = "icons/MonumentIcon.png";
                         }
-                        
+
                     } else
                     {
                         monument.Icon_path = "icons/MonumentIcon.png";
                     }
-                    
+
 
                 } else
                 {
@@ -488,7 +488,7 @@ namespace MonumentMap
                 {
                     NotifyUser("Failed to save monuments");
                 }
-                    
+
             }
         }
 
@@ -535,7 +535,7 @@ namespace MonumentMap
 
             }
 
-            
+
         }
 
         private void newTagBtn_Click(object sender, RoutedEventArgs e)
@@ -562,8 +562,8 @@ namespace MonumentMap
 
                 int fileNameIndex = filePath.LastIndexOf("\\");
                 monumentTypeIconName.Text = filePath.Substring(fileNameIndex + 1); //extract the icon name and display it
-            } 
-          
+            }
+
         }
 
         private void addMonumentTypeBtn_Click(object sender, RoutedEventArgs e)
@@ -571,7 +571,7 @@ namespace MonumentMap
 
             if(!checkForEmptyFields(newMonumTypeGrid))
             {
-                
+
                 if(monumentTypeIconPath.Text.Equals(""))
                 {
                     //TODO: manje seljacko obavestenje
@@ -614,7 +614,7 @@ namespace MonumentMap
                 {
                     NotifyUser("Failed to save monument types");
                 }
-                
+
             }
 
         }
@@ -668,7 +668,7 @@ namespace MonumentMap
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.Multiselect = false;
 
-            // Set filter for file extension 
+            // Set filter for file extension
             dlg.Filter = filterCriteria;
 
             // Display OpenFileDialog by calling ShowDialog method
@@ -678,7 +678,7 @@ namespace MonumentMap
             if (result == true)
             {
                 return dlg.FileName;
-                
+
             }
 
             return null;
@@ -701,7 +701,7 @@ namespace MonumentMap
         private void selectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             tagColorCode.Text = ColorPicker_Tag.SelectedColor.ToString();
-            
+
         }
 
         private bool checkForEmptyFields(Grid inputHolder)
@@ -727,13 +727,13 @@ namespace MonumentMap
                 {
                     Border border = ((Border)input);
                     ComboBox comboBox = ((ComboBox)border.Child);
-                    
+
 
                     if (comboBox.SelectedItem == null)
                     {
-                        
+
                         isEmpty = true;
-                
+
                         //make border red
                         border.BorderBrush = Brushes.Red;
 
@@ -759,9 +759,9 @@ namespace MonumentMap
                         date.BorderThickness = LostFocusThickness;
                         date.BorderBrush = Brushes.White;
                     }
-                    
+
                 }
-                
+
             }
 
             return isEmpty;
@@ -928,7 +928,7 @@ namespace MonumentMap
 
         private void Button_ClickCloseDisplayInfo(object sender, RoutedEventArgs e)
         {
-            
+
             if (isNewMonumentWindowInfoShown)
             {
 
@@ -1058,8 +1058,8 @@ namespace MonumentMap
             {
                 this.Cursor = Cursors.Hand;
                 CursorIcon.Visibility = Visibility.Visible;
-               
-                
+
+
                 var pos = e.GetPosition(this);
                 Canvas.SetLeft(CursorIcon, pos.X + 10);
                 Canvas.SetTop(CursorIcon, pos.Y + 10);
@@ -1080,7 +1080,7 @@ namespace MonumentMap
                 Brush col = (SolidColorBrush)(new BrushConverter().ConvertFrom("#093647"));
                 RemoveMonumentGrid.Background = col;
             }
-            
+
         }
 
 
@@ -1111,7 +1111,7 @@ namespace MonumentMap
 
         private void Window_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            
+
             if (worldMap.IsMouseOver && selectedMonument != null)
             {
                 if (!PinExistsOnMap(selectedMonument.Tag.ToString()))
@@ -1151,7 +1151,7 @@ namespace MonumentMap
             if (RemoveMonumentGrid.IsMouseOver && selectedMonument != null)
             {
                 RemoveMonument();
-                
+
             }
             if (selectedMonument != null)
             {
@@ -1187,7 +1187,7 @@ namespace MonumentMap
 
             observ_monuments.Remove(selectedMonumentObject);
             IO_Serializer.serializeMonuments(observ_monuments);
-            
+
         }
 
         private bool PinExistsOnMap(string id)
@@ -1223,7 +1223,7 @@ namespace MonumentMap
             (mainGrid as UIElement).MouseLeave += GridMonument_MouseLeave;
             (mainGrid as UIElement).MouseDown += GridMonument_MouseDown;
 
-            
+
             var mainBrush = new ImageBrush();
             mainBrush.Stretch = Stretch.UniformToFill;
             mainBrush.ImageSource = new BitmapImage(new Uri(monument.Picture_path, UriKind.Relative));
@@ -1291,6 +1291,6 @@ namespace MonumentMap
 
         }
 
-        
+
     }
 }
