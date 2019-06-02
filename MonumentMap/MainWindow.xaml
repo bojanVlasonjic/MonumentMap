@@ -14,6 +14,163 @@
     
     <!-- Dekorisanje pinova na mapi -->
     <Window.Resources>
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Border
+                  x:Name="Border" 
+                  Grid.ColumnSpan="2"
+                  CornerRadius="0"
+                  Background="#093647"
+                  BorderBrush="#093647"
+                  BorderThickness="1" />
+                <Border 
+                  Grid.Column="0"
+                  CornerRadius="0" 
+                  Margin="1" 
+                  Background="#093647" 
+                  BorderBrush="#093647"
+                  BorderThickness="0,0,1,0" />
+                <Path 
+                  x:Name="Arrow"
+                  Grid.Column="1"     
+                  Fill="White"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Data="M0,0 L0,2 L4,6 L8,2 L8,0 L4,4 z"
+                />
+            </Grid>
+
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="{x:Type TextBox}">
+            <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
+        </ControlTemplate>
+
+        <Style x:Key="{x:Type ComboBox}" TargetType="{x:Type ComboBox}">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="MinHeight" Value="20"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <ToggleButton 
+                            Name="ToggleButton" 
+                            Template="{StaticResource ComboBoxToggleButton}" 
+                            Grid.Column="2" 
+                            Focusable="false"
+                            IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                            ClickMode="Press">
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite" IsHitTestVisible="False"  Content="{TemplateBinding SelectionBoxItem}"
+                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                            Margin="3,3,23,3"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left" />
+                            <TextBox x:Name="PART_EditableTextBox"
+                            Style="{x:Null}" 
+                            Template="{StaticResource ComboBoxTextBox}" 
+                            HorizontalAlignment="Left" 
+                            VerticalAlignment="Center" 
+                            Margin="3,3,23,3"
+                            Focusable="True" 
+                            Background="#093647"
+                            Foreground="Green"
+                            Visibility="Hidden"
+                            IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                            <Popup 
+                            Name="Popup"
+                            Placement="Bottom"
+                            IsOpen="{TemplateBinding IsDropDownOpen}"
+                            AllowsTransparency="True" 
+                            Focusable="False"
+                            PopupAnimation="None">
+
+                                <Grid Name="DropDown"
+                              SnapsToDevicePixels="True"                
+                              MinWidth="{TemplateBinding ActualWidth}"
+                              MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border 
+                                x:Name="DropDownBorder"
+                                Background="#093647"
+
+                                BorderThickness="1"
+                                BorderBrush="#093647"/>
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="#888888"/>
+                            </Trigger>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </Trigger>
+                            <Trigger SourceName="Popup" Property="Popup.AllowsTransparency" Value="true">
+                                <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="0"/>
+                                <Setter TargetName="DropDownBorder" Property="Margin" Value="0,2,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsEditable"  Value="true">
+                                <Setter Property="IsTabStop" Value="false"/>
+                                <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+            </Style.Triggers>
+        </Style>
+
+        <!-- SimpleStyles: ComboBoxItem -->
+        <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            
+            <Setter Property="Template">
+                
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                        <Border Name="Border"
+                              Padding="2"
+                              SnapsToDevicePixels="true">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="#073647"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="#073647"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Image x:Key="SearchIconImage"
+               RenderOptions.BitmapScalingMode="HighQuality" 
+               Source="icons/searchIcon.png" />
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#072530"/>
             <Setter Property="Template">
@@ -70,34 +227,14 @@
                              Grid.Row="2" x:Name="SearchMonuments"/>
                     <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
                         <StackPanel x:Name="MonumentsStackPanel">
-                            <Grid Height="160" Margin="0, 5"
-                                  UIElement.MouseEnter="GridMonument_MouseEnter"
-                                  UIElement.MouseLeave="GridMonument_MouseLeave"
-                                  UIElement.MouseDown="GridMonument_MouseDown">
-                                <Grid>
-                                    <Grid.Background>
-                                        <SolidColorBrush Color="Black" Opacity="0.3"/>
-                                    </Grid.Background>
-
-
-                                    <Grid Width="80" Height="80">
-                                        <Grid.Background>
-                                            <ImageBrush ImageSource="icons/MonumentIconResource.png" Stretch="UniformToFill"/>
-                                        </Grid.Background>
-                                    </Grid>
-
-                                </Grid>
-                                <Grid.Background>
-                                    <ImageBrush ImageSource="pictures/DefaultMonumentImageResource.jpg" Stretch="UniformToFill"/>
-                                </Grid.Background>
-                            </Grid>
+                            
                             
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
                 
                 
-                <Grid x:Name="DisplayMonumentInfoHolder" Canvas.Right="0" Canvas.Top="0" Width="500" 
+                <Grid x:Name="DisplayMonumentInfoHolder" Canvas.Right="-500" Canvas.Top="0" Width="500" 
                       Height="{Binding CanvasPositions.Height}" Background="#072530">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50" />
@@ -130,7 +267,7 @@
                                         <RowDefinition Height="100"/>
                                     </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="1" Foreground="White" FontSize="22" VerticalAlignment="Center" TextWrapping="Wrap"
+                                    <TextBlock x:Name="DisplayInfoName" Grid.Row="1" Foreground="White" FontSize="22" VerticalAlignment="Center" TextWrapping="Wrap"
                                                FontWeight="SemiBold" Text="Monument Name or Title" Margin="15"/>
                                 </Grid>
                                 <Grid.Background>
@@ -138,14 +275,14 @@
                                 </Grid.Background>
                             </Grid>
 
-                            <TextBlock Foreground="White" TextWrapping="Wrap" TextAlignment="Justify" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat orci ut tincidunt fringilla. Praesent diam mi, rhoncus sed ultrices eu, bibendum et velit. Pellentesque vitae magna vulputate, pulvinar orci in, aliquet justo. Vestibulum non dolor iaculis, posuere velit in, scelerisque tellus. Mauris accumsan tempor enim, a rutrum tellus. Donec tincidunt dignissim lectus, in sollicitudin lacus malesuada eget. Mauris pretium gravida ante, ut fermentum nisi tristique quis. Nam facilisis enim pharetra, facilisis mi eu, lobortis nisi. Nulla dignissim purus et lobortis malesuada." Margin="15"/>
+                            <TextBlock x:Name="DisplayInfoDescription" Foreground="White" TextWrapping="Wrap" TextAlignment="Justify" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus feugiat orci ut tincidunt fringilla. Praesent diam mi, rhoncus sed ultrices eu, bibendum et velit. Pellentesque vitae magna vulputate, pulvinar orci in, aliquet justo. Vestibulum non dolor iaculis, posuere velit in, scelerisque tellus. Mauris accumsan tempor enim, a rutrum tellus. Donec tincidunt dignissim lectus, in sollicitudin lacus malesuada eget. Mauris pretium gravida ante, ut fermentum nisi tristique quis. Nam facilisis enim pharetra, facilisis mi eu, lobortis nisi. Nulla dignissim purus et lobortis malesuada." Margin="15"/>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Foreground="White" Text="Type: " Margin="15, 10"/>
-                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                                <TextBlock x:Name="DisplayInfoType" Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
                             </Grid>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -153,7 +290,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Foreground="White" Text="Climate: " Margin="15, 10"/>
-                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                                <TextBlock x:Name="DisplayInfoClimate" Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
                             </Grid>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -161,7 +298,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Foreground="White" Text="Eco endangered:" Margin="15, 10"/>
-                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                                <TextBlock  x:Name="DisplayInfoEcoEndangered" Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
                             </Grid>
 
                             <Grid>
@@ -170,7 +307,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Foreground="White" Text="In human settlement: " Margin="15, 10"/>
-                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                                <TextBlock  x:Name="DisplayInfoInHumanSettlement" Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
                             </Grid>
 
                             <Grid>
@@ -179,7 +316,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Foreground="White" Text="Has endangered species:" Margin="15, 10"/>
-                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                                <TextBlock  x:Name="DisplayInfoHasEndangeredSpecies" Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
                             </Grid>
 
                             <Grid>
@@ -188,7 +325,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Foreground="White" Text="Tourist status:" Margin="15, 10"/>
-                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                                <TextBlock x:Name="DisplayInfoTouristStatus" Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
                             </Grid>
 
                             <Grid>
@@ -197,7 +334,16 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Foreground="White" Text="Annual income: " Margin="15, 10"/>
-                                <TextBlock Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                                <TextBlock x:Name="DisplayInfoAnnualIncome" Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Foreground="White" Text="Discovery date: " Margin="15, 10"/>
+                                <TextBlock x:Name="DisplayInfoDiscoveryDate" Grid.Column="1" Text="Dummy" Margin="15, 10" Foreground="White" TextAlignment="Right"/>
                             </Grid>
 
                             <Grid Height="150">
@@ -508,8 +654,12 @@
                         <!-- Nov tip spomenika -->
                         <ColumnDefinition Width="60"></ColumnDefinition>
                         <!-- Novi tip tag -->
-                        <ColumnDefinition Width="340"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
                         <!-- Pretraga -->
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="250" />
+                        <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
@@ -532,8 +682,33 @@
                     </Button>
 
 
-                    <TextBlock x:Name="UserNotificationMessage" Foreground="White" Opacity="0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="3" FontSize="{Binding WindowConstants.HeaderFontSize}"></TextBlock>
+                    <TextBlock x:Name="UserNotificationMessage" Foreground="White" Opacity="0"
+                               VerticalAlignment="Center" HorizontalAlignment="Left"
+                               Grid.Row="0" Grid.Column="3"
+                               FontSize="{Binding WindowConstants.HeaderFontSize}" />
 
+                    <TextBlock Grid.Column="4" Text="Filter:" VerticalAlignment="Center"
+                               HorizontalAlignment="Center" FontSize="14" Foreground="White"/>
+
+                   
+                    <ComboBox Grid.Column="5" Margin="6" Padding="5" SelectedIndex="0">
+                        <ComboBoxItem Name="Item1" Margin="6">Item1</ComboBoxItem>
+                        <ComboBoxItem Name="Item2" Margin="6">Item2</ComboBoxItem>
+                        <ComboBoxItem Name="Item3" Margin="6">Item3</ComboBoxItem>
+                        <ComboBoxItem Name="Item4" Margin="6">Item4</ComboBoxItem>
+                        <ComboBoxItem Name="Item5" Margin="6">Item5</ComboBoxItem>
+                        <ComboBoxItem Name="Item6" Margin="6">Item6</ComboBoxItem>
+                    </ComboBox>
+
+                    <TextBox Grid.Column="6" Margin="6" Background="#093647"
+                            Text="Search..." HorizontalContentAlignment="Left" Padding="5"
+                            VerticalContentAlignment="Center" Foreground="White"
+                            FontSize="14" BorderThickness="0"/>
+                    
+                    <Button x:Name="searchBtn" Grid.Column="7" ToolTip="Search"
+                            Width="40" Height="40" Margin="0,0,5,5"
+                            BorderThickness="0" Content="{StaticResource SearchIconImage}"
+                            VerticalAlignment="Bottom"/>
                 </Grid>
 
 

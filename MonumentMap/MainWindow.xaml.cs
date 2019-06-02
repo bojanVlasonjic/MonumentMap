@@ -38,7 +38,7 @@ namespace MonumentMap
 
         /******** Booleans indicating whether pop-up windows are shown ********/
         public bool isNewMonumentWindowShown = false;
-        public bool isNewMonumentWindowInfoShown = true;
+        public bool isNewMonumentWindowInfoShown = false;
 
 
         /***************** Observable collections *****************/
@@ -108,6 +108,16 @@ namespace MonumentMap
                 NotifyUser("No monuments loaded");
                 observ_monuments = new ObservableCollection<Monument>();
             }
+            if (observ_monuments != null)
+            {
+                foreach(Monument m in observ_monuments ) {
+                    AddMonumentToMonumentsView(m);
+                    if (m.monumentPin != null)
+                    {
+                        addMonumentPinToMap(m);
+                    }
+                }
+            }
 
             /* Initializing font sizes */
             WindowConstants.HeaderFontSize = 20;
@@ -158,41 +168,61 @@ namespace MonumentMap
         }
 
 
-                        /*********************
-                        * MAP EVENT HANDLERS *
-                        * *******************/
-        
-            /*
-        //na dupli klik se ubaci pin na mapu - za sad
-        private void worldMap_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
+        /*********************
+        * MAP EVENT HANDLERS *
+        * *******************/
 
-            e.Handled = true;
+        /*
+    //na dupli klik se ubaci pin na mapu - za sad
+    private void worldMap_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
 
-            Point mousePosition = e.GetPosition(this);
-          //  NotifyUser(mousePosition.X + " " + mousePosition.Y);
-            
-            Location pinLocation = worldMap.ViewportPointToLocation(mousePosition);
+        e.Handled = true;
 
-            ControlTemplate template = (ControlTemplate)this.FindResource("MonumentPinTemplate"); //template za promenu izgleda pin-a
+        Point mousePosition = e.GetPosition(this);
+      //  NotifyUser(mousePosition.X + " " + mousePosition.Y);
 
-            Pushpin pin = new Pushpin();
-            pin.Template = template;
-            pin.Location = pinLocation;
-            pin.Location.Latitude += 5; //including the toolbar height in lattitude of the pin
+        Location pinLocation = worldMap.ViewportPointToLocation(mousePosition);
 
-            pin.Content = "pin" + worldMap.Children.Count;
+        ControlTemplate template = (ControlTemplate)this.FindResource("MonumentPinTemplate"); //template za promenu izgleda pin-a
 
-           
+        Pushpin pin = new Pushpin();
+        pin.Template = template;
+        pin.Location = pinLocation;
+        pin.Location.Latitude += 5; //including the toolbar height in lattitude of the pin
 
-            worldMap.Children.Add(pin); 
-        } */
+        pin.Content = "pin" + worldMap.Children.Count;
 
 
+
+        worldMap.Children.Add(pin); 
+    } */
+
+        public Monument selectedDisplayMonument = null;
         private void PinClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             Pushpin p = sender as Pushpin;
+            selectedDisplayMonument = getMonumentById(p.Content.ToString());
+            OpenDisplayInfo();
+            ChangeDisplayInfo(selectedDisplayMonument);
+
             NotifyUser(p.Content.ToString());
+        }
+
+        private void ChangeDisplayInfo(Monument monument)
+        {
+            DisplayInfoName.Text = monument.Name;
+            DisplayInfoDescription.Text = monument.Description;
+            DisplayInfoType.Text = monument.Type != null ? monument.Type.ToString() : "No type";
+            DisplayInfoClimate.Text = monument.Climate.ToString();
+            DisplayInfoEcoEndangered.Text = monument.IsEcoEndangered ? "Yes" : "No";
+            DisplayInfoInHumanSettlement.Text = monument.IsInSettlement ? "Yes" : "No";
+            DisplayInfoHasEndangeredSpecies.Text = monument.ContainsEndangeredSpecies ? "Yes" : "No";
+            DisplayInfoTouristStatus.Text = monument.TourStatus.ToString();
+            DisplayInfoAnnualIncome.Text = monument.AnnualIncome.ToString();
+            DisplayInfoDiscoveryDate.Text = monument.DateOfDiscovery.ToString("dd-MM-yyyy");
+
+            DisplayInfoImage.ImageSource = new BitmapImage(new Uri(monument.Picture_path, UriKind.Relative));
         }
 
         //postavljanje granice za zoom
@@ -377,6 +407,7 @@ namespace MonumentMap
                     monument.Icon_path = destinationPath;
                 }
 
+                AddMonumentToMonumentsView(monument);
                 observ_monuments.Add(monument);
                 closeNewMonumentWindow();
 
@@ -617,6 +648,18 @@ namespace MonumentMap
             return false;
         }
 
+        private Monument getMonumentById(string id)
+        {
+            foreach (Monument monument in observ_monuments)
+            {
+                if (monument.ID.Equals(id))
+                {
+                    return monument;
+                }
+            }
+
+            return null;
+        }
 
         private string getFileExtensionFromPath(string filePath)
         {
@@ -668,6 +711,23 @@ namespace MonumentMap
         }
 
 
+        private void OpenDisplayInfo()
+        {
+            if (!isNewMonumentWindowInfoShown)
+            {
+
+                DoubleAnimation double_anim = new DoubleAnimation
+                {
+                    From = -DisplayMonumentInfoHolder.Width,
+                    To = 0,
+                    Duration = new Duration(TimeSpan.FromSeconds(0.3)),
+                    AutoReverse = false
+                };
+
+                DisplayMonumentInfoHolder.BeginAnimation(Canvas.RightProperty, double_anim);
+                isNewMonumentWindowInfoShown = true;
+            }
+        }
 
         private void Button_ClickCloseDisplayInfo(object sender, RoutedEventArgs e)
         {
@@ -748,7 +808,7 @@ namespace MonumentMap
             Grid child = grid.Children[0] as Grid;
             var bg = new SolidColorBrush();
             Color color = (Color)ColorConverter.ConvertFromString("#093647");
-            bg.Opacity = 0.3;
+            bg.Opacity = 0.2;
             bg.Color = color;
             child.Background = bg;
         }
@@ -758,15 +818,18 @@ namespace MonumentMap
             Grid grid = sender as Grid;
             Grid child = grid.Children[0] as Grid;
             var bg = new SolidColorBrush();
-            bg.Opacity = 0.3;
-            bg.Color = Colors.Black;
+            Color color = (Color)ColorConverter.ConvertFromString("#093647");
+            bg.Opacity = 0.5;
+            bg.Color = color;
             child.Background = bg;
         }
 
+
+        private Monument selectedMonumentObject = null;
         private void GridMonument_MouseDown(object sender, MouseButtonEventArgs e)
         {
             selectedMonument = (Grid) sender;
-
+            selectedMonumentObject = getMonumentById(selectedMonument.Tag.ToString());
 
             DoubleAnimation anim = new DoubleAnimation
             {
@@ -781,14 +844,13 @@ namespace MonumentMap
             RemoveMonumentGrid.BeginAnimation(Canvas.TopProperty, anim);
 
 
-            var imgSource = new BitmapImage(new Uri(@"icons/MonumentIcon.png", UriKind.Relative));
+            var imgSource = new BitmapImage(new Uri(selectedMonumentObject.Icon_path, UriKind.Relative));
             ImageBrush img = new ImageBrush();
             img.ImageSource = imgSource;
             img.Stretch = Stretch.UniformToFill;
             CursorIcon.Background = img;
             CursorIcon.Width = 80;
             CursorIcon.Height = 80;
-            AddMonumentToMonumentsView();
         }
 
         private void Window_OnMouseMove(object sender, MouseEventArgs e)
@@ -822,36 +884,68 @@ namespace MonumentMap
             
         }
 
+        private void addMonumentPinToMap(Monument monument)
+        {
+            BitmapImage imgSource = new BitmapImage(new Uri(monument.Icon_path, UriKind.Relative));
+            ControlTemplate tmp = new ControlTemplate(typeof(Pushpin));
+            FrameworkElementFactory fact = new FrameworkElementFactory(typeof(Image));
+            fact.SetValue(Image.SourceProperty, imgSource);
+            fact.SetValue(Image.WidthProperty, 45.0);
+            fact.SetValue(Image.StretchProperty, Stretch.UniformToFill);
+            tmp.VisualTree = fact;
+
+            Location location = new Location(monument.monumentPin.latitude, monument.monumentPin.longitude);
+
+
+            Pushpin pin = new Pushpin();
+            pin.Template = tmp;
+            pin.Location = location;
+            pin.Content = monument.ID;
+
+            pin.MouseDown += PinClicked;
+
+            worldMap.Children.Add(pin);
+
+
+        }
+
         private void Window_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             
             if (worldMap.IsMouseOver && selectedMonument != null)
             {
-                e.Handled = true;
+                if (!PinExistsOnMap(selectedMonument.Tag.ToString()))
+                {
+                    e.Handled = true;
 
-                Point mousePosition = e.GetPosition(this);
-                mousePosition.Y = mousePosition.Y - 30;
-                mousePosition.X = mousePosition.X - 3;
-                Location pinLocation = worldMap.ViewportPointToLocation(mousePosition);
-                
-                BitmapImage imgSource = new BitmapImage(new Uri(@"icons/MonumentIcon.png", UriKind.Relative));
-                //ImageBrush img = new ImageBrush(imgSource);
+                    Point mousePosition = e.GetPosition(this);
+                    mousePosition.Y = mousePosition.Y - 30;
+                    mousePosition.X = mousePosition.X - 3;
+                    Location pinLocation = worldMap.ViewportPointToLocation(mousePosition);
+                    selectedMonumentObject.monumentPin = new MonumentPin(pinLocation);
+                    BitmapImage imgSource = new BitmapImage(new Uri(selectedMonumentObject.Icon_path, UriKind.Relative));
+                    //ImageBrush img = new ImageBrush(imgSource);
 
-                ControlTemplate tmp = new ControlTemplate(typeof(Pushpin));
-                FrameworkElementFactory fact = new FrameworkElementFactory(typeof(Image));
-                fact.SetValue(Image.SourceProperty, imgSource);
-                fact.SetValue(Image.WidthProperty, 45.0);
-                fact.SetValue(Image.StretchProperty, Stretch.UniformToFill);
-                tmp.VisualTree = fact;
+                    ControlTemplate tmp = new ControlTemplate(typeof(Pushpin));
+                    FrameworkElementFactory fact = new FrameworkElementFactory(typeof(Image));
+                    fact.SetValue(Image.SourceProperty, imgSource);
+                    fact.SetValue(Image.WidthProperty, 45.0);
+                    fact.SetValue(Image.StretchProperty, Stretch.UniformToFill);
+                    tmp.VisualTree = fact;
 
-                Pushpin pin = new Pushpin();
-                pin.Template = tmp;
-                pin.Location = pinLocation;
-                pin.Content = "pin" + worldMap.Children.Count;
+                    Pushpin pin = new Pushpin();
+                    pin.Template = tmp;
+                    pin.Location = pinLocation;
+                    pin.Content = selectedMonument.Tag.ToString();
 
-                pin.MouseDown += PinClicked;
+                    pin.MouseDown += PinClicked;
 
-                worldMap.Children.Add(pin);
+                    worldMap.Children.Add(pin);
+                }
+                else
+                {
+                    NotifyUser("That monument is already placed on map");
+                }
             }
 
             if (RemoveMonumentGrid.IsMouseOver && selectedMonument != null)
@@ -875,18 +969,52 @@ namespace MonumentMap
 
                 RemoveMonumentGrid.BeginAnimation(Canvas.TopProperty, anim);
             }
-            
-            
+
+            IO_Serializer.serializeMonuments(observ_monuments);
+
+            selectedMonumentObject = null;
             selectedMonument = null;
         }
 
         private void RemoveMonument()
         {
             MonumentsStackPanel.Children.Remove(selectedMonument); //deletes monument from view
-            //TODO physically remove monument
+            Pushpin pin = GetPinFromMapById(selectedMonument.Tag.ToString());
+            if (pin != null)
+            {
+                worldMap.Children.Remove(pin);
+            }
+
+            observ_monuments.Remove(selectedMonumentObject);
+            IO_Serializer.serializeMonuments(observ_monuments);
+            
         }
 
-        private void AddMonumentToMonumentsView()
+        private bool PinExistsOnMap(string id)
+        {
+            foreach(Pushpin p in worldMap.Children){
+                if (((string)p.Content).Equals(id))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private Pushpin GetPinFromMapById(string id)
+        {
+            foreach(Pushpin p in worldMap.Children) {
+                if (id.Equals(p.Content.ToString()))
+                {
+                    return p;
+                }
+            }
+
+            return null;
+        }
+
+        private void AddMonumentToMonumentsView(Monument monument)
         {
             var mainGrid = new Grid();
             mainGrid.Height = 160;
@@ -898,19 +1026,20 @@ namespace MonumentMap
             
             var mainBrush = new ImageBrush();
             mainBrush.Stretch = Stretch.UniformToFill;
-            mainBrush.ImageSource = new BitmapImage(new Uri("pictures/DefaultMonumentImage.jpg", UriKind.Relative));
+            mainBrush.ImageSource = new BitmapImage(new Uri(monument.Picture_path, UriKind.Relative));
             mainGrid.Background = mainBrush;
 
             var childGrid = new Grid();
 
+            Color color = (Color)ColorConverter.ConvertFromString("#093647");
             var secondBrush = new SolidColorBrush();
-            secondBrush.Opacity = 0.3;
-            secondBrush.Color = Colors.Black;
+            secondBrush.Opacity = 0.5;
+            secondBrush.Color = color;
             childGrid.Background = secondBrush;
 
 
             var imageGrid = new Grid();
-            BitmapImage iconSource = new BitmapImage(new Uri("icons/MonumentIcon.png", UriKind.Relative));
+            BitmapImage iconSource = new BitmapImage(new Uri(monument.Icon_path, UriKind.Relative));
             ImageBrush iconImage = new ImageBrush();
             iconImage.ImageSource = iconSource;
             iconImage.Stretch = Stretch.UniformToFill;
@@ -920,6 +1049,7 @@ namespace MonumentMap
 
 
             childGrid.Children.Add(imageGrid);
+            mainGrid.Tag = monument.ID; //setting tag as id of monument
             mainGrid.Children.Add(childGrid);
 
             MonumentsStackPanel.Children.Add(mainGrid);

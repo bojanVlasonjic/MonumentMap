@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Maps.MapControl.WPF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,7 @@ namespace MonumentMap
 
         public double AnnualIncome { get; set; } //displayed in $USD
         public DateTime DateOfDiscovery { get; set; }
+        public MonumentPin monumentPin { get; set; }
 
         public Monument() {  }
 
