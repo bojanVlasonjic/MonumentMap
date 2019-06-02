@@ -357,7 +357,7 @@ namespace MonumentMap
                 {
                     if(monumentType.SelectedValue.ToString().ToLower().Equals("no_type"))
                     {
-                        monument.Icon_path = "icons/monument-icon.png";
+                        monument.Icon_path = "icons/MonumentIcon.png";
                     } else
                     {
                         //TODO: postavi ikonicu odabranog tipa

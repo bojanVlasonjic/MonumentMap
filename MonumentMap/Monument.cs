@@ -15,6 +15,7 @@ namespace MonumentMap
         public string ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+
         public string Icon_path { get; set; }
         public string Picture_path { get; set; }
 
