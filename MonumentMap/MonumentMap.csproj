@@ -146,7 +146,6 @@
     <Resource Include="icons\default-icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="data\" />
     <None Include="pictures\DefaultMonumentImage.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -166,6 +165,9 @@
     <None Include="icons\monument-icon-test.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

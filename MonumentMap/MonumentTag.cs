@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace MonumentMap
 {
+    [Serializable]
     public class MonumentTag
     {
-        private string ID { get; set; }
-        private string Color { get; set; }
-        private string Description { get; set; }
+        public string ID { get; set; }
+        public string Color { get; set; }
+        public string Description { get; set; }
 
 
         public MonumentTag()
