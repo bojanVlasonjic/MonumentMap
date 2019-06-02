@@ -51,9 +51,6 @@ namespace MonumentMap
         private double mainWindowWidth;
 
         static BrushConverter brushConverter = new BrushConverter();
-        static Thickness FocusThickness = new Thickness(4);
-        static Thickness LostFocusThickness = new Thickness(1);
-
 
         static string BROWSE_ICONS_FILTER = "Icon Files (*.png, *.svg, *.eps, *.psd)|*.png;*.svg;*.eps;*.psd";
         static string BROWSE_PICS_FILTER = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files(*.*)|*.*";
@@ -715,12 +712,10 @@ namespace MonumentMap
                     TextBox textBox = ((TextBox)input);
                     if (textBox.Text.Equals("") && textBox.IsEnabled) {
                         textBox.BorderBrush = (Brush)brushConverter.ConvertFrom("#540a0a");
-                        textBox.BorderThickness = FocusThickness;
                         isEmpty = true;
                     } else
                     {
                         textBox.BorderBrush = Brushes.Transparent;
-                        textBox.BorderThickness = LostFocusThickness;
                     }
 
                 } else if(input is Border)
@@ -738,7 +733,6 @@ namespace MonumentMap
 
                             //make border red
                             border.BorderBrush = (Brush)brushConverter.ConvertFrom("#540a0a");
-
                         }
                         else
                         {
@@ -762,7 +756,6 @@ namespace MonumentMap
                 {
                     TextBox textBox = ((TextBox)input);
                     textBox.Text = string.Empty;
-                    textBox.BorderThickness = LostFocusThickness;
                     textBox.BorderBrush = Brushes.Transparent;
     
                 } else if(input is Border)
