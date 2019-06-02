@@ -365,69 +365,190 @@
                 </Grid>
 
                 
-                <Grid x:Name="newMonumTypeGridHolder" Visibility="Hidden" Width="{Binding CanvasPositions.Width}" Height="{Binding CanvasPositions.Height}">
+                <Grid x:Name="newMonumTypeGridHolder" Visibility="Visible" Width="{Binding CanvasPositions.Width}" Height="{Binding CanvasPositions.Height}">
                     <Grid.Background>
                         <SolidColorBrush Color="Black" Opacity="0.75" />
                     </Grid.Background>
                     <!-- Prozor za dodavanje novog tipa spomenika -->
-                    <Grid x:Name="newMonumTypeGrid" Width="500" Height="400" Background="#001a33" 
+                    <Border Width="400" CornerRadius="20"
+                          Height="500" Background="#072530" 
                           HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="0" Opacity="1" BlurRadius="100"/>
+                        </Border.Effect>
+                        <Grid x:Name="newMonumTypeGrid" Background="#072530" 
+                              Width="380"
+                              Height="480"
+                          HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"></RowDefinition>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="55"/>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                        </Grid.RowDefinitions>
+                            <TextBlock Foreground="White" Text="Add monument type"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Grid.Row="0" Grid.ColumnSpan="2"
+                                   VerticalAlignment="Top"
+                                   Margin="15"
+                                   HorizontalAlignment="Left"/>
+                            <Rectangle Height="2" VerticalAlignment="Bottom"
+                                   Grid.ColumnSpan="2"
+                                   HorizontalAlignment="Stretch"
+                                   Margin="15, 3" Fill="#093647"/>
 
-                        <TextBlock Foreground="White" Text="Add new monument type" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center"
-                                   FontSize="{Binding WindowConstants.HeaderFontSize}"  HorizontalAlignment="Center"/>
+                            <Label Content="ID:" Foreground="White"
+                               Grid.Column="0" Grid.Row="1"
+                               Margin="10"/>
+                            <TextBox x:Name="monumentTypeID" Text=""
+                                 VerticalContentAlignment="Center"
+                                 MaxLength="6" 
+                                 Margin="5"
+                                 Foreground="White"
+                                 Grid.Column="1" Grid.Row="1"
+                                 Width="100" HorizontalAlignment="Left"
+                                 Background="#093647"
+                                 BorderBrush="Transparent"
+                                 GotFocus="textBox_GotFocus" 
+                                 LostFocus="textBox_LostFocus"/>
 
-                        <Label Content="ID:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Column="0" Grid.Row="2" Margin="5"/>
-                        <TextBox x:Name="monumentTypeID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Margin="0,0,10,0"
-                                 Grid.Column="1" Grid.Row="2"  Width="100" HorizontalAlignment="Left" GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
+                            <Label Content="Name:" Foreground="White"
+                               Grid.Row="2" 
+                               Grid.Column="0" 
+                               Margin="10"/>
+                            <TextBox x:Name="monumentTypeName"
+                                 VerticalContentAlignment="Center"
+                                 Text="" 
+                                 Background="#093647"
+                                 Grid.Row="2" Grid.Column="1" 
+                                 Margin="5"
+                                 BorderBrush="Transparent"
+                                 Foreground="White"
+                                 GotFocus="textBox_GotFocus" 
+                                 LostFocus="textBox_LostFocus"/>
 
-                        <Label Content="Name:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="4" Grid.Column="0" Margin="5"/>
-                        <TextBox x:Name="monumentTypeName" Text="" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="4" Grid.Column="1" Margin="0,0,10,0"
-                                 GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
+                            <Label Content="Description:" Foreground="White"
+                               VerticalAlignment="Top" Margin="10"
+                               Grid.Row="3" Grid.Column="0"/>
+                            <TextBox x:Name="monumentTypeDescr" Text=""
+                                 FontSize="{Binding WindowConstants.FormFontSize}"
+                                 TextWrapping="Wrap" MaxLength="200"
+                                 Margin="5"
+                                 Background="#093647"
+                                 BorderBrush="Transparent"
+                                 HorizontalAlignment="Stretch"
+                                 AcceptsReturn="True" 
+                                 Foreground="White"
+                                 VerticalScrollBarVisibility="Hidden"
+                                 Grid.Row="3" Grid.Column="1" Height="80"
+                                 GotFocus="textBox_GotFocus" 
+                                 LostFocus="textBox_LostFocus"/>
 
-                        <Label Content="Description:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Top" Margin="5" Grid.Row="6" Grid.Column="0"/>
-                        <TextBox x:Name="monumentTypeDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="200" Margin="0,0,10,0"
-                                 HorizontalAlignment="Stretch" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Grid.Row="6" Grid.Column="1" Height="80"
-                                 GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
+                            <Label Content="Select icon:" 
+                               Foreground="White" 
+                               Margin="10" Grid.Row="4"
+                               VerticalAlignment="Center"
+                               Grid.Column="0"></Label>
+                            <Border Grid.Row="4" Grid.Column="1"
+                                Background="White" Padding="2"
+                                Width="70" Height="36"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Margin="5">
+                                <Button x:Name="monumentTypeBrowseBtn"
+                                    Content="Browse"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                Foreground="White"
+                                Click="monumentTypeBrowseBtn_Click"></Button>
+                            </Border>
 
-                        <Label Content="Select icon:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Margin="5" Grid.Row="8" Grid.Column="0"></Label>
-                        <Button x:Name="monumentTypeBrowseBtn" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Right"
-                                Width="70" Content="Browse" Height="36" VerticalAlignment="Center" Click="monumentTypeBrowseBtn_Click"></Button>
-                        <TextBlock x:Name="monumentTypeIconName" Foreground="White" HorizontalAlignment="Left" FontSize="{Binding WindowConstants.FormFontSize}"
-                                   Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" Margin="10" Width="Auto"></TextBlock>
+                            <TextBlock x:Name="monumentTypeIconName"
+                                   Foreground="White" 
+                                   HorizontalAlignment="Right" 
+                                   Grid.Row="4" Grid.Column="1" 
+                                   VerticalAlignment="Center" 
+                                   Margin="10" Width="170"/>
 
-                        <!-- Skriveni textBox koji cuva putanju do ikonice -->
-                        <TextBox x:Name="monumentTypeIconPath" Grid.Row="9" Grid.ColumnSpan="2" Width="200" Visibility="Hidden" IsEnabled="False"
+                            <!-- Skriveni textBox koji cuva putanju do ikonice -->
+                            <TextBox x:Name="monumentTypeIconPath" Grid.Row="1" Grid.ColumnSpan="2" Width="200" Visibility="Hidden" IsEnabled="False"
                                  GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"></TextBox>
 
-                        <Button x:Name="addMonumentTypeBtn" Foreground="White" Background="Blue" Content="Add type" Grid.Column="0" Grid.Row="10"
-                                Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="addMonumentTypeBtn_Click"></Button>
-                        <Button x:Name="cancelMonumentTypeBtn" Foreground="White" Background="Blue" Content="Cancel" Grid.Column="1" Grid.Row="10"
-                                Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Margin="50,7,50,0" Click="cancelMonumentTypeBtn_Click" ></Button>
+                            <Border Grid.Row="5" Grid.Column="1"
+                                Background="White" Padding="2"
+                                Width="100" Height="36"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Margin="5">
+                                <Button x:Name="addMonumentTypeBtn" 
+                                Foreground="White"
+                                Content="Add type"
+                                    HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch" 
+                                Click="addMonumentTypeBtn_Click"></Button>
+                            </Border>
+                            <Button x:Name="cancelMonumentTypeBtn"
+                                Foreground="White"
+                                Content="Cancel" Grid.Column="1"
+                                Grid.Row="0"
+                                Width="100" HorizontalAlignment="Right"
+                                VerticalAlignment="Center" 
+                                Margin="15" 
+                                Click="cancelMonumentTypeBtn_Click" ></Button>
 
-                        <TextBlock x:Name="newTypeNotificationMessage" Text="" Foreground="White" Opacity="0" VerticalAlignment="Center"
+                            <Rectangle Height="2" VerticalAlignment="Bottom"
+                                   Grid.Row="6"
+                                   Grid.ColumnSpan="2"
+                                   HorizontalAlignment="Stretch" Margin="15, 15" Fill="#093647"/>
+
+                            <TextBlock Grid.Row="7" Text="Delete monument type" Foreground="White"
+                                   FontSize="14" Margin="15" Grid.ColumnSpan="2"
+                                   FontWeight="SemiBold"/>
+                            <ComboBox x:Name="DeleteMonumentTypeCombobox" 
+                                  Grid.Row="8" Grid.ColumnSpan="2"
+                                  Width="200"
+                                  HorizontalAlignment="Left"
+                                  Margin="15, 5"
+                                  VerticalAlignment="Center"
+                                  Height="35"
+                                  ItemsSource="{Binding observ_monum_types}"/>
+
+                            <Border Grid.Row="8" Grid.Column="1"
+                                Background="White" Padding="2"
+                                Width="150" Height="36"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="5">
+                                <Button x:Name="DeleteMonumentTypeButton" 
+                                Foreground="White"
+                                Content="Delete"
+                                    HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch" 
+                                Click="addMonumentTypeBtn_Click"></Button>
+                            </Border>
+
+
+
+                            <TextBlock x:Name="newTypeNotificationMessage" Text="" Foreground="White" Opacity="0" VerticalAlignment="Center"
                                    HorizontalAlignment="Center" Grid.Row="12" Grid.ColumnSpan="2" FontSize="{Binding WindowConstants.HeaderFontSize}"></TextBlock>
-                    </Grid>
+                        </Grid>
+                    </Border>
                 </Grid>
 
                 <!-- Prozor za dodavanje novog Tag-a -->
