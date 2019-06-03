@@ -162,7 +162,7 @@ namespace MonumentMap
         {
             ObservableCollection<MonumentTag> observableTags = null;
 
-            if (File.Exists(monumentTypePath))
+            if (File.Exists(monumentTagPath))
             {
                 try
                 {
@@ -171,7 +171,7 @@ namespace MonumentMap
                         observableTags = (ObservableCollection<MonumentTag>)formatter.Deserialize(stream);
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     return null;
                 }

@@ -61,6 +61,7 @@ namespace MonumentMap
 
 
         static IOSerializer IO_Serializer = new IOSerializer();
+        static Utility utility = new Utility();
 
 
         /******************* Timers *******************/
@@ -491,26 +492,28 @@ namespace MonumentMap
         private void addTagBtn_Click(object sender, RoutedEventArgs e)
         {
 
-            //check if the user selected a color
-            if (tagColorCode.Text.Equals(""))
-            {
-                ColorPicker_Tag.BorderBrush = Brushes.Red;
-                return;
-            }
-            else
-            {
-                ColorPicker_Tag.BorderBrush = Brushes.Transparent;
-            }
-
 
             if (!checkForEmptyFields(newTagGrid)) {
 
-                if(findMonumentTag(tagID.Text) != null)
+                //check if the user selected a color
+                if (tagColorCode.Text.Equals(""))
+                {
+                    ColorPicker_Tag.BorderBrush = Brushes.Red;
+                    return;
+                }
+                else
+                {
+                    ColorPicker_Tag.BorderBrush = Brushes.Transparent;
+                }
+
+                //check whether id exists
+                if (findMonumentTag(tagID.Text) != null)
                 {
                     MessageBox.Show("ID already exists");
                     return;
                 }
 
+                //creating tag
                 MonumentTag tag = new MonumentTag();
 
                 tag.ID = tagID.Text;
@@ -625,6 +628,10 @@ namespace MonumentMap
         private void closeMonumentTypeDialog()
         {
             clearInputs(newMonumTypeGrid);
+
+            //clearing text for selected icon
+            monumentTypeIconName.Text = "";
+
             newMonumTypeGridHolder.Visibility = Visibility.Hidden;
         }
 
@@ -647,6 +654,7 @@ namespace MonumentMap
         private void closeTagWindow()
         {
             clearInputs(newTagGrid);
+
             newTagGridHolder.Visibility = Visibility.Hidden;
         }
 
@@ -760,6 +768,12 @@ namespace MonumentMap
                 } else if(input is Border)
                 {
                     Border border = ((Border)input);
+
+                    if(border.Child is Button)
+                    {
+                        continue;
+                    }
+
                     border.BorderBrush = Brushes.Transparent;
 
                     if(border.Child is ComboBox)
@@ -1232,40 +1246,6 @@ namespace MonumentMap
 
         }
 
-
-                    /******************
-                     * DELETE METHODS *
-                     * ****************/
-
-        private bool deleteTag(string tagID)
-        {
-
-            MonumentTag tag = findMonumentTag(tagID);
-
-            if(tag != null)
-            {
-                return observ_monum_tags.Remove(tag);
-            }
-
-            return false;
-
-        }
-
-
-        private bool deleteMonumentType(string typeID)
-        {
-
-            MonumentType type = findMonumentType(typeID);
-
-            if(type != null)
-            {
-                return observ_monum_types.Remove(type);
-            }
-
-            return false;
-
-        }
-
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
         {
             if (depObj != null)
@@ -1300,6 +1280,115 @@ namespace MonumentMap
             {
                 cb.FontSize = cb.FontSize + 1;
             }
+        }
+
+        private void monumentTypeSelected(object sender, SelectionChangedEventArgs e)
+        {
+           
+            if(monumentType.SelectedItem == null)
+            {
+                return;
+            }
+
+            //if the user selected the icon then don't change icon based on type
+            if(!newMonumentIconPath.Text.Equals(""))
+            {
+                return;
+            }
+
+            //extract type ID from selected item
+            int colonID = monumentType.SelectedItem.ToString().IndexOf(':'); //used to extract id from string
+            string typeID = monumentType.SelectedItem.ToString().Substring(0, colonID);
+
+            //if the selected type isn't no type
+            if(!typeID.Equals("0"))
+            {
+                MonumentType type = findMonumentType(typeID);
+
+                if(typeID != null)
+                {
+                    //change the default icon to type
+                    monumentIcon.Source = new BitmapImage(new Uri(type.Icon_path));
+                }
+            } else
+            {
+                monumentIcon.Source = DEFAULT_ICON;
+            }
+
+        }
+
+
+                    /******************
+                     * DELETE METHODS *
+                     * ****************/
+
+        private bool deleteTag(string tagID)
+        {
+
+            MonumentTag tag = findMonumentTag(tagID);
+
+            if (tag != null)
+            {
+                return observ_monum_tags.Remove(tag);
+            }
+
+            return false;
+
+        }
+
+
+        private bool deleteMonumentType(string typeID)
+        {
+
+            MonumentType type = findMonumentType(typeID);
+
+            if (type != null)
+            {
+                return observ_monum_types.Remove(type);
+            }
+
+            return false;
+
+        }
+
+        private void DeleteMonumentTypeButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            if(DeleteMonumentTypeCombobox.SelectedItem == null)
+            {
+                MessageBox.Show("Please select type you want to delete");
+                return;
+            }
+
+            //extract type ID from selected item
+            int colonID = DeleteMonumentTypeCombobox.SelectedItem.ToString().IndexOf(':'); //used to extract id from string
+            string typeID = DeleteMonumentTypeCombobox.SelectedItem.ToString().Substring(0, colonID);
+
+            if(typeID.Equals("0"))
+            {
+                MessageBox.Show("You can't delete a default type");
+                return;
+            }
+
+
+            MonumentType typeToDel = findMonumentType(typeID);
+
+            if(typeToDel != null)
+            {
+
+                //check whether a monument with type to delete already exists
+                if(utility.isMonumentTypeUsed(typeToDel.ID, observ_monuments))
+                {
+                    MessageBox.Show("Can't delete type used by monument");
+                    return;
+                }
+
+                //deleting monument type
+                observ_monum_types.Remove(typeToDel);
+                IO_Serializer.serializeMonumentTypes(observ_monum_types);
+                MessageBox.Show("Deleted");
+            }
+
         }
     }
 }

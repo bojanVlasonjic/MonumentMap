@@ -368,6 +368,7 @@
                     <Grid.Background>
                         <SolidColorBrush Color="Black" Opacity="0.75" />
                     </Grid.Background>
+                    
                     <!-- Prozor za dodavanje novog tipa spomenika -->
                     <Border Width="400" CornerRadius="20"
                           Height="500" Background="#072530" 
@@ -446,7 +447,6 @@
                                VerticalAlignment="Top" Margin="10"
                                Grid.Row="3" Grid.Column="0"/>
                             <TextBox x:Name="monumentTypeDescr" Text=""
-                                 FontSize="{Binding WindowConstants.FormFontSize}"
                                  TextWrapping="Wrap" MaxLength="200"
                                  Margin="5"
                                  Background="#093647"
@@ -483,7 +483,7 @@
                                    HorizontalAlignment="Right" 
                                    Grid.Row="4" Grid.Column="1" 
                                    VerticalAlignment="Center" 
-                                   Margin="10" Width="170"/>
+                                   Margin="10" Width="150"/>
 
                             <!-- Skriveni textBox koji cuva putanju do ikonice -->
                             <TextBox x:Name="monumentTypeIconPath" Grid.Row="1" Grid.ColumnSpan="2" Width="200" Visibility="Hidden" IsEnabled="False"
@@ -534,12 +534,13 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
                                 Margin="5">
+
                                 <Button x:Name="DeleteMonumentTypeButton" 
                                 Foreground="White"
                                 Content="Delete"
-                                    HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch" 
-                                Click="addMonumentTypeBtn_Click"></Button>
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch" Click="DeleteMonumentTypeButton_Click"/>
+
                             </Border>
 
 
@@ -551,57 +552,176 @@
                 </Grid>
 
                 <!-- Prozor za dodavanje novog Tag-a -->
-                <Grid x:Name="newTagGridHolder" Visibility="Hidden" Width="{Binding CanvasPositions.Width}" Height="{Binding CanvasPositions.Height}">
+                <Grid x:Name="newTagGridHolder" Visibility="Hidden" 
+                      Width="{Binding CanvasPositions.Width}"
+                      Height="{Binding CanvasPositions.Height}">
+                    
                     <Grid.Background>
                         <SolidColorBrush Color="Black" Opacity="0.75" />
                     </Grid.Background>
-                    <Grid x:Name="newTagGrid" Width="500" Height="400" Background="#001a33">
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="{Binding WindowConstants.RowSpacing}"/>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                        </Grid.RowDefinitions>
-                    
-                        <TextBlock Foreground="White" Text="Add new tag" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center"
-                                   FontSize="{Binding WindowConstants.HeaderFontSize}"  HorizontalAlignment="Center"/>
-
-                        <Label Content="ID:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Column="0" Grid.Row="2" Margin="5"/>
-                        <TextBox x:Name="tagID" Text="" MaxLength="6" FontSize="{Binding WindowConstants.FormFontSize}" Margin="0,0,10,0"
-                                 Grid.Column="1" Grid.Row="2"  Width="100" HorizontalAlignment="Left" GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
-
-                        <Label Content="Description:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0"/>
-                        <TextBox x:Name="tagDescr" Text="" FontSize="{Binding WindowConstants.FormFontSize}" TextWrapping="Wrap" MaxLength="200" HorizontalAlignment="Stretch" AcceptsReturn="True"
-                                 VerticalScrollBarVisibility="Auto" Grid.Row="4" Grid.Column="1" Height="80" GotFocus="textBox_GotFocus" LostFocus="textBox_LostFocus"/>
-
-                        <Label Content="Select color:" Foreground="White" FontSize="{Binding WindowConstants.FormFontSize}" Grid.Row="6" Grid.Column="0"/>
-                        <xctk:ColorPicker Name="ColorPicker_Tag" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Width="250"
-                                          SelectedColorChanged="selectedColorChanged" BorderThickness="3"/>
+                    <Border Width="400" CornerRadius="20"
+                          Height="500" Background="#072530" 
+                          HorizontalAlignment="Center" VerticalAlignment="Center">
                         
-                        <!-- Skriveno polje koje pamti hash kod odabrane boje -->
-                        <TextBox x:Name="tagColorCode" Grid.Row="7" Grid.ColumnSpan="2" Visibility="Hidden" GotFocus="textBox_GotFocus" IsEnabled="False" LostFocus="textBox_LostFocus"></TextBox>
+                        <Border.Effect>
+                            <DropShadowEffect ShadowDepth="0" Opacity="1" 
+                                              BlurRadius="100"/>
+                        </Border.Effect>
+                        
+                        <Grid x:Name="newTagGrid" Background="#072530"
+                              Width="380" Height="480">
 
-                        <Button x:Name="addTagBtn" Foreground="White" Background="Blue" Content="Add tag" Grid.Column="0" Grid.Row="8"
-                                Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="addTagBtn_Click"></Button>
-                        <Button x:Name="cancelTagBtn" Foreground="White" Background="Blue" Content="Cancel" Grid.Column="1" Grid.Row="8"
-                                Width="100" HorizontalAlignment="Center" FontSize="{Binding WindowConstants.FormFontSize}" VerticalAlignment="Center" Click="cancelTagBtn_Click"></Button>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock x:Name="newTagNotificationMessage" Text="" Foreground="White" Opacity="0" VerticalAlignment="Center"
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="55"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="55"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Foreground="White" Text="Add new tag"
+                                       Grid.Row="0" Grid.ColumnSpan="2"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       Margin="10"
+                                       FontSize="14" 
+                                       FontWeight="SemiBold"/>
+
+                            <!-- Cancel dugme-->
+                            <Button x:Name="cancelTagBtn"
+                                    Foreground="White"
+                                    Grid.Row="0" Grid.Column="1"
+                                    Content="Cancel"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Margin="10,5"
+                                    Width="100" Height="30"
+                                    Click="cancelTagBtn_Click"/>
+
+                            <Rectangle Height="2" VerticalAlignment="Bottom"
+                                   Grid.Row="0"
+                                   Grid.ColumnSpan="2"
+                                   HorizontalAlignment="Stretch" 
+                                   Margin="15, 15" Fill="#093647"/>
+
+                            <Label Content="ID:" Foreground="White" 
+                                   FontSize="14"
+                                   Grid.Column="0" Grid.Row="1" 
+                                   Margin="10"/>
+                            <TextBox x:Name="tagID" Text="" MaxLength="6"
+                                    FontSize="14"
+                                    Grid.Column="1" Grid.Row="1"
+                                    Width="100" HorizontalAlignment="Left"
+                                    Foreground="White"
+                                    VerticalContentAlignment="Center"
+                                    GotFocus="textBox_GotFocus"
+                                    LostFocus="textBox_LostFocus"
+                                    Background="#093647"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="3"
+                                    Margin="5"/>
+
+                            <Label Content="Description:" Foreground="White"
+                                   FontSize="14" VerticalAlignment="Top"
+                                   Grid.Row="2" Grid.Column="0"
+                                   Margin="10"/>
+                            <TextBox x:Name="tagDescr" Text=""
+                                     FontSize="14" TextWrapping="Wrap"
+                                     Foreground="White"
+                                     MaxLength="200" HorizontalAlignment="Stretch"
+                                     AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Hidden"
+                                     Grid.Row="2" Grid.Column="1" Height="80"
+                                     GotFocus="textBox_GotFocus"
+                                     Background="#093647"
+                                     BorderThickness="3"
+                                     BorderBrush="Transparent"
+                                     LostFocus="textBox_LostFocus"
+                                     Margin="5"/>
+
+                            <Label Content="Select color:" Foreground="White"
+                                   FontSize="14" Grid.Row="3" Grid.Column="0"
+                                   Margin="10"/>
+                            <xctk:ColorPicker Name="ColorPicker_Tag"
+                                              Grid.Row="3" Grid.Column="1"
+                                              HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              Width="180"
+                                              SelectedColorChanged="selectedColorChanged"
+                                              BorderBrush="Transparent"
+                                              Background="#093647"
+                                              BorderThickness="3"
+                                              Margin="5"/>
+
+                            <!-- Skriveno polje koje pamti hash kod odabrane boje -->
+                            <TextBox x:Name="tagColorCode" Grid.Row="0" Grid.ColumnSpan="2"
+                                     Visibility="Hidden" IsEnabled="False"></TextBox>
+
+                            <Border BorderThickness="2" BorderBrush="White"
+                                    Grid.Column="1" Grid.Row="4" Margin="10"
+                                    Padding="2" Height="36"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch">
+
+                                <Button x:Name="addTagBtn" Foreground="White"
+                                        Content="Add tag"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        Click="addTagBtn_Click"/>
+
+                            </Border>
+                            
+                            
+                            <!-- Brisanje tag-a -->
+                            <TextBlock Foreground="White" Text="Delete tag"
+                                       Grid.Row="5" Grid.ColumnSpan="2"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Left"
+                                       Margin="10"
+                                       FontSize="14" 
+                                       FontWeight="SemiBold"/>
+
+                            <Rectangle Height="2" VerticalAlignment="Bottom"
+                                   Grid.Row="5"
+                                   Grid.ColumnSpan="2"
+                                   HorizontalAlignment="Stretch" 
+                                   Margin="15, 15" Fill="#093647"/>
+
+
+                            <ComboBox x:Name="tagsToDelete" 
+                                      Grid.Column="0" Grid.Row="6"
+                                      ItemsSource="{Binding observ_monum_tags}"/>
+
+                            <Border Grid.Row="6" Grid.Column="1"
+                                Background="White" Padding="2"
+                                Width="150" Height="36"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="5">
+
+                                <Button x:Name="DeleteMonumentTagButton" 
+                                Foreground="White"
+                                Content="Delete"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"/>
+
+                            </Border>
+
+
+
+
+                            <TextBlock x:Name="newTagNotificationMessage" Text="" Foreground="White" Opacity="0" VerticalAlignment="Center"
                                    HorizontalAlignment="Center" Grid.Row="10" Grid.ColumnSpan="2" FontSize="{Binding WindowConstants.HeaderFontSize}"></TextBlock>
-                    </Grid>
+                        </Grid>
+                    </Border>
                 </Grid>
 
                 <!-- Prozor za dodavanje novih spomenika -->
@@ -791,10 +911,12 @@
                                        Grid.Row="4" Grid.Column="0"/>
                                 <Border BorderBrush="Transparent" BorderThickness="3"
                                         Grid.Row="4" Grid.Column="1" Margin="0,5,10,5">
-                                    <ComboBox x:Name="monumentType" SelectedIndex="0" VerticalAlignment="Stretch"
-                                          GotFocus="comboBox_GotFocus" 
+                                    <ComboBox x:Name="monumentType" SelectedIndex="0"
+                                              VerticalAlignment="Stretch"
+                                              GotFocus="comboBox_GotFocus" 
                                               LostFocus="comboBox_LostFocus"
-                                              ItemsSource="{Binding observ_monum_types}"/>
+                                              ItemsSource="{Binding observ_monum_types}"
+                                              SelectionChanged="monumentTypeSelected"/>
                                 </Border>
 
                                 <Label Content="Climate:" Foreground="White"
@@ -970,26 +1092,36 @@
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <Button x:Name="newMonumentBtn" Click="newMonumentBtn_Click" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Width="50"
-                         FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new monument" BorderThickness="0">
+                    <Button x:Name="newMonumentBtn" Click="newMonumentBtn_Click"
+                            Grid.Row="0" Grid.Column="0"
+                            HorizontalAlignment="Left" Width="50"
+                            FontSize="{Binding WindowConstants.HeaderFontSize}"
+                            ToolTip="Add new monument" BorderThickness="0">
                         <Image Source="icons/monument-icon.png" Height="35"/>
                     </Button>
 
-                    <Button x:Name="newMonumentTypeBtn" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Width="50"
-                         FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new type of monument" BorderThickness="0" Click="newMonumentTypeBtn_Click">
+                    <Button x:Name="newMonumentTypeBtn" Grid.Row="0" Grid.Column="1"
+                            HorizontalAlignment="Left" Width="50"
+                            FontSize="{Binding WindowConstants.HeaderFontSize}" 
+                            ToolTip="Manage monument types" BorderThickness="0" 
+                            Click="newMonumentTypeBtn_Click">
                         <Image Source="icons/type.png" Height="35"/>
                     </Button>
 
-                    <Button x:Name="newTagBtn" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" Width="50"
-                        FontSize="{Binding WindowConstants.HeaderFontSize}" ToolTip="Add new tag" BorderThickness="0" Click="newTagBtn_Click">
+                    <Button x:Name="newTagBtn" Grid.Row="0" Grid.Column="2"
+                            HorizontalAlignment="Left" Width="50"
+                            FontSize="{Binding WindowConstants.HeaderFontSize}"
+                            ToolTip="Manage monument tags" BorderThickness="0"
+                            Click="newTagBtn_Click">
                         <Image Source="icons/blue-tag.png" Height="35"/>
                     </Button>
 
-                    <Button Content="Font" Grid.Column="3" Foreground="White" FontSize="14"
-                            Click="Button_ClickFontIncrease"/>
+                    <Button Content="Font" Grid.Column="3" Foreground="White"
+                            FontSize="14" Click="Button_ClickFontIncrease"/>
 
-                    <TextBlock x:Name="UserNotificationMessage" Foreground="White" Opacity="0"
-                               VerticalAlignment="Center" HorizontalAlignment="Left"
+                    <TextBlock x:Name="UserNotificationMessage" Foreground="White"
+                               Opacity="0" VerticalAlignment="Center"
+                               HorizontalAlignment="Left"
                                Grid.Row="0" Grid.Column="4" />
 
                     <TextBlock Grid.Column="5" Text="Filter:" VerticalAlignment="Center"
