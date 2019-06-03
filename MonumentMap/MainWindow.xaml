@@ -720,7 +720,7 @@
 
                                 Height="30" Width="30" Margin="0,0,15,0"
                                 Click="cancelMonumentTypeBtn_Click"
-                                Command="{x:Static local:ToolbarCommands.ClosePopUp}>
+                                Command="{x:Static local:ToolbarCommands.ClosePopUp}">
                                 <Image Source="icons/xIcon1.png" Height="20"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Button>
@@ -815,7 +815,7 @@
                                     Margin="0,0,15,0"
                                     Width="30" Height="30"
                                     Click="cancelTagBtn_Click"
-                                    Command="{x:Static local:ToolbarCommands.ClosePopUp}>
+                                    Command="{x:Static local:ToolbarCommands.ClosePopUp}">
                                 <Image Source="icons/xIcon1.png" Height="20"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Button>
@@ -1083,7 +1083,9 @@
                                         Margin="10"
                                        Grid.Column="0" Grid.Row="0"/>
                                 <TextBox x:Name="monumentID" Text=""
+                                         Padding="5"
                                          BorderThickness="3"
+                                         VerticalContentAlignment="Center"
                                          MaxLength="6"
                                          Margin="0,5,10,5"
                                          Background="#093647"
@@ -1101,7 +1103,9 @@
                                        Margin="10"
                                        Grid.Row="1" Grid.Column="0"/>
                                 <TextBox x:Name="monumentName" Text="" Background="#093647"
+                                         Padding="5"
                                          Grid.Row="1" Grid.Column="1"
+                                         VerticalContentAlignment="Center"
                                          Margin="0,5,10,5"
                                          BorderThickness="3"
                                          BorderBrush="Transparent"
@@ -1115,6 +1119,7 @@
                                        Margin="10"
                                        Grid.Row="3" Grid.Column="0"/>
                                 <TextBox x:Name="monumentDescr" Text=""
+                                         Padding="5"
                                          Margin="0,5,10,5"
                                          TextWrapping="Wrap"
                                          BorderBrush="Transparent"
@@ -1135,6 +1140,7 @@
                                 <Border BorderBrush="Transparent" BorderThickness="3"
                                         Grid.Row="4" Grid.Column="1" Margin="0,5,10,5">
                                     <ComboBox x:Name="monumentType" SelectedIndex="0"
+                                              Padding="5"
                                               VerticalAlignment="Stretch"
                                               GotFocus="comboBox_GotFocus"
                                               LostFocus="comboBox_LostFocus"
@@ -1152,6 +1158,7 @@
                                         BorderThickness="3"
                                         Grid.Row="5" Grid.Column="1">
                                     <ComboBox x:Name="climateType"
+                                              Padding="5"
                                               GotFocus="comboBox_GotFocus"
                                               LostFocus="comboBox_LostFocus"
                                               MouseEnter="comboBox_MouseEnter"
@@ -1256,6 +1263,7 @@
                                         Grid.Row="10" Grid.Column="1"
                                         Margin="0,5,10,5">
                                     <ComboBox x:Name="touristStatus"
+                                              Padding="5"
                                           GotFocus="comboBox_GotFocus"
                                           LostFocus="comboBox_LostFocus"
                                           MouseEnter="comboBox_MouseEnter"
@@ -1267,6 +1275,8 @@
                                        Grid.Row="12" Grid.Column="0"
                                        Margin="10"/>
                                 <TextBox x:Name="annualIncome" Text=""
+                                         VerticalContentAlignment="Center"
+                                         Padding="5"
                                          PreviewTextInput="NumberValidationTextBox"
                                          Grid.Row="12" Grid.Column="1"
                                          GotFocus="textBox_GotFocus"
@@ -1282,6 +1292,8 @@
                                        Grid.Row="11" Grid.Column="0"
                                        Margin="10"/>
                                 <TextBox x:Name="discoveryDate"
+                                         Padding="5"
+                                         VerticalContentAlignment="Center"
                                          Grid.Row="11" Grid.Column="1"
                                          Margin="0,5,10,5"
                                          BorderBrush="Transparent"
@@ -1298,6 +1310,7 @@
                                         BorderThickness="3"
                                         Grid.Row="9" Grid.Column="1">
                                     <ComboBox x:Name="newMonumentTag"
+                                              Padding="5"
                                               GotFocus="comboBox_GotFocus"
                                               LostFocus="comboBox_LostFocus"
                                               ItemsSource="{Binding observ_monum_tags}"

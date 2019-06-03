@@ -279,8 +279,7 @@ namespace MonumentMap
             selectedDisplayMonument = getMonumentById(p.Content.ToString());
             OpenDisplayInfo();
             ChangeDisplayInfo(selectedDisplayMonument);
-
-            NotifyUser(p.Content.ToString());
+            
         }
 
         private void ChangeDisplayInfo(Monument monument)
@@ -551,14 +550,17 @@ namespace MonumentMap
                     iconBrush.ImageSource = new BitmapImage(new Uri(monument.Icon_path, UriKind.Relative));
                     ((grid.Children[0] as Grid).Children[0] as Grid).Background = iconBrush;
 
-                    Pushpin pin = GetPinFromMapById(monument.ID);
-                    worldMap.Children.Remove(pin);
 
-                    addMonumentPinToMap(monument);
+                    if (monument.monumentPin != null)
+                    {
+                        Pushpin pin = GetPinFromMapById(monument.ID);
+                        worldMap.Children.Remove(pin);
+
+                        addMonumentPinToMap(monument);
+                    }
 
 
-
-
+                    ChangeDisplayInfo(monument);
                     //replacing existing monument with the edited one
                     observ_monuments = utility.replaceMonument(observ_monuments, monument);
                     message = "Monument edited";
@@ -1205,6 +1207,18 @@ namespace MonumentMap
             {
                 Brush col = (SolidColorBrush)(new BrushConverter().ConvertFrom("#093647"));
                 RemoveMonumentGrid.Background = col;
+            }
+
+
+            if (SearchMonumentGrid.IsMouseOver)
+            {
+                Brush col = (SolidColorBrush)(new BrushConverter().ConvertFrom("#206d3a"));
+                SearchMonumentGrid.Background = col;
+            }
+            else
+            {
+                Brush col = (SolidColorBrush)(new BrushConverter().ConvertFrom("#072530"));
+                SearchMonumentGrid.Background = col;
             }
 
         }
