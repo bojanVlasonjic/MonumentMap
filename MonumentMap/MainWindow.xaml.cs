@@ -67,6 +67,7 @@ namespace MonumentMap
         private bool editingMonument = false;
 
         private int FONT_SIZE_CHANGE = 0;
+        public string FONT_SIZE_TEXT { get; set; }
         private const int MAX_FONT_SIZE = 5;
 
 
@@ -98,7 +99,13 @@ namespace MonumentMap
             this.MouseUp += Window_OnMouseUp;
             
             onLoad();
-            
+
+            updateFontSizeText();
+        }
+
+        private void updateFontSizeText()
+        {
+            FontSizeIndicator.Text = "+" + FONT_SIZE_CHANGE.ToString();
         }
 
 
@@ -138,6 +145,7 @@ namespace MonumentMap
 
             initializeDefaultMonumentType();
             initializeDefaultTag();
+
 
         }
 
@@ -529,6 +537,25 @@ namespace MonumentMap
                 } else
                 {
                     //TODO: za losmija, promeniti sliku i ikonicu
+                    Grid grid = GetMonumentGrid(monument.ID);
+
+                    var mainBrush = new ImageBrush();
+                    mainBrush.Stretch = Stretch.UniformToFill;
+                    mainBrush.ImageSource = new BitmapImage(new Uri(monument.Picture_path, UriKind.Relative));
+                    grid.Background = mainBrush;
+
+                    var iconBrush = new ImageBrush();
+                    iconBrush.Stretch = Stretch.UniformToFill;
+                    iconBrush.ImageSource = new BitmapImage(new Uri(monument.Icon_path, UriKind.Relative));
+                    ((grid.Children[0] as Grid).Children[0] as Grid).Background = iconBrush;
+
+                    Pushpin pin = GetPinFromMapById(monument.ID);
+                    worldMap.Children.Remove(pin);
+
+                    addMonumentPinToMap(monument);
+
+
+
 
                     //replacing existing monument with the edited one
                     observ_monuments = utility.replaceMonument(observ_monuments, monument);
@@ -1360,8 +1387,8 @@ namespace MonumentMap
             iconImage.ImageSource = iconSource;
             iconImage.Stretch = Stretch.UniformToFill;
             imageGrid.Background = iconImage;
-            imageGrid.Width = 80;
-            imageGrid.Height = 80;
+            imageGrid.Width = 62;
+            imageGrid.Height = 62;
 
 
             childGrid.Children.Add(imageGrid);
@@ -1581,20 +1608,28 @@ namespace MonumentMap
 
         private void radioBtnGotFocus(object sender, RoutedEventArgs e)
         {
-            ((RadioButton)sender).BorderBrush = Brushes.Black;
-            ((RadioButton)sender).FontSize += 2;
+            ((RadioButton)sender).BorderBrush = Brushes.White;
         }
 
         private void radioBtnLostFocus(object sender, RoutedEventArgs e)
         {
-            ((RadioButton)sender).BorderBrush = Brushes.White;
-            ((RadioButton)sender).FontSize -= 2;
+            ((RadioButton)sender).BorderBrush = (Brush)brushConverter.ConvertFrom("#093647");
         }
 
         private void editMonumentBtn_Click(object sender, RoutedEventArgs e)
         {
+            
+
             if(selectedDisplayMonument != null)
             {
+                var monumentE = getMonumentById(selectedDisplayMonument.ID);
+
+                if (monumentE == null)
+                {
+                    NotifyUser("Monument has been deleted");
+                    return;
+                }
+
                 editingMonument = true;
                 closeDisplayInfoWindow();
 
@@ -1711,7 +1746,7 @@ namespace MonumentMap
 
             changeFontSize(1);
             FONT_SIZE_CHANGE++;
-
+            updateFontSizeText();
         }
 
         private void decreaseFontBtn_Click(object sender, RoutedEventArgs e)
@@ -1724,6 +1759,7 @@ namespace MonumentMap
 
             changeFontSize(-1);
             FONT_SIZE_CHANGE--;
+            updateFontSizeText();
         }
 
 
@@ -1830,6 +1866,7 @@ namespace MonumentMap
             (mainGrid as UIElement).MouseDown += MouseClickSearchElement;
 
             var text1 = new TextBlock();
+            text1.FontSize += FONT_SIZE_CHANGE;
             text1.Foreground = Brushes.White;
             text1.Text = monument.ID;
             text1.HorizontalAlignment = HorizontalAlignment.Center;
@@ -1837,6 +1874,7 @@ namespace MonumentMap
             Grid.SetColumn(text1, 0);
 
             var text2 = new TextBlock();
+            text2.FontSize += FONT_SIZE_CHANGE;
             text2.Foreground = Brushes.White;
             text2.Text = monument.Name;
             text2.HorizontalAlignment = HorizontalAlignment.Center;
@@ -1844,6 +1882,7 @@ namespace MonumentMap
             Grid.SetColumn(text2, 1);
 
             var text3 = new TextBlock();
+            text3.FontSize += FONT_SIZE_CHANGE;
             text3.Foreground = Brushes.White;
             text3.Text = monument.Type.ToString();
             text3.HorizontalAlignment = HorizontalAlignment.Center;
@@ -1851,6 +1890,7 @@ namespace MonumentMap
             Grid.SetColumn(text3, 2);
 
             var text4 = new TextBlock();
+            text4.FontSize += FONT_SIZE_CHANGE;
             text4.Foreground = Brushes.White;
             text4.Text = monument.Climate.ToString();
             text4.HorizontalAlignment = HorizontalAlignment.Center;
@@ -1898,6 +1938,11 @@ namespace MonumentMap
         {
             selectedDisplayMonument = getMonumentById(id);
 
+            if (selectedDisplayMonument == null)
+            {
+                NotifyUser("Monument has been deleted");
+                return;
+            }
 
             Grid gridToView = GetMonumentGrid(id);
             UIElement container = VisualTreeHelper.GetParent(gridToView) as UIElement;

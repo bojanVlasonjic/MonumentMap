@@ -153,14 +153,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="icons\MonumentIcon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="icons\MonumentIconResource.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="pictures\DefaultMonumentImageResource.jpg" />
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +165,28 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\addMonumentIcon.png" />
+    <Resource Include="icons\addTag1Icon.png" />
+    <Resource Include="icons\addTagIcon.png" />
+    <Resource Include="icons\addTypeIcon.png" />
+    <Resource Include="icons\arrowDownIcon.png" />
+    <Resource Include="icons\arrowLeftIcon.png" />
+    <Resource Include="icons\arrowRightIcon.png" />
+    <Resource Include="icons\arrowUpIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icons\MonumentIcon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Resource Include="icons\MonumentIconResource.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\xIcon1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\AppIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
