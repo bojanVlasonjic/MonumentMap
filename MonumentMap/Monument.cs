@@ -18,6 +18,7 @@ namespace MonumentMap
 
         private string _id;
         private MonumentPin _pin;
+        private List<MonumentTag> _tags;
 
         public string ID {
             get
@@ -59,6 +60,20 @@ namespace MonumentMap
             {
                 _pin = value;
                 OnPropertyChanged(nameof(monumentPin));
+            }
+        }
+
+        public List<MonumentTag> Tags
+        {
+            get
+            {
+                return _tags;
+            }
+
+            set
+            {
+                _tags = value;
+                OnPropertyChanged(nameof(Tags));
             }
         }
 

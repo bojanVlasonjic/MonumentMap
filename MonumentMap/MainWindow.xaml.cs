@@ -55,9 +55,18 @@ namespace MonumentMap
         static string BROWSE_PICS_FILTER = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files(*.*)|*.*";
 
 
+        private const string DEFAULT_TYPE_ID = "0";
+        private const string DEFAULT_TAG_ID = "No_tag";
+
+
         //default picture and icon
         private BitmapImage DEFAULT_ICON;
         private BitmapImage DEFAULT_PICTURE;
+
+        private bool editingMonument = false;
+
+        private int FONT_SIZE_CHANGE = 0;
+        private const int MAX_FONT_SIZE = 5;
 
 
         static IOSerializer IO_Serializer = new IOSerializer();
@@ -125,27 +134,48 @@ namespace MonumentMap
             climateType.ItemsSource = Enum.GetValues(typeof(ClimateType)).Cast<ClimateType>();
             touristStatus.ItemsSource = Enum.GetValues(typeof(TouristStatus)).Cast<TouristStatus>();
 
-            initializeNoMonumentType();
+            initializeDefaultMonumentType();
+            initializeDefaultTag();
 
         }
 
 
-        private void initializeNoMonumentType()
+        private void initializeDefaultMonumentType()
         {
 
             foreach(MonumentType type in observ_monum_types)
             {
-                if(type.ID.Equals("0"))
+                if(type.ID.Equals(DEFAULT_TYPE_ID))
                 {
                     return;
                 }
             }
 
             MonumentType no_type = new MonumentType();
-            no_type.ID = "0";
+            no_type.ID = DEFAULT_TYPE_ID;
             no_type.Name = "No_type";
             no_type.Icon_path = "icons/MonumentIcon.png";
             observ_monum_types.Add(no_type);
+        }
+
+
+        private void initializeDefaultTag()
+        {
+            foreach(MonumentTag tag in observ_monum_tags)
+            {
+                if(tag.ID.Equals(DEFAULT_TAG_ID))
+                {
+                    return;
+                }
+            }
+
+            MonumentTag defaultTag = new MonumentTag();
+
+            defaultTag.ID = DEFAULT_TAG_ID;
+            defaultTag.Description = "Default tag";
+            defaultTag.Color = Brushes.White.ToString();
+
+            observ_monum_tags.Add(defaultTag);
         }
 
         private void initializeGlobalObjects()
@@ -157,6 +187,7 @@ namespace MonumentMap
             bool notLoaded = false;
 
             /* Loading collections from files */
+
             observ_monuments = IO_Serializer.deserializeMonuments();
             if (observ_monuments == null)
             {
@@ -213,6 +244,9 @@ namespace MonumentMap
             //centerPopUpWindows();
         }
 
+        /*********************
+        * REGULAR EXPRESSIONS *
+        * *******************/
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
@@ -224,32 +258,6 @@ namespace MonumentMap
         /*********************
         * MAP EVENT HANDLERS *
         * *******************/
-
-        /*
-    //na dupli klik se ubaci pin na mapu - za sad
-    private void worldMap_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-
-        e.Handled = true;
-
-        Point mousePosition = e.GetPosition(this);
-      //  NotifyUser(mousePosition.X + " " + mousePosition.Y);
-
-        Location pinLocation = worldMap.ViewportPointToLocation(mousePosition);
-
-        ControlTemplate template = (ControlTemplate)this.FindResource("MonumentPinTemplate"); //template za promenu izgleda pin-a
-
-        Pushpin pin = new Pushpin();
-        pin.Template = template;
-        pin.Location = pinLocation;
-        pin.Location.Latitude += 5; //including the toolbar height in lattitude of the pin
-
-        pin.Content = "pin" + worldMap.Children.Count;
-
-
-
-        worldMap.Children.Add(pin);
-    } */
 
         public Monument selectedDisplayMonument = null;
         private void PinClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -274,6 +282,7 @@ namespace MonumentMap
             DisplayInfoTouristStatus.Text = monument.TourStatus.ToString();
             DisplayInfoAnnualIncome.Text = monument.AnnualIncome.ToString();
             DisplayInfoDiscoveryDate.Text = monument.DateOfDiscovery;
+            DisplayInfoTag.Text = monument.Tags[0].ID;
 
             DisplayInfoImage.ImageSource = new BitmapImage(new Uri(monument.Picture_path, UriKind.Relative));
         }
@@ -326,10 +335,24 @@ namespace MonumentMap
                 //reseting default icon and picture
                 monumentPicture.Source = DEFAULT_PICTURE;
                 monumentIcon.Source = DEFAULT_ICON;
+
+                editingMonument = false;
+
+                //changing heading and button text
+                addMonumentBtn.Content = "Add monument";
+                newMonumentHeading.Content = "Add monument";
+
+                monumentID.IsEnabled = true;
             }
         }
 
         private void newMonumentBtn_Click(object sender, RoutedEventArgs e)
+        {
+            openNewMonumentWindow();
+        }
+
+
+        private void openNewMonumentWindow()
         {
             if (!isNewMonumentWindowShown)
             {
@@ -382,13 +405,21 @@ namespace MonumentMap
 
             if(!checkForEmptyFields(newMonumentForm))
             {
-                if(monumentIdExists(monumentID.Text))
+                if(monumentIdExists(monumentID.Text) && !editingMonument)
                 {
                     MessageBox.Show("Monument id already exists");
                     return;
                 }
 
-                Monument monument = new Monument();
+                Monument monument;
+
+                if(!editingMonument)
+                {
+                    monument = new Monument();
+                } else
+                {
+                    monument = getMonumentById(monumentID.Text);
+                }
 
                 //extracting textBox values
                 monument.ID = monumentID.Text;
@@ -416,9 +447,20 @@ namespace MonumentMap
                 monument.IsInSettlement = radioButtonChecked(radioSettlementPosBtn);
                 monument.ContainsEndangeredSpecies = radioButtonChecked(radioSpeciesPosBtn);
 
-                //parsing date picker
+                //parsing date 
                 monument.DateOfDiscovery = discoveryDate.Text;
 
+                //initializing tag list
+                monument.Tags = new List<MonumentTag>();
+                MonumentTag selectedTag = findMonumentTag(newMonumentTag.SelectedItem.ToString());
+
+                if(selectedTag != null)
+                {
+                    monument.Tags.Add(selectedTag);
+                } else
+                {
+                    monument.Tags.Add(findMonumentTag(DEFAULT_TAG_ID)); //put default tag in case something wen't wrong
+                }
 
                 //if the user left the local image as default
                 if(newMonumentPicturePath.Text.Equals(""))
@@ -443,7 +485,7 @@ namespace MonumentMap
                 if(newMonumentIconPath.Text.Equals(""))
                 {
 
-                    if (!typeID.Equals("0"))
+                    if (!typeID.Equals(DEFAULT_TYPE_ID))
                     {
                         //set the monument icon from monument type
                         if (monument.Type != null)
@@ -474,13 +516,27 @@ namespace MonumentMap
                     monument.Icon_path = destinationPath;
                 }
 
-                AddMonumentToMonumentsView(monument);
-                observ_monuments.Add(monument);
+                string message;
+
+                if(!editingMonument)
+                {
+                    AddMonumentToMonumentsView(monument);
+                    observ_monuments.Add(monument);
+                    message = "Monument added";
+                } else
+                {
+                    //TODO: za losmija, promeniti sliku i ikonicu
+
+                    //replacing existing monument with the edited one
+                    observ_monuments = utility.replaceMonument(observ_monuments, monument);
+                    message = "Monument edited";
+                }
+                
                 closeNewMonumentWindow();
 
                 if(IO_Serializer.serializeMonuments(observ_monuments))
                 {
-                    NotifyUser("Monument added");
+                    NotifyUser(message);
                 } else
                 {
                     NotifyUser("Failed to save monuments");
@@ -635,14 +691,6 @@ namespace MonumentMap
             newMonumTypeGridHolder.Visibility = Visibility.Hidden;
         }
 
-        private void addTagToMonumentBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-            //TODO: proveri ima li praznih polja
-
-
-        }
-
 
         private void cancelTagBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -654,6 +702,8 @@ namespace MonumentMap
         private void closeTagWindow()
         {
             clearInputs(newTagGrid);
+
+            ColorPicker_Tag.SelectedColor = null;
 
             newTagGridHolder.Visibility = Visibility.Hidden;
         }
@@ -782,7 +832,10 @@ namespace MonumentMap
                         combobox.SelectedItem = null;
                     }
 
-                } 
+                } else if(input is ComboBox)
+                {
+                    ((ComboBox)input).SelectedItem = null;
+                }
 
             }
         }
@@ -887,13 +940,13 @@ namespace MonumentMap
         private void comboBox_GotFocus(object sender, RoutedEventArgs e)
         {
             var combo = sender as ComboBox;
-            ((Border)combo.Parent).BorderBrush = (Brush)brushConverter.ConvertFrom("#0a3f54");
+            ((Border)combo.Parent).BorderBrush = Brushes.White;
         }
 
         private void comboBox_LostFocus(object sender, RoutedEventArgs e)
         {
             var combo = sender as ComboBox;
-            ((Border)combo.Parent).BorderBrush = (Brush)brushConverter.ConvertFrom("#093647"); ;
+            ((Border)combo.Parent).BorderBrush = (Brush)brushConverter.ConvertFrom("#093647");
         }
 
 
@@ -918,6 +971,12 @@ namespace MonumentMap
         private void Button_ClickCloseDisplayInfo(object sender, RoutedEventArgs e)
         {
 
+            closeDisplayInfoWindow();
+        }
+
+
+        private void closeDisplayInfoWindow()
+        {
             if (isNewMonumentWindowInfoShown)
             {
 
@@ -1103,38 +1162,45 @@ namespace MonumentMap
 
             if (worldMap.IsMouseOver && selectedMonument != null)
             {
-                if (!PinExistsOnMap(selectedMonument.Tag.ToString()))
+                if (PinExistsOnMap(selectedMonument.Tag.ToString()))
                 {
-                    e.Handled = true;
+                    Pushpin pinToRemove = GetPinFromMapById(selectedMonument.Tag.ToString());
 
-                    Point mousePosition = e.GetPosition(this);
-                    mousePosition.Y = mousePosition.Y - 30;
-                    mousePosition.X = mousePosition.X - 3;
-                    Location pinLocation = worldMap.ViewportPointToLocation(mousePosition);
-                    selectedMonumentObject.monumentPin = new MonumentPin(pinLocation);
-                    BitmapImage imgSource = new BitmapImage(new Uri(selectedMonumentObject.Icon_path, UriKind.Relative));
-                    //ImageBrush img = new ImageBrush(imgSource);
+                    if(pinToRemove != null)
+                    {
+                        worldMap.Children.Remove(pinToRemove); //removing pin from map
+                    }
 
-                    ControlTemplate tmp = new ControlTemplate(typeof(Pushpin));
-                    FrameworkElementFactory fact = new FrameworkElementFactory(typeof(Image));
-                    fact.SetValue(Image.SourceProperty, imgSource);
-                    fact.SetValue(Image.WidthProperty, 45.0);
-                    fact.SetValue(Image.StretchProperty, Stretch.UniformToFill);
-                    tmp.VisualTree = fact;
-
-                    Pushpin pin = new Pushpin();
-                    pin.Template = tmp;
-                    pin.Location = pinLocation;
-                    pin.Content = selectedMonument.Tag.ToString();
-
-                    pin.MouseDown += PinClicked;
-
-                    worldMap.Children.Add(pin);
                 }
-                else
-                {
-                    NotifyUser("That monument is already placed on map");
-                }
+                
+                //adding pin to map
+
+                e.Handled = true;
+
+                Point mousePosition = e.GetPosition(this);
+                mousePosition.Y = mousePosition.Y - 30;
+                mousePosition.X = mousePosition.X - 3;
+                Location pinLocation = worldMap.ViewportPointToLocation(mousePosition);
+                selectedMonumentObject.monumentPin = new MonumentPin(pinLocation);
+                BitmapImage imgSource = new BitmapImage(new Uri(selectedMonumentObject.Icon_path, UriKind.Relative));
+                //ImageBrush img = new ImageBrush(imgSource);
+
+                ControlTemplate tmp = new ControlTemplate(typeof(Pushpin));
+                FrameworkElementFactory fact = new FrameworkElementFactory(typeof(Image));
+                fact.SetValue(Image.SourceProperty, imgSource);
+                fact.SetValue(Image.WidthProperty, 45.0);
+                fact.SetValue(Image.StretchProperty, Stretch.UniformToFill);
+                tmp.VisualTree = fact;
+
+                Pushpin pin = new Pushpin();
+                pin.Template = tmp;
+                pin.Location = pinLocation;
+                pin.Content = selectedMonument.Tag.ToString();
+
+                pin.MouseDown += PinClicked;
+
+                worldMap.Children.Add(pin);
+                
             }
 
             if (RemoveMonumentGrid.IsMouseOver && selectedMonument != null)
@@ -1266,22 +1332,6 @@ namespace MonumentMap
             }
         }
         
-        private void Button_ClickFontIncrease(object sender, RoutedEventArgs e)
-        {
-            foreach (TextBlock tb in FindVisualChildren<TextBlock>(this))
-            {
-                tb.FontSize = tb.FontSize + 1;
-            }
-            foreach (TextBox tb in FindVisualChildren<TextBox>(this))
-            {
-                tb.FontSize = tb.FontSize + 1;
-            }
-            foreach (ComboBox cb in FindVisualChildren<ComboBox>(this))
-            {
-                cb.FontSize = cb.FontSize + 1;
-            }
-        }
-
         private void monumentTypeSelected(object sender, SelectionChangedEventArgs e)
         {
            
@@ -1301,7 +1351,7 @@ namespace MonumentMap
             string typeID = monumentType.SelectedItem.ToString().Substring(0, colonID);
 
             //if the selected type isn't no type
-            if(!typeID.Equals("0"))
+            if(!typeID.Equals(DEFAULT_TYPE_ID))
             {
                 MonumentType type = findMonumentType(typeID);
 
@@ -1351,6 +1401,21 @@ namespace MonumentMap
 
         }
 
+
+        private bool deleteMonument(string id)
+        {
+
+            Monument monumToDelete = getMonumentById(id);
+
+            if(monumToDelete != null)
+            {
+                return observ_monuments.Remove(monumToDelete);
+            }
+
+            return false;
+
+        }
+
         private void DeleteMonumentTypeButton_Click(object sender, RoutedEventArgs e)
         {
 
@@ -1364,7 +1429,7 @@ namespace MonumentMap
             int colonID = DeleteMonumentTypeCombobox.SelectedItem.ToString().IndexOf(':'); //used to extract id from string
             string typeID = DeleteMonumentTypeCombobox.SelectedItem.ToString().Substring(0, colonID);
 
-            if(typeID.Equals("0"))
+            if(typeID.Equals(DEFAULT_TYPE_ID))
             {
                 MessageBox.Show("You can't delete a default type");
                 return;
@@ -1389,6 +1454,236 @@ namespace MonumentMap
                 MessageBox.Show("Deleted");
             }
 
+        }
+
+        private void DeleteMonumentTagButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            if(tagsToDelete.SelectedItem == null)
+            {
+                MessageBox.Show("Please select tag in order to delete it");
+                return;
+            }
+
+            if(tagsToDelete.SelectedItem.ToString().Equals(DEFAULT_TAG_ID))
+            {
+                MessageBox.Show("You can't delete a default tag");
+                return;
+            }
+
+            MonumentTag tagToDel = findMonumentTag(tagsToDelete.SelectedItem.ToString());
+
+            if(tagToDel != null)
+            {
+
+                if(utility.isMonumentTagUsed(tagToDel.ID, observ_monuments))
+                {
+                    MessageBox.Show("Can't delete tag used by monument");
+                    return;
+                }
+
+                observ_monum_tags.Remove(tagToDel);
+                IO_Serializer.serializeMonumentTags(observ_monum_tags);
+                MessageBox.Show("Deleted");
+            }
+
+        }
+
+        private void comboBox_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ComboBox box = sender as ComboBox;
+
+            if(box.Parent is Border)
+            {
+                ((Border)box.Parent).BorderBrush = Brushes.White;
+            }
+        }
+
+        private void comboBox_MouseLeave(object sender, MouseEventArgs e)
+        {
+
+            ComboBox box = sender as ComboBox;
+
+            if (box.Parent is Border)
+            {
+                ((Border)box.Parent).BorderBrush = Brushes.Transparent;
+            }
+
+        }
+
+        private void radioBtnGotFocus(object sender, RoutedEventArgs e)
+        {
+            ((RadioButton)sender).BorderBrush = Brushes.Black;
+            ((RadioButton)sender).FontSize += 2;
+        }
+
+        private void radioBtnLostFocus(object sender, RoutedEventArgs e)
+        {
+            ((RadioButton)sender).BorderBrush = Brushes.White;
+            ((RadioButton)sender).FontSize -= 2;
+        }
+
+        private void editMonumentBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if(selectedDisplayMonument != null)
+            {
+                editingMonument = true;
+                closeDisplayInfoWindow();
+
+                //displaying values to textboxes
+                monumentID.Text = selectedDisplayMonument.ID;
+                monumentName.Text = selectedDisplayMonument.Name;
+                monumentDescr.Text = selectedDisplayMonument.Description;
+                annualIncome.Text = selectedDisplayMonument.AnnualIncome.ToString();
+                discoveryDate.Text = selectedDisplayMonument.DateOfDiscovery;
+
+                //displaying values to enum binded comboboxes
+                climateType.SelectedIndex = (int)selectedDisplayMonument.Climate;
+                touristStatus.SelectedIndex = (int)selectedDisplayMonument.TourStatus;
+
+                //displaying values to observable collection binded comboboxes
+                int index; //index of combobox element
+
+                index = getComboBoxItemIndex(newMonumentTag.Items, selectedDisplayMonument.Tags[0].ID);
+                if(index != -1)
+                {
+                    newMonumentTag.SelectedIndex = index;
+                }
+
+                index = getComboBoxItemIndex(monumentType.Items, selectedDisplayMonument.Type.ToString());
+                if (index != -1)
+                {
+                    monumentType.SelectedIndex = index;
+                }
+
+                //checking radio buttons
+                checkRadioButton(selectedDisplayMonument.IsEcoEndangered, radioEcoPosBtn, radioEcoNegBtn);
+                checkRadioButton(selectedDisplayMonument.IsInSettlement, radioSettlementPosBtn, radioSettlementNegBtn);
+                checkRadioButton(selectedDisplayMonument.ContainsEndangeredSpecies, radioSpeciesPosBtn, radioSpeciesNegBtn);
+
+                //adding values to hidden fields for icon path and picture path
+                newMonumentIconPath.Text = selectedDisplayMonument.Icon_path;
+                newMonumentPicturePath.Text = selectedDisplayMonument.Picture_path;
+
+                //changing icon and picture
+                try
+                {
+                    monumentPicture.Source = new BitmapImage(new Uri(selectedDisplayMonument.Picture_path));
+                }
+                catch (UriFormatException)
+                {
+                    newMonumentPicturePath.Text = string.Empty; //leaving default pic
+                }
+
+                try
+                {
+                    monumentIcon.Source = new BitmapImage(new Uri(selectedDisplayMonument.Icon_path));
+                }
+                catch (UriFormatException)
+                {
+                    newMonumentIconPath.Text = string.Empty; //leaving default icon
+                }
+
+                //disabling id field
+                monumentID.IsEnabled = false;
+
+                //changing heading and button text
+                addMonumentBtn.Content = "Save changes";
+                newMonumentHeading.Content = "Edit monument";
+
+                openNewMonumentWindow();
+
+            }
+        }
+
+
+        private void checkRadioButton(bool condition, RadioButton positiveBtn, RadioButton negativeBtn)
+        {
+           
+            if(condition)
+            {
+                positiveBtn.IsChecked = true;
+            } else
+            {
+                negativeBtn.IsChecked = true;
+            }
+
+        }
+
+        private int getComboBoxItemIndex(ItemCollection items, string itemToFind)
+        {
+
+            for(int i = 0; i < items.Count; i++)
+            {
+
+                if(items[i].ToString().Equals(itemToFind))
+                {
+                    return i;
+                }
+
+            }
+
+            return -1;
+
+        }
+
+
+        /***********************
+         * Font manage methods *
+         * **********************/
+
+        private void increaseFontBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            if(FONT_SIZE_CHANGE >= MAX_FONT_SIZE)
+            {
+                NotifyUser("Maximum font reached");
+                return;
+            }
+
+            changeFontSize(1);
+            FONT_SIZE_CHANGE++;
+
+        }
+
+        private void decreaseFontBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (FONT_SIZE_CHANGE <= 0)
+            {
+                NotifyUser("Minimum font reached");
+                return;
+            }
+
+            changeFontSize(-1);
+            FONT_SIZE_CHANGE--;
+        }
+
+
+        private void changeFontSize(int factor)
+        {
+            foreach (TextBlock tb in FindVisualChildren<TextBlock>(this))
+            {
+                tb.FontSize = tb.FontSize + factor;
+            }
+            foreach (TextBox tb in FindVisualChildren<TextBox>(this))
+            {
+                tb.FontSize = tb.FontSize + factor;
+            }
+            foreach (ComboBox cb in FindVisualChildren<ComboBox>(this))
+            {
+                cb.FontSize = cb.FontSize + factor;
+            }
+        }
+
+
+
+        /*******************
+         * COMMAND METHODS *
+         * ****************/
+
+        private void AddNewMonument_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            openNewMonumentWindow();
         }
     }
 }

@@ -93,6 +93,7 @@
     <Compile Include="CustomDatePicker.cs" />
     <Compile Include="IOSerializer.cs" />
     <Compile Include="MonumentTag.cs" />
+    <Compile Include="ToolbarCommands.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="WindowConstants.cs" />
     <Compile Include="MainWindow.xaml.cs">
