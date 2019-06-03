@@ -21,8 +21,23 @@ namespace MonumentMap
         private double _scrollViewerHeights;
         private double _monumentsScrollViewerHeight;
         private double _removeLeft;
+        private double _findOnMapLeft;
 
         public CanvasPositions() { }
+
+
+        public double FindOnMapLeft
+        {
+            get
+            {
+                return _findOnMapLeft;
+            }
+            set
+            {
+                _findOnMapLeft = value;
+                OnPropertyChanged(nameof(FindOnMapLeft));
+            }
+        }
 
         public double RemoveLeft
         {
