@@ -40,12 +40,14 @@ namespace MonumentMap
         public bool isNewMonumentWindowShown = false;
         public bool isNewMonumentWindowInfoShown = false;
         public bool isSearchResultsShown = false;
+        public bool isTagDialogShown = false;
+        public bool isTypeDialogShown = false;
 
         /***************** Observable collections *****************/
         public ObservableCollection<Monument> observ_monuments { get; set; }
         public ObservableCollection<MonumentType> observ_monum_types { get; set; }
         public ObservableCollection<MonumentTag> observ_monum_tags { get; set; }
-        
+
 
         private double mainWindowHeight;
         private double mainWindowWidth;
@@ -97,7 +99,7 @@ namespace MonumentMap
             this.SizeChanged += OnWindowSizeChanged;
             this.MouseMove += Window_OnMouseMove;
             this.MouseUp += Window_OnMouseUp;
-            
+
             onLoad();
 
             updateFontSizeText();
@@ -458,7 +460,7 @@ namespace MonumentMap
                 monument.IsInSettlement = radioButtonChecked(radioSettlementPosBtn);
                 monument.ContainsEndangeredSpecies = radioButtonChecked(radioSpeciesPosBtn);
 
-                //parsing date 
+                //parsing date
                 monument.DateOfDiscovery = discoveryDate.Text;
 
                 //initializing tag list
@@ -561,7 +563,7 @@ namespace MonumentMap
                     observ_monuments = utility.replaceMonument(observ_monuments, monument);
                     message = "Monument edited";
                 }
-                
+
                 closeNewMonumentWindow();
 
                 if(IO_Serializer.serializeMonuments(observ_monuments))
@@ -627,6 +629,7 @@ namespace MonumentMap
         {
 
             newTagGridHolder.Visibility = Visibility.Visible;
+            isTagDialogShown = true;
 
         }
 
@@ -634,6 +637,7 @@ namespace MonumentMap
         {
 
             newMonumTypeGridHolder.Visibility = Visibility.Visible;
+            isTypeDialogShown = true;
         }
 
         private void monumentTypeBrowseBtn_Click(object sender, RoutedEventArgs e)
@@ -719,6 +723,8 @@ namespace MonumentMap
             monumentTypeIconName.Text = "";
 
             newMonumTypeGridHolder.Visibility = Visibility.Hidden;
+
+            isTypeDialogShown = false;
         }
 
 
@@ -736,6 +742,8 @@ namespace MonumentMap
             ColorPicker_Tag.SelectedColor = null;
 
             newTagGridHolder.Visibility = Visibility.Hidden;
+
+            isTagDialogShown = false;
         }
 
 
@@ -828,7 +836,7 @@ namespace MonumentMap
                         }
                     }
 
-                } 
+                }
 
             }
 
@@ -844,7 +852,7 @@ namespace MonumentMap
                     TextBox textBox = ((TextBox)input);
                     textBox.Text = string.Empty;
                     textBox.BorderBrush = Brushes.Transparent;
-    
+
                 } else if(input is Border)
                 {
                     Border border = ((Border)input);
@@ -1232,7 +1240,7 @@ namespace MonumentMap
         private void Window_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
 
-            
+
 
             if (worldMap.IsMouseOver && selectedMonument != null)
             {
@@ -1246,7 +1254,7 @@ namespace MonumentMap
                     }
 
                 }
-                
+
                 //adding pin to map
 
                 e.Handled = true;
@@ -1274,7 +1282,7 @@ namespace MonumentMap
                 pin.MouseDown += PinClicked;
 
                 worldMap.Children.Add(pin);
-                
+
             }
 
             if (RemoveMonumentGrid.IsMouseOver && selectedMonument != null)
@@ -1309,7 +1317,7 @@ namespace MonumentMap
                 {
                     SearchMonumentGrid.BeginAnimation(Canvas.TopProperty, anim);
                 }
-                
+
             }
 
             IO_Serializer.serializeMonuments(observ_monuments);
@@ -1373,7 +1381,7 @@ namespace MonumentMap
             mainGrid.Background = mainBrush;
 
             var childGrid = new Grid();
-            
+
             Color color = Colors.Black;
             var secondBrush = new SolidColorBrush();
             secondBrush.Opacity = 0.3;
@@ -1426,10 +1434,10 @@ namespace MonumentMap
                 }
             }
         }
-        
+
         private void monumentTypeSelected(object sender, SelectionChangedEventArgs e)
         {
-           
+
             if(monumentType.SelectedItem == null)
             {
                 return;
@@ -1618,7 +1626,7 @@ namespace MonumentMap
 
         private void editMonumentBtn_Click(object sender, RoutedEventArgs e)
         {
-            
+
 
             if(selectedDisplayMonument != null)
             {
@@ -1702,7 +1710,7 @@ namespace MonumentMap
 
         private void checkRadioButton(bool condition, RadioButton positiveBtn, RadioButton negativeBtn)
         {
-           
+
             if(condition)
             {
                 positiveBtn.IsChecked = true;
@@ -1737,8 +1745,12 @@ namespace MonumentMap
 
         private void increaseFontBtn_Click(object sender, RoutedEventArgs e)
         {
+            increaseAllFonts();
+        }
 
-            if(FONT_SIZE_CHANGE >= MAX_FONT_SIZE)
+        private void increaseAllFonts()
+        {
+            if (FONT_SIZE_CHANGE >= MAX_FONT_SIZE)
             {
                 NotifyUser("Maximum font reached");
                 return;
@@ -1746,10 +1758,17 @@ namespace MonumentMap
 
             changeFontSize(1);
             FONT_SIZE_CHANGE++;
+            
             updateFontSizeText();
+
         }
 
         private void decreaseFontBtn_Click(object sender, RoutedEventArgs e)
+        {
+            decreaseAllFonts();
+        }
+
+        private void decreaseAllFonts()
         {
             if (FONT_SIZE_CHANGE <= 0)
             {
@@ -1790,6 +1809,48 @@ namespace MonumentMap
             openNewMonumentWindow();
         }
 
+        private void AddNewType_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            newMonumTypeGridHolder.Visibility = Visibility.Visible;
+            isTypeDialogShown = true;
+        }
+
+        private void AddNewTag_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            newTagGridHolder.Visibility = Visibility.Visible;
+            isTagDialogShown = true;
+        }
+
+        private void IncreaseFont_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            increaseAllFonts();
+        }
+
+        private void DecreaseFont_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            decreaseAllFonts();
+        }
+
+        private void Search_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            searchTextBox.Focus();
+        }
+
+        private void ClosePopUp_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+           if(isTypeDialogShown)
+            {
+                closeMonumentTypeDialog();
+            }
+
+           if(isTagDialogShown)
+            {
+                closeTagWindow();
+            }
+
+        }
+
 
         /*******************
          * SEARCH METHODS *
@@ -1812,7 +1873,7 @@ namespace MonumentMap
                 }
             }
 
-            else 
+            else
             {
                 foreach(Monument m in observ_monuments)
                 {
@@ -2039,7 +2100,7 @@ namespace MonumentMap
             {
                 SearchOnClick();
             }
-            
+
         }
 
         private void FilterSearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -2051,6 +2112,19 @@ namespace MonumentMap
         {
             CloseSearchResults();
         }
+
+
+
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            IInputElement focusedControl = FocusManager.GetFocusedElement(Application.Current.Windows[0]);
+            if (focusedControl is DependencyObject)
+            {
+                string str = HelpProvider.GetHelpKey((DependencyObject)focusedControl);
+                HelpProvider.ShowHelp(str, this);
+            }
+        }
+
 
     }
 }

@@ -14,10 +14,24 @@
         Icon="icons/AppIcon.png">
 
     <Window.CommandBindings>
-        
+        <CommandBinding Command="{x:Static local:ToolbarCommands.AddNewMonument}"
+                        Executed="AddNewMonument_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.AddNewType}"
+                        Executed="AddNewType_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.AddNewTag}"
+                        Executed="AddNewTag_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.IncreaseFont}"
+                        Executed="IncreaseFont_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.DecreaseFont}"
+                        Executed="DecreaseFont_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.SearchMonuments}"
+                        Executed="Search_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.ClosePopUp}"
+                        Executed="ClosePopUp_Executed"/>
+        <CommandBinding Command="ApplicationCommands.Help" Executed="CommandBinding_Executed"/>
     </Window.CommandBindings>
 
-    
+
     <Window.Resources>
         <Style TargetType="{x:Type RadioButton}">
             <Setter Property="Template">
@@ -57,7 +71,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -65,22 +79,22 @@
                     <ColumnDefinition Width="20" />
                 </Grid.ColumnDefinitions>
                 <Border
-                  x:Name="Border" 
+                  x:Name="Border"
                   Grid.ColumnSpan="2"
                   CornerRadius="0"
                   Background="#093647"
                   BorderBrush="#093647"
                   BorderThickness="1" />
-                <Border 
+                <Border
                   Grid.Column="0"
-                  CornerRadius="0" 
-                  Margin="1" 
-                  Background="#093647" 
+                  CornerRadius="0"
+                  Margin="1"
+                  Background="#093647"
                   BorderBrush="#093647"
                   BorderThickness="0,0,1,0" />
-                <Path 
+                <Path
                   x:Name="Arrow"
-                  Grid.Column="1"     
+                  Grid.Column="1"
                   Fill="White"
                   HorizontalAlignment="Center"
                   VerticalAlignment="Center"
@@ -107,10 +121,10 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBox}">
                         <Grid>
-                            <ToggleButton 
-                            Name="ToggleButton" 
-                            Template="{StaticResource ComboBoxToggleButton}" 
-                            Grid.Column="2" 
+                            <ToggleButton
+                            Name="ToggleButton"
+                            Template="{StaticResource ComboBoxToggleButton}"
+                            Grid.Column="2"
                             Focusable="false"
                             IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
                             ClickMode="Press">
@@ -122,29 +136,29 @@
                             VerticalAlignment="Center"
                             HorizontalAlignment="Left" />
                             <TextBox x:Name="PART_EditableTextBox"
-                            Style="{x:Null}" 
-                            Template="{StaticResource ComboBoxTextBox}" 
-                            HorizontalAlignment="Left" 
-                            VerticalAlignment="Center" 
+                            Style="{x:Null}"
+                            Template="{StaticResource ComboBoxTextBox}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
                             Margin="3,3,23,3"
-                            Focusable="True" 
+                            Focusable="True"
                             Background="#093647"
                             Foreground="Green"
                             Visibility="Hidden"
                             IsReadOnly="{TemplateBinding IsReadOnly}"/>
-                            <Popup 
+                            <Popup
                             Name="Popup"
                             Placement="Bottom"
                             IsOpen="{TemplateBinding IsDropDownOpen}"
-                            AllowsTransparency="True" 
+                            AllowsTransparency="True"
                             Focusable="False"
                             PopupAnimation="None">
 
                                 <Grid Name="DropDown"
-                              SnapsToDevicePixels="True"                
+                              SnapsToDevicePixels="True"
                               MinWidth="{TemplateBinding ActualWidth}"
                               MaxHeight="{TemplateBinding MaxDropDownHeight}">
-                                    <Border 
+                                    <Border
                                 x:Name="DropDownBorder"
                                 Background="#093647"
 
@@ -188,9 +202,9 @@
             <Setter Property="SnapsToDevicePixels" Value="true"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="OverridesDefaultStyle" Value="true"/>
-            
+
             <Setter Property="Template">
-                
+
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ComboBoxItem}">
                         <Border Name="Border"
@@ -213,7 +227,7 @@
 
 
         <Image x:Key="SearchIconImage"
-               RenderOptions.BitmapScalingMode="HighQuality" 
+               RenderOptions.BitmapScalingMode="HighQuality"
                Source="icons/searchIcon.png" />
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#072530"/>
@@ -275,44 +289,44 @@
                                 <SolidColorBrush Color="#093647" />
                             </Grid.Background>
 
-                            <TextBlock Grid.Column="0" Text="ID" 
-                                       VerticalAlignment="Center" 
-                                       HorizontalAlignment="Center" 
+                            <TextBlock Grid.Column="0" Text="ID"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
                                        FontSize="14" Foreground="White"
                                        FontWeight="SemiBold"/>
 
-                            <TextBlock Grid.Column="1" Text="Name" 
-                                       VerticalAlignment="Center" 
-                                       HorizontalAlignment="Center" 
+                            <TextBlock Grid.Column="1" Text="Name"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
                                        FontSize="14" Foreground="White"
                                        FontWeight="SemiBold"/>
 
-                            <TextBlock Grid.Column="2" Text="Type" 
-                                       VerticalAlignment="Center" 
-                                       HorizontalAlignment="Center" 
+                            <TextBlock Grid.Column="2" Text="Type"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
                                        FontSize="14" Foreground="White"
                                        FontWeight="SemiBold"/>
 
-                            <TextBlock Grid.Column="3" Text="Climate" 
-                                       VerticalAlignment="Center" 
-                                       HorizontalAlignment="Center" 
+                            <TextBlock Grid.Column="3" Text="Climate"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
                                        FontSize="14" Foreground="White"
                                        FontWeight="SemiBold"/>
 
                         </Grid>
 
-                        <ScrollViewer Grid.Row="1" 
+                        <ScrollViewer Grid.Row="1"
                                       VerticalScrollBarVisibility="Hidden">
                             <StackPanel x:Name="SearchResultsDisplay">
-                                
+
                             </StackPanel>
-                            
+
                         </ScrollViewer>
-                        
+
                     </Grid>
-                    
-                    
-                    <!--<DataGrid Visibility="Visible" 
+
+
+                    <!--<DataGrid Visibility="Visible"
                               ItemsSource="{Binding searchMonuments}"
                               Background="Transparent"
                               GridLinesVisibility="None"
@@ -323,7 +337,7 @@
                               AlternationCount="2"
                               HorizontalScrollBarVisibility="Hidden"
                               VirtualizingStackPanel.IsVirtualizing="False">
-                        
+
                         <DataGrid.ItemContainerStyle>
                             <Style TargetType="DataGridRow">
                                 <Setter Property="Background" Value="LightBlue" />
@@ -332,7 +346,7 @@
                                 <Setter Property="Height" Value="50" />
                                 <Setter Property="VerticalAlignment" Value="Center" />
                                 <Style.Triggers>
-                                    <DataTrigger 
+                                    <DataTrigger
                                         Binding="{Binding RelativeSource={RelativeSource Mode=PreviousData}}"
                                         Value="{x:Null}">
                                         <Setter Property="Background" Value="Transparent"/>
@@ -380,7 +394,7 @@
                     </DataGrid>-->
                 </Grid>
 
-                    
+
 
                 <Grid Canvas.Top="50" Width="160" Height="{Binding CanvasPositions.MonumentsScrollViewerHeight}"
                       Background="#072530">
@@ -402,14 +416,14 @@
                     <ScrollViewer x:Name="MonumentsGridScrollViewer"
                                   Grid.Row="3" VerticalScrollBarVisibility="Hidden">
                         <StackPanel x:Name="MonumentsStackPanel">
-                            
-                            
+
+
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
-                
-                
-                <Grid x:Name="DisplayMonumentInfoHolder" Canvas.Right="-550" Canvas.Top="0" Width="550" 
+
+
+                <Grid x:Name="DisplayMonumentInfoHolder" Canvas.Right="-550" Canvas.Top="0" Width="550"
                       Height="{Binding CanvasPositions.Height}" Background="#072530">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50" />
@@ -433,7 +447,7 @@
 
 
                     </Grid>
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden"  
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                         <StackPanel>
 
@@ -543,7 +557,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Border Background="White" Padding="2" Width="80"
-                                        Height="40" HorizontalAlignment="Left" 
+                                        Height="40" HorizontalAlignment="Left"
                                         VerticalAlignment="Top"
                                         Margin="15, 15, 15, 15">
                                     <Button x:Name="editMonumentBtn" Content="Edit"
@@ -557,22 +571,22 @@
                     </ScrollViewer>
                 </Grid>
 
-                
+
                 <Grid x:Name="newMonumTypeGridHolder" Visibility="Hidden"
-                      Width="{Binding CanvasPositions.Width}" 
+                      Width="{Binding CanvasPositions.Width}"
                       Height="{Binding CanvasPositions.Height}">
                     <Grid.Background>
                         <SolidColorBrush Color="Black" Opacity="0.75" />
                     </Grid.Background>
-                    
+
                     <!-- Prozor za dodavanje novog tipa spomenika -->
                     <Border Width="400" CornerRadius="20"
-                          Height="500" Background="#072530" 
+                          Height="500" Background="#072530"
                           HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Border.Effect>
                             <DropShadowEffect ShadowDepth="0" Opacity="1" BlurRadius="100"/>
                         </Border.Effect>
-                        <Grid x:Name="newMonumTypeGrid" Background="#072530" 
+                        <Grid x:Name="newMonumTypeGrid" Background="#072530"
                               Width="380"
                               Height="480"
                           HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -614,29 +628,29 @@
                                Margin="10"/>
                             <TextBox x:Name="monumentTypeID" Text=""
                                  VerticalContentAlignment="Center"
-                                 MaxLength="6" 
+                                 MaxLength="6"
                                  Margin="5"
                                  Foreground="White"
                                  Grid.Column="1" Grid.Row="1"
                                  Width="100" HorizontalAlignment="Left"
                                  Background="#093647"
                                  BorderBrush="Transparent"
-                                 GotFocus="textBox_GotFocus" 
+                                 GotFocus="textBox_GotFocus"
                                  LostFocus="textBox_LostFocus"/>
 
                             <Label Content="Name:" Foreground="White"
-                               Grid.Row="2" 
-                               Grid.Column="0" 
+                               Grid.Row="2"
+                               Grid.Column="0"
                                Margin="10"/>
                             <TextBox x:Name="monumentTypeName"
                                  VerticalContentAlignment="Center"
-                                 Text="" 
+                                 Text=""
                                  Background="#093647"
-                                 Grid.Row="2" Grid.Column="1" 
+                                 Grid.Row="2" Grid.Column="1"
                                  Margin="5"
                                  BorderBrush="Transparent"
                                  Foreground="White"
-                                 GotFocus="textBox_GotFocus" 
+                                 GotFocus="textBox_GotFocus"
                                  LostFocus="textBox_LostFocus"/>
 
                             <Label Content="Description:" Foreground="White"
@@ -648,15 +662,15 @@
                                  Background="#093647"
                                  BorderBrush="Transparent"
                                  HorizontalAlignment="Stretch"
-                                 AcceptsReturn="True" 
+                                 AcceptsReturn="True"
                                  Foreground="White"
                                  VerticalScrollBarVisibility="Hidden"
                                  Grid.Row="3" Grid.Column="1" Height="80"
-                                 GotFocus="textBox_GotFocus" 
+                                 GotFocus="textBox_GotFocus"
                                  LostFocus="textBox_LostFocus"/>
 
-                            <Label Content="Select icon:" 
-                               Foreground="White" 
+                            <Label Content="Select icon:"
+                               Foreground="White"
                                Margin="10" Grid.Row="4"
                                VerticalAlignment="Center"
                                Grid.Column="0"></Label>
@@ -675,10 +689,10 @@
                             </Border>
 
                             <TextBlock x:Name="monumentTypeIconName"
-                                   Foreground="White" 
-                                   HorizontalAlignment="Right" 
-                                   Grid.Row="4" Grid.Column="1" 
-                                   VerticalAlignment="Center" 
+                                   Foreground="White"
+                                   HorizontalAlignment="Right"
+                                   Grid.Row="4" Grid.Column="1"
+                                   VerticalAlignment="Center"
                                    Margin="10" Width="150"/>
 
                             <!-- Skriveni textBox koji cuva putanju do ikonice -->
@@ -691,23 +705,26 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Margin="5">
-                                <Button x:Name="addMonumentTypeBtn" 
+                                <Button x:Name="addMonumentTypeBtn"
                                 Foreground="White"
                                 Content="Add type"
                                     HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch" 
+                                VerticalAlignment="Stretch"
                                 Click="addMonumentTypeBtn_Click"></Button>
                             </Border>
                             <Button x:Name="cancelMonumentTypeBtn"
                                 Foreground="White"
                                  Grid.Column="1"
                                 Grid.Row="0" HorizontalAlignment="Right"
-                                VerticalAlignment="Center" 
+                                VerticalAlignment="Center"
+
                                 Height="30" Width="30" Margin="0,0,15,0"
-                                Click="cancelMonumentTypeBtn_Click" >
+                                Click="cancelMonumentTypeBtn_Click"
+                                Command="{x:Static local:ToolbarCommands.ClosePopUp}>
                                 <Image Source="icons/xIcon1.png" Height="20"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Button>
+
 
                             <Rectangle Height="2" VerticalAlignment="Bottom"
                                    Grid.Row="6"
@@ -717,7 +734,7 @@
                             <TextBlock Grid.Row="7" Text="Delete monument type" Foreground="White"
                                    FontSize="14" Margin="15" Grid.ColumnSpan="2"
                                    FontWeight="SemiBold"/>
-                            <ComboBox x:Name="DeleteMonumentTypeCombobox" 
+                            <ComboBox x:Name="DeleteMonumentTypeCombobox"
                                   Grid.Row="8" Grid.ColumnSpan="2"
                                   Width="200"
                                   HorizontalAlignment="Left"
@@ -733,7 +750,7 @@
                                 VerticalAlignment="Center"
                                 Margin="5">
 
-                                <Button x:Name="DeleteMonumentTypeButton" 
+                                <Button x:Name="DeleteMonumentTypeButton"
                                 Foreground="White"
                                 Content="Delete"
                                 HorizontalAlignment="Stretch"
@@ -746,23 +763,23 @@
                 </Grid>
 
                 <!-- Prozor za dodavanje novog Tag-a -->
-                <Grid x:Name="newTagGridHolder" Visibility="Hidden" 
+                <Grid x:Name="newTagGridHolder" Visibility="Hidden"
                       Width="{Binding CanvasPositions.Width}"
                       Height="{Binding CanvasPositions.Height}">
-                    
+
                     <Grid.Background>
                         <SolidColorBrush Color="Black" Opacity="0.75" />
                     </Grid.Background>
 
                     <Border Width="400" CornerRadius="20"
-                          Height="500" Background="#072530" 
+                          Height="500" Background="#072530"
                           HorizontalAlignment="Center" VerticalAlignment="Center">
-                        
+
                         <Border.Effect>
-                            <DropShadowEffect ShadowDepth="0" Opacity="1" 
+                            <DropShadowEffect ShadowDepth="0" Opacity="1"
                                               BlurRadius="100"/>
                         </Border.Effect>
-                        
+
                         <Grid x:Name="newTagGrid" Background="#072530"
                               Width="380" Height="480">
 
@@ -786,7 +803,7 @@
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Left"
                                        Margin="15"
-                                       FontSize="14" 
+                                       FontSize="14"
                                        FontWeight="SemiBold"/>
 
                             <!-- Cancel dugme-->
@@ -797,20 +814,22 @@
                                     VerticalAlignment="Center"
                                     Margin="0,0,15,0"
                                     Width="30" Height="30"
-                                    Click="cancelTagBtn_Click">
+                                    Click="cancelTagBtn_Click"
+                                    Command="{x:Static local:ToolbarCommands.ClosePopUp}>
                                 <Image Source="icons/xIcon1.png" Height="20"
                                        RenderOptions.BitmapScalingMode="HighQuality" />
                             </Button>
 
+
                             <Rectangle Height="2" VerticalAlignment="Bottom"
                                    Grid.Row="0"
                                    Grid.ColumnSpan="2"
-                                   HorizontalAlignment="Stretch" 
+                                   HorizontalAlignment="Stretch"
                                    Margin="15, 0" Fill="#093647"/>
 
-                            <Label Content="ID:" Foreground="White" 
+                            <Label Content="ID:" Foreground="White"
                                    FontSize="14"
-                                   Grid.Column="0" Grid.Row="1" 
+                                   Grid.Column="0" Grid.Row="1"
                                    Margin="10"/>
                             <TextBox x:Name="tagID" Text="" MaxLength="6"
                                     FontSize="14"
@@ -850,7 +869,7 @@
                                               Grid.Row="3" Grid.Column="1"
                                               HorizontalAlignment="Stretch"
                                               VerticalAlignment="Center"
-                                              
+
                                               SelectedColorChanged="selectedColorChanged"
                                               BorderBrush="Transparent"
                                               Background="#093647"
@@ -874,25 +893,25 @@
                                         Click="addTagBtn_Click"/>
 
                             </Border>
-                            
-                            
+
+
                             <!-- Brisanje tag-a -->
                             <TextBlock Foreground="White" Text="Delete tag"
                                        Grid.Row="5" Grid.ColumnSpan="2"
                                        VerticalAlignment="Top"
                                        HorizontalAlignment="Left"
                                        Margin="15"
-                                       FontSize="14" 
+                                       FontSize="14"
                                        FontWeight="SemiBold"/>
 
                             <Rectangle Height="2" VerticalAlignment="Bottom"
                                    Grid.Row="5"
                                    Grid.ColumnSpan="2"
-                                   HorizontalAlignment="Stretch" 
+                                   HorizontalAlignment="Stretch"
                                    Margin="15, 5" Fill="#093647"/>
 
 
-                            <ComboBox x:Name="tagsToDelete" 
+                            <ComboBox x:Name="tagsToDelete"
                                       Grid.Column="0" Grid.Row="6"
                                       VerticalAlignment="Center"
                                       HorizontalAlignment="Stretch"
@@ -908,7 +927,7 @@
                                 VerticalAlignment="Center"
                                 Margin="10">
 
-                                <Button x:Name="DeleteMonumentTagButton" 
+                                <Button x:Name="DeleteMonumentTagButton"
                                 Foreground="White"
                                 Content="Delete"
                                 HorizontalAlignment="Stretch"
@@ -921,7 +940,7 @@
                 </Grid>
 
                 <!-- Prozor za dodavanje novih spomenika -->
-                <Grid Background="#072530" 
+                <Grid Background="#072530"
                       x:Name="newMonumentGrid"
                       Canvas.Left="-550" Width="550">
 
@@ -929,7 +948,7 @@
                         <RowDefinition Height="50"></RowDefinition>
                         <RowDefinition Height="{Binding CanvasPositions.ScrollViewerHeights}"></RowDefinition>
                     </Grid.RowDefinitions>
-                    
+
                     <!-- Zaglavlje prozora-->
                     <Grid x:Name="newMonumentHeader" Height="50" Grid.Row="0" Background="#072530">
 
@@ -961,7 +980,7 @@
                         <StackPanel>
 
                             <!-- Slika i ikonica -->
-                            
+
                             <Grid x:Name="newMonumentPicAndIcon"
                                     Margin="0,15,0,0">
 
@@ -972,18 +991,18 @@
                                     <RowDefinition Height="280" />
                                 </Grid.RowDefinitions>
 
-                                
-                                    
-                                    
-                                <Image x:Name="monumentPicture" 
+
+
+
+                                <Image x:Name="monumentPicture"
                                         Source="pictures/DefaultMonumentImageResource.jpg"
                                         VerticalAlignment="Stretch"
                                         HorizontalAlignment="Stretch"
                                         Grid.Row="0" Grid.Column="0"
                                         Stretch="UniformToFill"/>
-                                    
-                                
-                                
+
+
+
                                 <Grid>
                                     <Grid.Background>
                                         <SolidColorBrush Color="Black" Opacity="0.4" />
@@ -1006,7 +1025,7 @@
                                                 HorizontalAlignment="Stretch"
                                                 ToolTip="Change monument picture"
                                                 Content="Change picture"
-                                                Foreground="White" FontSize="14" 
+                                                Foreground="White" FontSize="14"
                                                 Click="changeMonumPicBtn_Click"/>
                                     </Border>
 
@@ -1015,7 +1034,7 @@
                                             Width="125" Height="45">
                                         <Button x:Name="changeMonumIconBtn"
                                             Grid.Column="0" VerticalAlignment="Stretch"
-                                            HorizontalAlignment="Stretch" 
+                                            HorizontalAlignment="Stretch"
                                             Content="Change icon" Foreground="White"
                                             FontSize="14"
                                             Click="changeMonumIconBtn_Click"
@@ -1030,11 +1049,11 @@
                                             Stretch="UniformToFill"
                                             Grid.Column="1"/>
                                 </Grid>
-                                
-                            </Grid>
-                            
 
-                          
+                            </Grid>
+
+
+
                             <!-- Forma za dodavanje novog spomenika -->
                             <Grid x:Name="newMonumentForm" Margin="0,15,0,0">
 
@@ -1065,7 +1084,7 @@
                                        Grid.Column="0" Grid.Row="0"/>
                                 <TextBox x:Name="monumentID" Text=""
                                          BorderThickness="3"
-                                         MaxLength="6" 
+                                         MaxLength="6"
                                          Margin="0,5,10,5"
                                          Background="#093647"
                                          Grid.Column="1" Grid.Row="0"
@@ -1073,7 +1092,7 @@
                                          GotFocus="textBox_GotFocus"
                                          LostFocus="textBox_LostFocus"
                                          Foreground="White"/>
-                                
+
                                 <!-- Skrivena polja koja pamte putanju do odabrane slike i ikonice -->
                                 <TextBox x:Name="newMonumentIconPath" Grid.Row="1" Grid.Column="0" Visibility="Hidden" IsEnabled="False"></TextBox>
                                 <TextBox x:Name="newMonumentPicturePath" Grid.Row="1" Grid.Column="1" Visibility="Hidden" IsEnabled="False"></TextBox>
@@ -1090,23 +1109,23 @@
                                          LostFocus="textBox_LostFocus"
                                          Foreground="White"/>
 
-                                <Label Content="Description:" 
+                                <Label Content="Description:"
                                        Foreground="White"
                                         VerticalAlignment="Top"
                                        Margin="10"
                                        Grid.Row="3" Grid.Column="0"/>
                                 <TextBox x:Name="monumentDescr" Text=""
                                          Margin="0,5,10,5"
-                                         TextWrapping="Wrap" 
+                                         TextWrapping="Wrap"
                                          BorderBrush="Transparent"
                                          BorderThickness="3"
                                          Background="#093647"
                                          MaxLength="200"
-                                         HorizontalAlignment="Stretch" 
+                                         HorizontalAlignment="Stretch"
                                          AcceptsReturn="True"
                                          VerticalScrollBarVisibility="Hidden"
                                          Grid.Row="3" Grid.Column="1" Height="80"
-                                         GotFocus="textBox_GotFocus" 
+                                         GotFocus="textBox_GotFocus"
                                          LostFocus="textBox_LostFocus"
                                          Foreground="White"/>
 
@@ -1117,7 +1136,7 @@
                                         Grid.Row="4" Grid.Column="1" Margin="0,5,10,5">
                                     <ComboBox x:Name="monumentType" SelectedIndex="0"
                                               VerticalAlignment="Stretch"
-                                              GotFocus="comboBox_GotFocus" 
+                                              GotFocus="comboBox_GotFocus"
                                               LostFocus="comboBox_LostFocus"
                                               ItemsSource="{Binding observ_monum_types}"
                                               SelectionChanged="monumentTypeSelected"
@@ -1130,10 +1149,10 @@
                                        Margin="10"/>
                                 <Border BorderBrush="Transparent"
                                         Margin="0,5,10,5"
-                                        BorderThickness="3" 
+                                        BorderThickness="3"
                                         Grid.Row="5" Grid.Column="1">
                                     <ComboBox x:Name="climateType"
-                                              GotFocus="comboBox_GotFocus" 
+                                              GotFocus="comboBox_GotFocus"
                                               LostFocus="comboBox_LostFocus"
                                               MouseEnter="comboBox_MouseEnter"
                                               MouseLeave="comboBox_MouseLeave"/>
@@ -1143,23 +1162,23 @@
                                        Foreground="White"
                                        Margin="10"
                                        Grid.Row="6" Grid.Column="0"/>
-                                <RadioButton x:Name="radioEcoPosBtn" Content="Yes" 
-                                             HorizontalAlignment="Left" 
+                                <RadioButton x:Name="radioEcoPosBtn" Content="Yes"
+                                             HorizontalAlignment="Left"
                                              Background="#093647"
-                                             Grid.Row="6" Grid.Column="1" 
+                                             Grid.Row="6" Grid.Column="1"
                                              VerticalAlignment="Center"
-                                            Foreground="White" 
+                                            Foreground="White"
                                              GroupName="eco" Margin="20, 0"
                                              BorderBrush="#093647"
                                              BorderThickness="3"
                                              GotFocus="radioBtnGotFocus"
                                              LostFocus="radioBtnLostFocus"/>
                                 <RadioButton x:Name="radioEcoNegBtn"
-                                             Content="No" 
+                                             Content="No"
                                              HorizontalAlignment="Right"
                                              Grid.Row="6" Grid.Column="1"
                                              VerticalAlignment="Center"
-                                             Foreground="White" 
+                                             Foreground="White"
                                              GroupName="eco" Margin="20, 0"
                                              IsChecked="True"
                                              BorderBrush="#093647"
@@ -1169,15 +1188,15 @@
                                              LostFocus="radioBtnLostFocus"/>
 
                                 <Label Content="In human settlement:"
-                                       Foreground="White" 
+                                       Foreground="White"
                                        Margin="10"
                                        Grid.Row="7" Grid.Column="0"/>
-                                <RadioButton x:Name="radioSettlementPosBtn" 
+                                <RadioButton x:Name="radioSettlementPosBtn"
                                              Background="#093647"
                                              Content="Yes" HorizontalAlignment="Left"
-                                             Grid.Row="7" Grid.Column="1" 
+                                             Grid.Row="7" Grid.Column="1"
                                              VerticalAlignment="Center"
-                                             Foreground="White" 
+                                             Foreground="White"
                                              GroupName="settlement" Margin="20, 0"
                                              BorderBrush="#093647"
                                              BorderThickness="3"
@@ -1188,19 +1207,19 @@
                                              Content="No" HorizontalAlignment="Right"
                                              Grid.Row="7" Grid.Column="1"
                                              VerticalAlignment="Center"
-                                             Foreground="White" 
-                                             GroupName="settlement" 
+                                             Foreground="White"
+                                             GroupName="settlement"
                                              Margin="20, 0" IsChecked="True"
                                              BorderBrush="#093647"
                                              BorderThickness="3"
                                              GotFocus="radioBtnGotFocus"
                                              LostFocus="radioBtnLostFocus"
-                                             
+
                                              >
                                 </RadioButton>
 
                                 <Label Content="Has endangered species:"
-                                       Foreground="White" 
+                                       Foreground="White"
                                        Grid.Row="8" Grid.Column="0"
                                        Margin="10"/>
                                 <RadioButton x:Name="radioSpeciesPosBtn"
@@ -1208,19 +1227,19 @@
                                              Background="#093647"
                                              Grid.Row="8" Grid.Column="1"
                                              VerticalAlignment="Center"
-                                            Foreground="White" 
-                                             GroupName="species" 
+                                            Foreground="White"
+                                             GroupName="species"
                                              Margin="20, 0"
                                              BorderBrush="#093647"
                                              BorderThickness="3"
                                              GotFocus="radioBtnGotFocus"
                                              LostFocus="radioBtnLostFocus"/>
-                                <RadioButton x:Name="radioSpeciesNegBtn" 
+                                <RadioButton x:Name="radioSpeciesNegBtn"
                                              Content="No" HorizontalAlignment="Right"
-                                             Grid.Row="8" Grid.Column="1" 
+                                             Grid.Row="8" Grid.Column="1"
                                              Background="#093647"
                                              VerticalAlignment="Center"
-                                             Foreground="White" 
+                                             Foreground="White"
                                              GroupName="species" Margin="20, 0"
                                              IsChecked="True"
                                              BorderBrush="#093647"
@@ -1228,7 +1247,7 @@
                                              GotFocus="radioBtnGotFocus"
                                              LostFocus="radioBtnLostFocus"/>
 
-                                <Label Content="Tourist status:" 
+                                <Label Content="Tourist status:"
                                        Foreground="White"
                                        Grid.Row="10" Grid.Column="0"
                                        Margin="10"/>
@@ -1237,20 +1256,20 @@
                                         Grid.Row="10" Grid.Column="1"
                                         Margin="0,5,10,5">
                                     <ComboBox x:Name="touristStatus"
-                                          GotFocus="comboBox_GotFocus" 
+                                          GotFocus="comboBox_GotFocus"
                                           LostFocus="comboBox_LostFocus"
                                           MouseEnter="comboBox_MouseEnter"
                                           MouseLeave="comboBox_MouseLeave"/>
                                 </Border>
 
                                 <Label Content="Annual income ($):"
-                                       Foreground="White" 
+                                       Foreground="White"
                                        Grid.Row="12" Grid.Column="0"
                                        Margin="10"/>
                                 <TextBox x:Name="annualIncome" Text=""
-                                         PreviewTextInput="NumberValidationTextBox" 
+                                         PreviewTextInput="NumberValidationTextBox"
                                          Grid.Row="12" Grid.Column="1"
-                                         GotFocus="textBox_GotFocus" 
+                                         GotFocus="textBox_GotFocus"
                                          LostFocus="textBox_LostFocus"
                                          Margin="0,5,10,5"
                                          BorderBrush="Transparent"
@@ -1259,7 +1278,7 @@
                                          Foreground="White"/>
 
                                 <Label Content="Discovery date:"
-                                       Foreground="White" 
+                                       Foreground="White"
                                        Grid.Row="11" Grid.Column="0"
                                        Margin="10"/>
                                 <TextBox x:Name="discoveryDate"
@@ -1276,10 +1295,10 @@
                                        Margin="10"/>
                                 <Border BorderBrush="Transparent"
                                         Margin="0,5,10,5"
-                                        BorderThickness="3" 
+                                        BorderThickness="3"
                                         Grid.Row="9" Grid.Column="1">
                                     <ComboBox x:Name="newMonumentTag"
-                                              GotFocus="comboBox_GotFocus" 
+                                              GotFocus="comboBox_GotFocus"
                                               LostFocus="comboBox_LostFocus"
                                               ItemsSource="{Binding observ_monum_tags}"
                                               MouseEnter="comboBox_MouseEnter"
@@ -1315,7 +1334,7 @@
                     <TextBlock Text="Find on Map" Foreground="White" FontSize="16"
                                TextAlignment="Center" VerticalAlignment="Center"/>
                 </Grid>
-                
+
 
                 <Grid x:Name="CursorIcon" Canvas.Top="0" Canvas.Left="0"
                       Visibility="Hidden" Width="100" Height="100"/>
@@ -1333,7 +1352,7 @@
                         <ColumnDefinition Width="60"></ColumnDefinition>
                         <ColumnDefinition Width="160"/>
                         <ColumnDefinition></ColumnDefinition>
-                        
+
                         <!-- Pretraga -->
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="65" />
@@ -1350,27 +1369,34 @@
                             Grid.Row="0" Grid.Column="0"
                             HorizontalAlignment="Left" Width="50"
                             FontSize="{Binding WindowConstants.HeaderFontSize}"
-                            ToolTip="Add new monument" BorderThickness="0">
+
+                            ToolTip="Add new monument" BorderThickness="0"
+                            Command="{x:Static local:ToolbarCommands.AddNewMonument}">
                         <Image Source="icons/addMonumentIcon.png" Height="30"
                                RenderOptions.BitmapScalingMode="HighQuality"/>
+
                     </Button>
 
                     <Button x:Name="newMonumentTypeBtn" Grid.Row="0" Grid.Column="1"
                             HorizontalAlignment="Left" Width="50"
-                            FontSize="{Binding WindowConstants.HeaderFontSize}" 
-                            ToolTip="Manage monument types" BorderThickness="0" 
-                            Click="newMonumentTypeBtn_Click">
+                            FontSize="{Binding WindowConstants.HeaderFontSize}"
+                            ToolTip="Manage monument types" BorderThickness="0"
+                            Click="newMonumentTypeBtn_Click"
+                            Command="{x:Static local:ToolbarCommands.AddNewType}">
                         <Image Source="icons/addTypeIcon.png" Height="30"
                                RenderOptions.BitmapScalingMode="HighQuality"/>
+
                     </Button>
 
                     <Button x:Name="newTagBtn" Grid.Row="0" Grid.Column="2"
                             HorizontalAlignment="Left" Width="50"
                             FontSize="{Binding WindowConstants.HeaderFontSize}"
                             ToolTip="Manage monument tags" BorderThickness="0"
-                            Click="newTagBtn_Click">
+                            Click="newTagBtn_Click"
+                            Command="{x:Static local:ToolbarCommands.AddNewTag}">
                         <Image Source="icons/addTagIcon.png" Height="30"
                                RenderOptions.BitmapScalingMode="HighQuality"/>
+
                     </Button>
 
                     <Grid Grid.Column="3" >
@@ -1390,8 +1416,10 @@
                                 HorizontalAlignment="Stretch"
                             Foreground="White" FontSize="20"
                             FontWeight="UltraBold"
+
                             VerticalAlignment="Stretch"
-                            Click="increaseFontBtn_Click" >
+                            Click="increaseFontBtn_Click"
+                            Command="{x:Static local:ToolbarCommands.IncreaseFont}">
                             <Image Source="icons/arrowUpIcon.png"
                                    RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Button>
@@ -1401,7 +1429,8 @@
                             Foreground="White" FontSize="20"
                             FontWeight="UltraBold"
                             VerticalAlignment="Stretch"
-                            Click="decreaseFontBtn_Click">
+                            Click="decreaseFontBtn_Click"
+                            Command="{x:Static local:ToolbarCommands.DecreaseFont}">
                             <Image Source="icons/arrowDownIcon.png"
                                    RenderOptions.BitmapScalingMode="HighQuality" />
                         </Button>
@@ -1419,7 +1448,8 @@
                                    FontSize="14" FontWeight="SemiBold"/>
 
                     </Grid>
-                    
+
+
 
                     <TextBlock x:Name="UserNotificationMessage" Foreground="White"
                                Opacity="0" VerticalAlignment="Center"
@@ -1442,7 +1472,7 @@
                                FontSize="14" Foreground="White" FontWeight="SemiBold"
                                />
 
-                   
+
                     <ComboBox Grid.Column="7" Margin="6" Padding="6"
                               SelectedIndex="0"
                               x:Name="FilterSearch"
@@ -1460,7 +1490,7 @@
                             ToolTip="Enter search text"
                             x:Name="searchTextBox"
                             TextChanged="SearchTextBox_TextChanged"
-                             KeyDown="SearchTextBox_KeyDown"/>
+                            KeyDown="SearchTextBox_KeyDown"/>
 
 
                     <Button x:Name="searchBtn" Grid.Column="9" ToolTip="Search"
