@@ -27,6 +27,7 @@
                         Executed="Search_Executed"/>
         <CommandBinding Command="{x:Static local:ToolbarCommands.ClosePopUp}"
                         Executed="ClosePopUp_Executed"/>
+        <CommandBinding Command="ApplicationCommands.Help" Executed="CommandBinding_Executed"/>
     </Window.CommandBindings>
     
     
