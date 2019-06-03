@@ -39,12 +39,13 @@ namespace MonumentMap
         /******** Booleans indicating whether pop-up windows are shown ********/
         public bool isNewMonumentWindowShown = false;
         public bool isNewMonumentWindowInfoShown = false;
-
+        public bool isSearchResultsShown = false;
 
         /***************** Observable collections *****************/
         public ObservableCollection<Monument> observ_monuments { get; set; }
         public ObservableCollection<MonumentType> observ_monum_types { get; set; }
         public ObservableCollection<MonumentTag> observ_monum_tags { get; set; }
+        
 
         private double mainWindowHeight;
         private double mainWindowWidth;
@@ -88,6 +89,7 @@ namespace MonumentMap
             this.MouseUp += Window_OnMouseUp;
             
             onLoad();
+            
         }
 
 
@@ -209,6 +211,7 @@ namespace MonumentMap
             CanvasPositions.Height = mainWindowHeight;
             CanvasPositions.ScrollViewerHeights = mainWindowHeight;
             CanvasPositions.RemoveLeft = (mainWindowWidth / 2) - (RemoveMonumentGrid.Width / 2);
+            CanvasPositions.FindOnMapLeft = (mainWindowWidth / 2) - (RemoveMonumentGrid.Width / 2) + 130;
 
             //centerPopUpWindows();
         }
@@ -934,6 +937,41 @@ namespace MonumentMap
             }
         }
 
+        private void ShowSearchResults()
+        {
+
+            if (isSearchResultsShown) return;
+            SearchCancelButton.Visibility = Visibility.Visible;
+            DoubleAnimation double_anim = new DoubleAnimation
+            {
+                From = -SearchGrid.Width,
+                To = 0,
+                Duration = new Duration(TimeSpan.FromSeconds(0.25)),
+                AutoReverse = false
+            };
+
+            SearchGrid.BeginAnimation(Canvas.RightProperty, double_anim);
+            isSearchResultsShown = true;
+
+
+        }
+
+        private void CloseSearchResults()
+        {
+            if (!isSearchResultsShown) return;
+            SearchCancelButton.Visibility = Visibility.Hidden;
+            DoubleAnimation double_anim = new DoubleAnimation
+            {
+                From = 0,
+                To = -SearchGrid.Width,
+                Duration = new Duration(TimeSpan.FromSeconds(0.25)),
+                AutoReverse = false
+            };
+
+            SearchGrid.BeginAnimation(Canvas.RightProperty, double_anim);
+            isSearchResultsShown = false;
+        }
+
 
                         /*********************************
                          * METHODS FOR USER NOTIFICATION *
@@ -995,8 +1033,8 @@ namespace MonumentMap
             Grid grid = sender as Grid;
             Grid child = grid.Children[0] as Grid;
             var bg = new SolidColorBrush();
-            Color color = (Color)ColorConverter.ConvertFromString("#093647");
-            bg.Opacity = 0.2;
+            Color color = Colors.Black;
+            bg.Opacity = 0.0;
             bg.Color = color;
             child.Background = bg;
         }
@@ -1006,8 +1044,8 @@ namespace MonumentMap
             Grid grid = sender as Grid;
             Grid child = grid.Children[0] as Grid;
             var bg = new SolidColorBrush();
-            Color color = (Color)ColorConverter.ConvertFromString("#093647");
-            bg.Opacity = 0.5;
+            Color color = Colors.Black;
+            bg.Opacity = 0.3;
             bg.Color = color;
             child.Background = bg;
         }
@@ -1030,6 +1068,11 @@ namespace MonumentMap
             ease.EasingMode = EasingMode.EaseInOut;
             anim.EasingFunction = ease;
             RemoveMonumentGrid.BeginAnimation(Canvas.TopProperty, anim);
+
+            if (selectedMonumentObject.monumentPin != null)
+            {
+                SearchMonumentGrid.BeginAnimation(Canvas.TopProperty, anim);
+            }
 
 
             var imgSource = new BitmapImage(new Uri(selectedMonumentObject.Icon_path, UriKind.Relative));
@@ -1098,8 +1141,12 @@ namespace MonumentMap
 
         }
 
+
+
         private void Window_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
+
+            
 
             if (worldMap.IsMouseOver && selectedMonument != null)
             {
@@ -1140,8 +1187,16 @@ namespace MonumentMap
             if (RemoveMonumentGrid.IsMouseOver && selectedMonument != null)
             {
                 RemoveMonument();
-
             }
+
+            if (SearchMonumentGrid.IsMouseOver && selectedMonument != null)
+            {
+                worldMap.Center = new Location(selectedMonumentObject.monumentPin.latitude, selectedMonumentObject.monumentPin.longitude);
+                worldMap.ZoomLevel = 16;
+            }
+
+
+
             if (selectedMonument != null)
             {
                 DoubleAnimation anim = new DoubleAnimation
@@ -1157,6 +1212,11 @@ namespace MonumentMap
                 anim.EasingFunction = ease;
 
                 RemoveMonumentGrid.BeginAnimation(Canvas.TopProperty, anim);
+                if (selectedMonumentObject.monumentPin != null)
+                {
+                    SearchMonumentGrid.BeginAnimation(Canvas.TopProperty, anim);
+                }
+                
             }
 
             IO_Serializer.serializeMonuments(observ_monuments);
@@ -1211,6 +1271,7 @@ namespace MonumentMap
             (mainGrid as UIElement).MouseEnter += GridMonument_MouseEnter;
             (mainGrid as UIElement).MouseLeave += GridMonument_MouseLeave;
             (mainGrid as UIElement).MouseDown += GridMonument_MouseDown;
+            (mainGrid as UIElement).MouseUp += GridMonument_MouseUp;
 
 
             var mainBrush = new ImageBrush();
@@ -1219,10 +1280,10 @@ namespace MonumentMap
             mainGrid.Background = mainBrush;
 
             var childGrid = new Grid();
-
-            Color color = (Color)ColorConverter.ConvertFromString("#093647");
+            
+            Color color = Colors.Black;
             var secondBrush = new SolidColorBrush();
-            secondBrush.Opacity = 0.5;
+            secondBrush.Opacity = 0.3;
             secondBrush.Color = color;
             childGrid.Background = secondBrush;
 
@@ -1244,6 +1305,13 @@ namespace MonumentMap
             MonumentsStackPanel.Children.Add(mainGrid);
 
 
+        }
+
+        private void GridMonument_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            selectedDisplayMonument = getMonumentById(selectedMonument.Tag.ToString());
+            OpenDisplayInfo();
+            ChangeDisplayInfo(selectedDisplayMonument);
         }
 
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
@@ -1389,6 +1457,255 @@ namespace MonumentMap
                 MessageBox.Show("Deleted");
             }
 
+        }
+
+
+        private void SearchMonumentsDisplay()
+        {
+
+            if (searchTextBox == null) return;
+
+            string val = searchTextBox.Text.ToLower();
+            string filterVal = FilterSearch.Text.ToLower();
+            SearchResultsDisplay.Children.Clear();
+
+            if (val.Equals(""))
+            {
+                foreach(Monument m in observ_monuments)
+                {
+                    addElementsToSearchDisplay(m);
+                }
+            }
+
+            else 
+            {
+                foreach(Monument m in observ_monuments)
+                {
+                    if (filterVal.Equals("id"))
+                    {
+                        if (m.ID.ToLower().Contains(val))
+                        {
+                            addElementsToSearchDisplay(m);
+                        }
+                    }
+
+                    else if (filterVal.Equals("name"))
+                    {
+                        if (m.Name.ToLower().Contains(val))
+                        {
+                            addElementsToSearchDisplay(m);
+                        }
+                    }
+                    else if (filterVal.Equals("type"))
+                    {
+                        if (m.Type.ToString().ToLower().Contains(val))
+                        {
+                            addElementsToSearchDisplay(m);
+                        }
+                    }
+                    else if (filterVal.Equals("climate"))
+                    {
+                        if (m.Climate.ToString().ToLower().Contains(val))
+                        {
+                            addElementsToSearchDisplay(m);
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+        private void addElementsToSearchDisplay(Monument monument)
+        {
+            var mainGrid = new Grid();
+            mainGrid.Height = 50;
+            mainGrid.Tag = monument.ID;
+            mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            mainGrid.ColumnDefinitions.Add(new ColumnDefinition());
+
+            (mainGrid as UIElement).MouseEnter += MouseOverSearchElement;
+            (mainGrid as UIElement).MouseLeave += MouseLeaveSearchElement;
+            (mainGrid as UIElement).MouseDown += MouseClickSearchElement;
+
+            var text1 = new TextBlock();
+            text1.Foreground = Brushes.White;
+            text1.Text = monument.ID;
+            text1.HorizontalAlignment = HorizontalAlignment.Center;
+            text1.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetColumn(text1, 0);
+
+            var text2 = new TextBlock();
+            text2.Foreground = Brushes.White;
+            text2.Text = monument.Name;
+            text2.HorizontalAlignment = HorizontalAlignment.Center;
+            text2.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetColumn(text2, 1);
+
+            var text3 = new TextBlock();
+            text3.Foreground = Brushes.White;
+            text3.Text = monument.Type.ToString();
+            text3.HorizontalAlignment = HorizontalAlignment.Center;
+            text3.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetColumn(text3, 2);
+
+            var text4 = new TextBlock();
+            text4.Foreground = Brushes.White;
+            text4.Text = monument.Climate.ToString();
+            text4.HorizontalAlignment = HorizontalAlignment.Center;
+            text4.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetColumn(text4, 3);
+
+            mainGrid.Children.Add(text1);
+            mainGrid.Children.Add(text2);
+            mainGrid.Children.Add(text3);
+            mainGrid.Children.Add(text4);
+
+            SearchResultsDisplay.Children.Add(mainGrid);
+
+        }
+
+        private Grid GetMonumentGrid(string id)
+        {
+
+            foreach(Grid g in MonumentsStackPanel.Children)
+            {
+                if (g.Tag.ToString().Equals(id))
+                {
+                    return g;
+                }
+            }
+
+
+            return null;
+        }
+
+
+        private void ChangeMonumentGridBG(Grid grid, Color c)
+        {
+            Grid childGrid = grid.Children[0] as Grid;
+            Color color = c; //(Color)ColorConverter.ConvertFromString("#093647");
+            var secondBrush = new SolidColorBrush();
+            secondBrush.Opacity = 0.3;
+            secondBrush.Color = color;
+            childGrid.Background = secondBrush;
+        }
+
+        private Grid lastGridSearched = null;
+
+        private void searchAndDisplayMonument(string id)
+        {
+            selectedDisplayMonument = getMonumentById(id);
+
+
+            Grid gridToView = GetMonumentGrid(id);
+            UIElement container = VisualTreeHelper.GetParent(gridToView) as UIElement;
+            Point relativeLocation = gridToView.TranslatePoint(new Point(0, 0), container);
+            MonumentsGridScrollViewer.ScrollToVerticalOffset(relativeLocation.Y);
+
+            if (lastGridSearched != null)
+            {
+                ChangeMonumentGridBG(lastGridSearched, Colors.Black);
+            }
+
+            lastGridSearched = gridToView;
+
+            ChangeMonumentGridBG(gridToView, Colors.White);
+
+            ChangeDisplayInfo(selectedDisplayMonument);
+
+
+            if (selectedDisplayMonument.monumentPin != null)
+            {
+                Location location = new Location(selectedDisplayMonument.monumentPin.latitude, selectedDisplayMonument.monumentPin.longitude);
+                worldMap.Center = location;
+                worldMap.ZoomLevel = 16;
+                OpenDisplayInfo();
+            }
+
+
+            CloseSearchResults();
+        }
+
+        private void MouseClickSearchElement(object sender, MouseButtonEventArgs e)
+        {
+
+            var grid = sender as Grid;
+            string id = grid.Tag.ToString();
+            searchAndDisplayMonument(id);
+
+
+        }
+
+        private void MouseLeaveSearchElement(object sender, MouseEventArgs e)
+        {
+            var grid = (Grid)sender;
+            grid.Background = (Brush)brushConverter.ConvertFrom("#072530"); //072530
+        }
+
+        private void MouseOverSearchElement(object sender, MouseEventArgs e)
+        {
+            var grid = (Grid)sender;
+            grid.Background = (Brush)brushConverter.ConvertFrom("#093647");
+        }
+
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            SearchMonumentsDisplay();
+            ShowSearchResults();
+        }
+
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != System.Windows.Input.Key.Enter) return;
+
+            e.Handled = true;
+
+            SearchOnClick();
+        }
+
+        private void SearchOnClick()
+        {
+            if (!FilterSearch.Text.Equals("ID")) return;
+            string id = searchTextBox.Text;
+
+            Monument m = getMonumentById(id);
+            if (m == null)
+            {
+                NotifyUser("No monument with that Id");
+                return;
+            }
+            else
+            {
+                searchAndDisplayMonument(id);
+            }
+        }
+
+        private void SearchBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (searchTextBox.Text.Equals(""))
+            {
+                SearchMonumentsDisplay();
+                ShowSearchResults();
+            }
+            else
+            {
+                SearchOnClick();
+            }
+            
+        }
+
+        private void FilterSearch_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SearchMonumentsDisplay();
+        }
+
+        private void CloseSearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            CloseSearchResults();
         }
     }
 }

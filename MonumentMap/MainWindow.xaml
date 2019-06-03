@@ -210,7 +210,134 @@
            <!-- Canvas koji prekriva glavni prozor -->
             <Canvas x:Name="mainCanvas"  Panel.ZIndex="99" HorizontalAlignment="Stretch">
 
-                <DataGrid Visibility="Hidden" ItemsSource="{Binding observ_monuments}" Canvas.Top="50" Canvas.Right="100"/>
+                <Grid Canvas.Top="50" Canvas.Right="-500" x:Name="SearchGrid"
+                      Width="500" Height="{Binding CanvasPositions.ScrollViewerHeights}"
+                      Background="#072530">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.Background>
+                                <SolidColorBrush Color="#093647" />
+                            </Grid.Background>
+
+                            <TextBlock Grid.Column="0" Text="ID" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Center" 
+                                       FontSize="14" Foreground="White"
+                                       FontWeight="SemiBold"/>
+
+                            <TextBlock Grid.Column="1" Text="Name" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Center" 
+                                       FontSize="14" Foreground="White"
+                                       FontWeight="SemiBold"/>
+
+                            <TextBlock Grid.Column="2" Text="Type" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Center" 
+                                       FontSize="14" Foreground="White"
+                                       FontWeight="SemiBold"/>
+
+                            <TextBlock Grid.Column="3" Text="Climate" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Center" 
+                                       FontSize="14" Foreground="White"
+                                       FontWeight="SemiBold"/>
+
+                        </Grid>
+
+                        <ScrollViewer Grid.Row="1" 
+                                      VerticalScrollBarVisibility="Hidden">
+                            <StackPanel x:Name="SearchResultsDisplay">
+                                
+                            </StackPanel>
+                            
+                        </ScrollViewer>
+                        
+                    </Grid>
+                    
+                    
+                    <!--<DataGrid Visibility="Visible" 
+                              ItemsSource="{Binding searchMonuments}"
+                              Background="Transparent"
+                              GridLinesVisibility="None"
+                              VerticalScrollBarVisibility="Hidden"
+                              RowHeaderWidth="0"
+                              BorderThickness="0"
+                              CanUserAddRows="False"
+                              AlternationCount="2"
+                              HorizontalScrollBarVisibility="Hidden"
+                              VirtualizingStackPanel.IsVirtualizing="False">
+                        
+                        <DataGrid.ItemContainerStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="LightBlue" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="Padding" Value="5" />
+                                <Setter Property="Height" Value="50" />
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Style.Triggers>
+                                    <DataTrigger 
+                                        Binding="{Binding RelativeSource={RelativeSource Mode=PreviousData}}"
+                                        Value="{x:Null}">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+
+                        </DataGrid.ItemContainerStyle>
+                        <DataGrid.CellStyle>
+                            <Style TargetType="{x:Type DataGridCell}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{x:Null}" />
+                                        <Setter Property="BorderBrush" Value="{x:Null}" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter Property="Background" Value="{x:Null}" />
+                                        <Setter Property="BorderBrush" Value="{x:Null}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}">
+                                <Setter Property="FontWeight"  Value="SemiBold" />
+                                <Setter Property="FontSize"  Value="13" />
+                                <Setter Property="Padding"  Value="5" />
+                                <Setter Property="Height" Value="50" />
+                                <Setter Property="Background" Value="#093647" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn>
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+
+                    </DataGrid>-->
+                </Grid>
+
+                    
 
                 <Grid Canvas.Top="50" Width="160" Height="{Binding CanvasPositions.MonumentsScrollViewerHeight}"
                       Background="#072530">
@@ -222,11 +349,15 @@
                     </Grid.RowDefinitions>
 
                     <Rectangle Fill="#093647"/>
-                    <TextBox Margin="0, 5" TextAlignment="Left" Foreground="White" BorderThickness="0"
-                             Text="Search..." VerticalContentAlignment="Center"
-                             FontSize="14" Background="#093647" Padding="5"
+                    <TextBlock Margin="0, 5" TextAlignment="Left" Foreground="White"
+                             Text="Your monuments"
+                             FontSize="14"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
                              Grid.Row="2" x:Name="SearchMonuments"/>
-                    <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
+                    <ScrollViewer x:Name="MonumentsGridScrollViewer"
+                                  Grid.Row="3" VerticalScrollBarVisibility="Hidden">
                         <StackPanel x:Name="MonumentsStackPanel">
                             
                             
@@ -1056,7 +1187,13 @@
 
                 <Grid Width="120" Height="40" x:Name="RemoveMonumentGrid" Background="#072530"
                       Canvas.Top="-50" Canvas.Left="{Binding CanvasPositions.RemoveLeft}">
-                    <TextBlock Text="Remove" Foreground="White" FontSize="16"
+                    <TextBlock Text="Delete" Foreground="White" FontSize="16"
+                               TextAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+
+                <Grid Width="130" Height="40" x:Name="SearchMonumentGrid" Background="#072530"
+                      Canvas.Top="-50" Canvas.Left="{Binding CanvasPositions.FindOnMapLeft}">
+                    <TextBlock Text="Find on Map" Foreground="White" FontSize="16"
                                TextAlignment="Center" VerticalAlignment="Center"/>
                 </Grid>
                 
@@ -1082,6 +1219,7 @@
                         <ColumnDefinition></ColumnDefinition>
                         
                         <!-- Pretraga -->
+                        <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="150" />
                         <ColumnDefinition Width="250" />
@@ -1124,29 +1262,43 @@
                                HorizontalAlignment="Left"
                                Grid.Row="0" Grid.Column="4" />
 
-                    <TextBlock Grid.Column="5" Text="Filter:" VerticalAlignment="Center"
-                               HorizontalAlignment="Center" FontSize="14" Foreground="White"/>
+
+                    <Button Content="Cancel" Grid.Column="5" Foreground="White"
+                            Margin="5" VerticalContentAlignment="Center"
+                            Click="CloseSearchButton_Click"
+                            x:Name="SearchCancelButton"
+                            Visibility="Hidden"/>
+
+                    <TextBlock Grid.Column="6" Text="Search:" VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               FontSize="14" Foreground="White"
+                               />
 
                    
-                    <ComboBox Grid.Column="6" Margin="6" Padding="6" SelectedIndex="0">
-                        <ComboBoxItem Name="Item1">Item1</ComboBoxItem>
-                        <ComboBoxItem Name="Item2">Item2</ComboBoxItem>
-                        <ComboBoxItem Name="Item3">Item3</ComboBoxItem>
-                        <ComboBoxItem Name="Item4">Item4</ComboBoxItem>
-                        <ComboBoxItem Name="Item5">Item5</ComboBoxItem>
-                        <ComboBoxItem Name="Item6">Item6</ComboBoxItem>
+                    <ComboBox Grid.Column="7" Margin="6" Padding="6"
+                              SelectedIndex="0"
+                              x:Name="FilterSearch"
+                              SelectionChanged="FilterSearch_SelectionChanged">
+                        <ComboBoxItem Name="ID">ID</ComboBoxItem>
+                        <ComboBoxItem Name="Name">Name</ComboBoxItem>
+                        <ComboBoxItem Name="Type">Type</ComboBoxItem>
+                        <ComboBoxItem Name="Climate">Climate</ComboBoxItem>
                     </ComboBox>
 
-                    <TextBox Grid.Column="7" Margin="6" Background="#093647"
+                    <TextBox Grid.Column="8" Margin="6" Background="#093647"
                             Text="" HorizontalContentAlignment="Left" Padding="5"
                             VerticalContentAlignment="Center" Foreground="White"
                             FontSize="14" BorderThickness="0"
-                            x:Name="searchTextBox"/>
+                            x:Name="searchTextBox"
+                             TextChanged="SearchTextBox_TextChanged"
+                             KeyDown="SearchTextBox_KeyDown"
+                             />
 
-                    <Button x:Name="searchBtn" Grid.Column="8" ToolTip="Search"
+                    <Button x:Name="searchBtn" Grid.Column="9" ToolTip="Search"
                             Width="40" Height="40" Margin="0,0,5,5"
                             BorderThickness="0" Content="{StaticResource SearchIconImage}"
-                            VerticalAlignment="Bottom"/>
+                            VerticalAlignment="Bottom"
+                            Click="SearchBtn_Click"/>
                 </Grid>
 
 
