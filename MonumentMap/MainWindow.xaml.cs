@@ -40,6 +40,8 @@ namespace MonumentMap
         public bool isNewMonumentWindowShown = false;
         public bool isNewMonumentWindowInfoShown = false;
         public bool isSearchResultsShown = false;
+        public bool isTagDialogShown = false;
+        public bool isTypeDialogShown = false;
 
         /***************** Observable collections *****************/
         public ObservableCollection<Monument> observ_monuments { get; set; }
@@ -600,6 +602,7 @@ namespace MonumentMap
         {
 
             newTagGridHolder.Visibility = Visibility.Visible;
+            isTagDialogShown = true;
 
         }
 
@@ -607,6 +610,7 @@ namespace MonumentMap
         {
 
             newMonumTypeGridHolder.Visibility = Visibility.Visible;
+            isTypeDialogShown = true;
         }
 
         private void monumentTypeBrowseBtn_Click(object sender, RoutedEventArgs e)
@@ -692,6 +696,8 @@ namespace MonumentMap
             monumentTypeIconName.Text = "";
 
             newMonumTypeGridHolder.Visibility = Visibility.Hidden;
+
+            isTypeDialogShown = false;
         }
 
 
@@ -709,6 +715,8 @@ namespace MonumentMap
             ColorPicker_Tag.SelectedColor = null;
 
             newTagGridHolder.Visibility = Visibility.Hidden;
+
+            isTagDialogShown = false;
         }
 
 
@@ -1702,8 +1710,12 @@ namespace MonumentMap
 
         private void increaseFontBtn_Click(object sender, RoutedEventArgs e)
         {
+            increaseAllFonts();
+        }
 
-            if(FONT_SIZE_CHANGE >= MAX_FONT_SIZE)
+        private void increaseAllFonts()
+        {
+            if (FONT_SIZE_CHANGE >= MAX_FONT_SIZE)
             {
                 NotifyUser("Maximum font reached");
                 return;
@@ -1711,10 +1723,14 @@ namespace MonumentMap
 
             changeFontSize(1);
             FONT_SIZE_CHANGE++;
-
         }
 
         private void decreaseFontBtn_Click(object sender, RoutedEventArgs e)
+        {
+            decreaseAllFonts();
+        }
+
+        private void decreaseAllFonts()
         {
             if (FONT_SIZE_CHANGE <= 0)
             {
@@ -1752,6 +1768,48 @@ namespace MonumentMap
         private void AddNewMonument_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             openNewMonumentWindow();
+        }
+
+        private void AddNewType_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            newMonumTypeGridHolder.Visibility = Visibility.Visible;
+            isTypeDialogShown = true;
+        }
+
+        private void AddNewTag_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            newTagGridHolder.Visibility = Visibility.Visible;
+            isTagDialogShown = true;
+        }
+
+        private void IncreaseFont_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            increaseAllFonts();
+        }
+
+        private void DecreaseFont_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            decreaseAllFonts();
+        }
+
+        private void Search_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            searchTextBox.Focus();
+        }
+
+        private void ClosePopUp_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+           
+           if(isTypeDialogShown)
+            {
+                closeMonumentTypeDialog();
+            }
+
+           if(isTagDialogShown)
+            {
+                closeTagWindow();
+            }
+           
         }
 
 
@@ -2007,5 +2065,6 @@ namespace MonumentMap
             CloseSearchResults();
         }
 
+        
     }
 }

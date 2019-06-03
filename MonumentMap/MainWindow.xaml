@@ -13,7 +13,20 @@
         WindowState="Maximized">
 
     <Window.CommandBindings>
-        
+        <CommandBinding Command="{x:Static local:ToolbarCommands.AddNewMonument}"
+                        Executed="AddNewMonument_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.AddNewType}"
+                        Executed="AddNewType_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.AddNewTag}"
+                        Executed="AddNewTag_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.IncreaseFont}"
+                        Executed="IncreaseFont_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.DecreaseFont}"
+                        Executed="DecreaseFont_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.SearchMonuments}"
+                        Executed="Search_Executed"/>
+        <CommandBinding Command="{x:Static local:ToolbarCommands.ClosePopUp}"
+                        Executed="ClosePopUp_Executed"/>
     </Window.CommandBindings>
     
     
@@ -660,7 +673,8 @@
                                 Width="100" HorizontalAlignment="Right"
                                 VerticalAlignment="Center" 
                                 Margin="15" 
-                                Click="cancelMonumentTypeBtn_Click" ></Button>
+                                Click="cancelMonumentTypeBtn_Click"
+                                Command="{x:Static local:ToolbarCommands.ClosePopUp}"></Button>
 
                             <Rectangle Height="2" VerticalAlignment="Bottom"
                                    Grid.Row="6"
@@ -751,7 +765,8 @@
                                     VerticalAlignment="Top"
                                     Margin="10,5"
                                     Width="100" Height="30"
-                                    Click="cancelTagBtn_Click"/>
+                                    Click="cancelTagBtn_Click"
+                                    Command="{x:Static local:ToolbarCommands.ClosePopUp}"/>
 
                             <Rectangle Height="2" VerticalAlignment="Bottom"
                                    Grid.Row="0"
@@ -1288,7 +1303,8 @@
                             Grid.Row="0" Grid.Column="0"
                             HorizontalAlignment="Left" Width="50"
                             FontSize="{Binding WindowConstants.HeaderFontSize}"
-                            ToolTip="Add new monument" BorderThickness="0">
+                            ToolTip="Add new monument" BorderThickness="0"
+                            Command="{x:Static local:ToolbarCommands.AddNewMonument}">
                         <Image Source="icons/monument-icon.png" Height="35"/>
                     </Button>
 
@@ -1296,7 +1312,8 @@
                             HorizontalAlignment="Left" Width="50"
                             FontSize="{Binding WindowConstants.HeaderFontSize}" 
                             ToolTip="Manage monument types" BorderThickness="0" 
-                            Click="newMonumentTypeBtn_Click">
+                            Click="newMonumentTypeBtn_Click"
+                            Command="{x:Static local:ToolbarCommands.AddNewType}">
                         <Image Source="icons/type.png" Height="35"/>
                     </Button>
 
@@ -1304,7 +1321,8 @@
                             HorizontalAlignment="Left" Width="50"
                             FontSize="{Binding WindowConstants.HeaderFontSize}"
                             ToolTip="Manage monument tags" BorderThickness="0"
-                            Click="newTagBtn_Click">
+                            Click="newTagBtn_Click"
+                            Command="{x:Static local:ToolbarCommands.AddNewTag}">
                         <Image Source="icons/blue-tag.png" Height="35"/>
                     </Button>
 
@@ -1317,14 +1335,16 @@
                             Foreground="White" FontSize="20"
                             FontWeight="UltraBold"
                             VerticalAlignment="Center"
-                            Click="increaseFontBtn_Click" />
+                            Click="increaseFontBtn_Click"
+                            Command="{x:Static local:ToolbarCommands.IncreaseFont}"/>
 
                     <Button x:Name="decreaseFontBtn" Grid.Column="3"
                             Width="30" Content="-" HorizontalAlignment="Right"
                             Foreground="White" FontSize="20"
                             FontWeight="UltraBold"
                             VerticalAlignment="Center"
-                            Click="decreaseFontBtn_Click"/>
+                            Click="decreaseFontBtn_Click"
+                            Command="{x:Static local:ToolbarCommands.DecreaseFont}"/>
 
                     <TextBlock x:Name="UserNotificationMessage" Foreground="White"
                                Opacity="0" VerticalAlignment="Center"
@@ -1362,7 +1382,7 @@
                             ToolTip="Enter search text"
                             x:Name="searchTextBox"
                             TextChanged="SearchTextBox_TextChanged"
-                             KeyDown="SearchTextBox_KeyDown"/>
+                            KeyDown="SearchTextBox_KeyDown"/>
 
 
                     <Button x:Name="searchBtn" Grid.Column="9" ToolTip="Search"
