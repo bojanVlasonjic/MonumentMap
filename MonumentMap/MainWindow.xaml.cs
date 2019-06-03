@@ -46,7 +46,6 @@ namespace MonumentMap
         public ObservableCollection<MonumentType> observ_monum_types { get; set; }
         public ObservableCollection<MonumentTag> observ_monum_tags { get; set; }
 
-
         private double mainWindowHeight;
         private double mainWindowWidth;
 
@@ -86,7 +85,7 @@ namespace MonumentMap
             this.SizeChanged += OnWindowSizeChanged;
             this.MouseMove += Window_OnMouseMove;
             this.MouseUp += Window_OnMouseUp;
-
+            
             onLoad();
         }
 
@@ -1267,6 +1266,40 @@ namespace MonumentMap
 
         }
 
+        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child != null && child is T)
+                    {
+                        yield return (T)child;
+                    }
 
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+        
+        private void Button_ClickFontIncrease(object sender, RoutedEventArgs e)
+        {
+            foreach (TextBlock tb in FindVisualChildren<TextBlock>(this))
+            {
+                tb.FontSize = tb.FontSize + 1;
+            }
+            foreach (TextBox tb in FindVisualChildren<TextBox>(this))
+            {
+                tb.FontSize = tb.FontSize + 1;
+            }
+            foreach (ComboBox cb in FindVisualChildren<ComboBox>(this))
+            {
+                cb.FontSize = cb.FontSize + 1;
+            }
+        }
     }
 }

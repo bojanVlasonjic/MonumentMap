@@ -956,7 +956,9 @@
                         <!-- Nov tip spomenika -->
                         <ColumnDefinition Width="60"></ColumnDefinition>
                         <!-- Novi tip tag -->
+                        <ColumnDefinition Width="60"/>
                         <ColumnDefinition></ColumnDefinition>
+                        
                         <!-- Pretraga -->
                         <ColumnDefinition Width="50" />
                         <ColumnDefinition Width="150" />
@@ -983,16 +985,18 @@
                         <Image Source="icons/blue-tag.png" Height="35"/>
                     </Button>
 
+                    <Button Content="Font" Grid.Column="3" Foreground="White" FontSize="14"
+                            Click="Button_ClickFontIncrease"/>
+
                     <TextBlock x:Name="UserNotificationMessage" Foreground="White" Opacity="0"
                                VerticalAlignment="Center" HorizontalAlignment="Left"
-                               Grid.Row="0" Grid.Column="3"
-                               FontSize="{Binding WindowConstants.HeaderFontSize}" />
+                               Grid.Row="0" Grid.Column="4" />
 
-                    <TextBlock Grid.Column="4" Text="Filter:" VerticalAlignment="Center"
+                    <TextBlock Grid.Column="5" Text="Filter:" VerticalAlignment="Center"
                                HorizontalAlignment="Center" FontSize="14" Foreground="White"/>
 
                    
-                    <ComboBox Grid.Column="5" Margin="6" Padding="6" SelectedIndex="0">
+                    <ComboBox Grid.Column="6" Margin="6" Padding="6" SelectedIndex="0">
                         <ComboBoxItem Name="Item1">Item1</ComboBoxItem>
                         <ComboBoxItem Name="Item2">Item2</ComboBoxItem>
                         <ComboBoxItem Name="Item3">Item3</ComboBoxItem>
@@ -1001,13 +1005,13 @@
                         <ComboBoxItem Name="Item6">Item6</ComboBoxItem>
                     </ComboBox>
 
-                    <TextBox Grid.Column="6" Margin="6" Background="#093647"
+                    <TextBox Grid.Column="7" Margin="6" Background="#093647"
                             Text="" HorizontalContentAlignment="Left" Padding="5"
                             VerticalContentAlignment="Center" Foreground="White"
                             FontSize="14" BorderThickness="0"
                             x:Name="searchTextBox"/>
 
-                    <Button x:Name="searchBtn" Grid.Column="7" ToolTip="Search"
+                    <Button x:Name="searchBtn" Grid.Column="8" ToolTip="Search"
                             Width="40" Height="40" Margin="0,0,5,5"
                             BorderThickness="0" Content="{StaticResource SearchIconImage}"
                             VerticalAlignment="Bottom"/>
@@ -1016,7 +1020,7 @@
 
                 <!-- BING MAPA -->
                 <Grid>
-                    <m:Map x:Name="worldMap" ZoomLevel="3.6"  Mode="AerialWithLabels" CredentialsProvider="AtDk4CCssn5oeGv1MfzEWA_LA9eulE9bDLI6VdfGkcnCi6ydlDX0LT-jNXskoIV_" RenderTransformOrigin="0.5,0.5"/>
+                    <m:Map x:Name="worldMap" ZoomLevel="3.6" RenderOptions.BitmapScalingMode="HighQuality"  Mode="AerialWithLabels" CredentialsProvider="AtDk4CCssn5oeGv1MfzEWA_LA9eulE9bDLI6VdfGkcnCi6ydlDX0LT-jNXskoIV_" RenderTransformOrigin="0.5,0.5"/>
                 </Grid>
 
             </DockPanel>
