@@ -1047,6 +1047,7 @@
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Center" Grid.Row="0"
                                             Stretch="UniformToFill"
+                                            RenderOptions.BitmapScalingMode="HighQuality"
                                             Grid.Column="1"/>
                                 </Grid>
 
@@ -1125,7 +1126,7 @@
                                          BorderBrush="Transparent"
                                          BorderThickness="3"
                                          Background="#093647"
-                                         MaxLength="200"
+                                         MaxLength="1000"
                                          HorizontalAlignment="Stretch"
                                          AcceptsReturn="True"
                                          VerticalScrollBarVisibility="Hidden"
