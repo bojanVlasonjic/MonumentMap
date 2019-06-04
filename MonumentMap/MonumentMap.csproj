@@ -197,6 +197,9 @@
     <Resource Include="icons\AppIcon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Help\add-monument.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Help\error.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
