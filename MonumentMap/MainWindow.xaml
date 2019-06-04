@@ -1366,7 +1366,7 @@
                         <ColumnDefinition Width="60"></ColumnDefinition>
                         <ColumnDefinition Width="60"></ColumnDefinition>
                         <ColumnDefinition Width="60"></ColumnDefinition>
-                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition Width="220"/>
                         <ColumnDefinition></ColumnDefinition>
 
                         <!-- Pretraga -->
@@ -1425,6 +1425,7 @@
                             <ColumnDefinition Width="20"/>
                             <ColumnDefinition Width="30"/>
                             <ColumnDefinition />
+                            <ColumnDefinition Width="60"/>
                         </Grid.ColumnDefinitions>
 
                         <Button x:Name="increaseFontBtn" Grid.Column="0"
@@ -1458,10 +1459,18 @@
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Center" FontSize="15"/>
 
-                        <TextBlock Grid.Column="3" Grid.RowSpan="2"  Text="Font Size"
+                        <TextBlock Grid.Column="2" Grid.RowSpan="2"  Text="Font Size"
                                    Foreground="White" HorizontalAlignment="Left"
                                    VerticalAlignment="Center" Margin="10"
                                    FontSize="14" FontWeight="SemiBold"/>
+
+                        <Button Grid.Column="3" Width="50"
+                                Margin="0,0,5,0"
+                                Grid.RowSpan="2" HorizontalAlignment="Right"
+                                Click="Button_ClickHelp">
+                            <Image Source="icons/qMarkIcon.png" Height="30"
+                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Button>
 
                     </Grid>
 
