@@ -43,6 +43,11 @@ namespace MonumentMap
         public bool isTagDialogShown = false;
         public bool isTypeDialogShown = false;
 
+        public bool increaseFontClicked = false;
+        public bool decreaseFontClicked = false;
+
+
+
         /***************** Observable collections *****************/
         public ObservableCollection<Monument> observ_monuments { get; set; }
         public ObservableCollection<MonumentType> observ_monum_types { get; set; }
@@ -1766,6 +1771,7 @@ namespace MonumentMap
         private void increaseFontBtn_Click(object sender, RoutedEventArgs e)
         {
             increaseAllFonts();
+            increaseFontClicked = true;
         }
 
         private void increaseAllFonts()
@@ -1786,6 +1792,7 @@ namespace MonumentMap
         private void decreaseFontBtn_Click(object sender, RoutedEventArgs e)
         {
             decreaseAllFonts();
+            decreaseFontClicked = true;
         }
 
         private void decreaseAllFonts()
@@ -1826,29 +1833,70 @@ namespace MonumentMap
 
         private void AddNewMonument_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            openNewMonumentWindow();
+            if(!isNewMonumentWindowShown)
+            {
+                openNewMonumentWindow();
+            }
+            
         }
 
         private void AddNewType_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            newMonumTypeGridHolder.Visibility = Visibility.Visible;
-            isTypeDialogShown = true;
+            if(!isTypeDialogShown)
+            {
+                newMonumTypeGridHolder.Visibility = Visibility.Visible;
+                isTypeDialogShown = true;
+            }
+            
         }
 
         private void AddNewTag_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            newTagGridHolder.Visibility = Visibility.Visible;
-            isTagDialogShown = true;
+            if(!isTagDialogShown)
+            {
+                newTagGridHolder.Visibility = Visibility.Visible;
+                isTagDialogShown = true;
+            }
+           
         }
 
         private void IncreaseFont_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             increaseAllFonts();
+            
+        }
+        
+        private void IncreaseFont_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if(increaseFontClicked)
+            {
+                e.CanExecute = false;
+                increaseFontClicked = false;
+            } else
+            {
+                e.CanExecute = true;
+            }
         }
 
         private void DecreaseFont_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             decreaseAllFonts();
+           
+        }
+
+        
+        private void DecreaseFont_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+
+            if(decreaseFontClicked)
+            {
+                decreaseFontClicked = false;
+                e.CanExecute = false;
+            } else
+            {
+                e.CanExecute = true;
+            }
+
         }
 
         private void Search_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -2133,8 +2181,6 @@ namespace MonumentMap
             CloseSearchResults();
         }
 
-
-
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             IInputElement focusedControl = FocusManager.GetFocusedElement(Application.Current.Windows[0]);
@@ -2145,6 +2191,6 @@ namespace MonumentMap
             }
         }
 
-
+        
     }
 }

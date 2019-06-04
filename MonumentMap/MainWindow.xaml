@@ -21,9 +21,11 @@
         <CommandBinding Command="{x:Static local:ToolbarCommands.AddNewTag}"
                         Executed="AddNewTag_Executed"/>
         <CommandBinding Command="{x:Static local:ToolbarCommands.IncreaseFont}"
-                        Executed="IncreaseFont_Executed"/>
+                        Executed="IncreaseFont_Executed"
+                        CanExecute="IncreaseFont_CanExecute"/>
         <CommandBinding Command="{x:Static local:ToolbarCommands.DecreaseFont}"
-                        Executed="DecreaseFont_Executed"/>
+                        Executed="DecreaseFont_Executed"
+                        CanExecute="DecreaseFont_CanExecute"/>
         <CommandBinding Command="{x:Static local:ToolbarCommands.SearchMonuments}"
                         Executed="Search_Executed"/>
         <CommandBinding Command="{x:Static local:ToolbarCommands.ClosePopUp}"
