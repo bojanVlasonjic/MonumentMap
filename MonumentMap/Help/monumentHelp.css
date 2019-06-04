@@ -5,11 +5,23 @@
 	display: inline-block;
 }
 
-body {
-	background-color: lightblue;
+html, body {
+	margin: 0;
+	background: #072530;
+	overflow-y: auto;
+	overflow-x: auto;
+    font-family:sans-serif;
+	color: white;
 }
 
+.back {
+    position: fixed;
+    font-size: large;
+}
+
+
+
 .screenshot {
-	width: 600px;
-	height: 400px;
+	width: 800px;
+	height: 600px;
 }
