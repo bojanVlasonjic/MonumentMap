@@ -59,7 +59,7 @@ namespace MonumentMap
 
         static BrushConverter brushConverter = new BrushConverter();
 
-        static string BROWSE_ICONS_FILTER = "Icon Files (*.png, *.svg, *.eps, *.psd)|*.png;*.svg;*.eps;*.psd";
+        static string BROWSE_ICONS_FILTER = "Icon Files (*.png, *.jpg, *.svg, *.eps, *.psd)|*.png;*.jpg;*.svg;*.eps;*.psd";
         static string BROWSE_PICS_FILTER = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF|All files(*.*)|*.*";
 
 
@@ -1235,7 +1235,8 @@ namespace MonumentMap
             ControlTemplate tmp = new ControlTemplate(typeof(Pushpin));
             FrameworkElementFactory fact = new FrameworkElementFactory(typeof(Image));
             fact.SetValue(Image.SourceProperty, imgSource);
-            fact.SetValue(Image.WidthProperty, 45.0);
+            fact.SetValue(Image.WidthProperty, 50.0);
+            fact.SetValue(Image.HeightProperty, 50.0);
             fact.SetValue(Image.StretchProperty, Stretch.UniformToFill);
             tmp.VisualTree = fact;
 
@@ -1243,6 +1244,8 @@ namespace MonumentMap
 
 
             Pushpin pin = new Pushpin();
+            pin.Width = 50;
+            pin.Height = 50;
             pin.Template = tmp;
             pin.Location = location;
             pin.Content = monument.ID;
@@ -1289,11 +1292,14 @@ namespace MonumentMap
                 ControlTemplate tmp = new ControlTemplate(typeof(Pushpin));
                 FrameworkElementFactory fact = new FrameworkElementFactory(typeof(Image));
                 fact.SetValue(Image.SourceProperty, imgSource);
-                fact.SetValue(Image.WidthProperty, 45.0);
+                fact.SetValue(Image.WidthProperty, 50.0);
+                fact.SetValue(Image.HeightProperty, 50.0);
                 fact.SetValue(Image.StretchProperty, Stretch.UniformToFill);
                 tmp.VisualTree = fact;
 
                 Pushpin pin = new Pushpin();
+                pin.Width = 50;
+                pin.Height = 50;
                 pin.Template = tmp;
                 pin.Location = pinLocation;
                 pin.Content = selectedMonument.Tag.ToString();
