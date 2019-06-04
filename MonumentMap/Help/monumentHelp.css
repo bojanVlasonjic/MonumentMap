@@ -1,0 +1,15 @@
+
+.add-monument-icon {
+	height: 40px;
+	width: 40px;
+	display: inline-block;
+}
+
+body {
+	background-color: lightblue;
+}
+
+.screenshot {
+	width: 600px;
+	height: 400px;
+}
