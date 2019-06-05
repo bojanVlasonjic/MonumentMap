@@ -9,3 +9,4 @@ Uputstvo za pokretanje:
 https://www.microsoft.com/en-us/download/details.aspx?id=27165 , pa potom uključiti istu biblioteku iz instalacionog foldera.
 - Korišćen je i "Color picker" iz "WpfToolKit Extended" biblioteke. Postoji mogućnost da je neophodno instalirati i ovu biblioteku (Za VS: Project -> Manage NuGet Packages -> Pronaći i instalirati Extended WPF Toolkit biblioteku).
 - MainWindow.xaml file ponekad zna da prijavi "Invalid Markup", iako nema nikakve greške i ne bude nikakvih problema prilikom pokretanja aplikacije.
+- Internet konekcija je neophodna kako se ne bi prikazivao "Invalid credentials..." dijalog preko mape. 
